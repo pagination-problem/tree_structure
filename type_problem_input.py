@@ -138,19 +138,19 @@ class ProblemInput(list) :
             symbol_set_on_m2 = sorted(symbol_set_on_m2)
             str_for_tiles_on_m2 = str(self.opt_tiles_m2)
 
-        str_res = "[ \n { \n \"tiles\" : "
-        str_res += str(self)
-        str_res += ",\n \"symbols\" : " + str(symbol_set)
-        str_res += ",\n \"height\" : " + str(self.height)
-        str_res += ",\n \"max_symbol_size\" : " + str(self.max_symbol_size)
-        str_res += ",\n \"opt_value\" : " + str(self.opt_value)
-        str_res += ",\n \"opt_tiles_m1\" :  " + str_for_tiles_on_m1
-        str_res += ",\n \"symbols_on_m1\" : " + str(symbol_set_on_m1)
-        str_res += ",\n \"opt_tiles_m2\" : " + str_for_tiles_on_m2
-        str_res += ",\n \"symbols_on_m2\" : " + str(symbol_set_on_m2)
-        str_res += ",\n \"seed\" : " + str(self.seed)
-        str_res += "\n } \n]"
-        return str_res
+        result = ["[\n {"]
+        result.append(f'"tiles" : {self}')
+        result.append(f'"symbols" : {symbol_set}')
+        result.append(f'"height" : {self.height}')
+        result.append(f'"max_symbol_size" : {self.max_symbol_size}')
+        result.append(f'"opt_value" : {self.opt_value}')
+        result.append(f'"opt_tiles_m1" : {str__for_tiles_on_m1}')
+        result.append(f'"symbols_on_m1" : {symbol_set_on_m1}')
+        result.append(f'"opt_tiles_m2" : {str_for_tiles_on_m2}')
+        result.append(f'"symbols_on_m2" : {symbol_set_on_m2}')
+        result.append(f'"seed" : {self.seed}')
+        result.append("\n }\n]")
+        return "\n".join(result)
 
     def write_instance_in_json_file(self, directory_path):
         directory_path = directory_path + self.name + ".json"
