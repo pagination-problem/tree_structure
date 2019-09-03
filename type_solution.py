@@ -32,8 +32,8 @@ class Solution(list) :
 
         """
         Print a solution that way :
-        For input : 'self.name'
-        Beta : 'self.beta'
+        For input: 'self.name'
+        Beta: 'self.beta'
         Machine 1 (C1) : tile | tile | tile | ... | END
         Machine 2 (C2) : tile | tile | ... | END
         Cmax = max(C1, C2)
