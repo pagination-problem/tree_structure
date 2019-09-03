@@ -187,9 +187,7 @@ class ProblemInput(list) :
         for t in self.opt_tiles_m2:
             symbol_set_on_m2 = symbol_set_on_m2.union(t.symbols)
         symbol_set_on_m2 = sorted(symbol_set_on_m2)
-        temp_L_symbols_m2 = list()
-        for s in symbol_set_on_m2:
-            temp_L_symbols_m2.append(str(s))
+        temp_L_symbols_m2 = [str(s) for s in symbol_set_on_m2]
         
         
         my_dict = dict()
