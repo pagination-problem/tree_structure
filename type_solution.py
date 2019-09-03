@@ -6,7 +6,7 @@ class Solution(list) :
     """
     For now, there are two attributs in this class but maybe I should create a list of machines even for the
     smallest studied case.
-    It will make some computations easier (for example : the __repre__)
+    It will make some computations easier (for example : the __repr__)
 
     I also store :
         - the name of the studied input in order to be able to link the solution found by the
