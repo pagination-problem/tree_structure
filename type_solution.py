@@ -11,15 +11,15 @@ class Solution(list) :
     I also store :
         - the name of the studied input in order to be able to link the solution found by the
     heuristic with the input.
-        - the beta used to compute this solution
+        - the beta used to compute this solution.
 
-    So the attributes of this class are :
-        - name : str
-        - beta : float
-        - machine1 : Page
-        - machine2 : Page
-        - Cmax : int
-        - opt_value : the optimal value. If unknown, will be None
+    So the attributes of this class are:
+        - name: str
+        - beta: float
+        - machine1: Page
+        - machine2: Page
+        - Cmax: int
+        - opt_value: the optimal value. If unknown, will be None
     """
     def __init__(self, name, beta, machine1, machine2, opt_value = None):
         self.machine1 = machine1
