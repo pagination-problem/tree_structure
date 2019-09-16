@@ -208,10 +208,6 @@ if __name__ == '__main__':
         dir_path_for_results = "C:\\Users\\sarah\\Documents\\These\\Sub-problems\\2__tree-merging__Cmax\\3-Programmation\\Results\\" + str(number_of_tiles) + "_tiles"
         dir_path_for_recap = "C:\\Users\\sarah\\Documents\\These\\Sub-problems\\2__tree-merging__Cmax\\3-Programmation\\Results\\" + str(number_of_tiles) + "_tiles\\recap"
 
-    
-    start = time.time()
-    print("Beginning of run.")
-
     filenames_with_extension = files_in(dir_path_for_inputs)
     filenames_without_extension = list()
 
@@ -240,6 +236,8 @@ if __name__ == '__main__':
     print("Do you have anything to change ? Well DO IT NOW, YOU IDIOT")
     rep = input ("Enter your answer.")
 
+    start = time.time()
+    print("Beginning of run.")
     for filename in filenames_without_extension:
         my_input = tools.load_json_instance_from(dir_path_for_inputs, filename)
         print("Now computing the instance ", my_input.name)
