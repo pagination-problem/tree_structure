@@ -61,7 +61,7 @@ def filling_the_matrix(the_input, nb_internal_nodes, nb_leaves):
     # There will be empty cells for two reasons : 
     #       - There is a condition inherent to the method which is i >= j. So this means half of the matrix is empty
     #       - There are as many rows (and columns) as there are leaves in the starting tree but maybe not all of leaves
-    #           are kept in the input. The cells for these not-used leaves are left empty (with an 'x' inside in fact)
+    #           are kept in the input. The cells for these not-used leaves are left empty (with an 'x' inside)
     #
     # Of course, all the indexes used in the matrix are in LEAF-ONLY index. See the top of
     # this document to have explanation of whats does this mean.
