@@ -82,7 +82,8 @@ def selecting_a_representative_for_an_interval(begin, end, the_set):
 
     return save_tuple
 
-def FPTAS(the_input, epsilon):
+def run(the_input, epsilon):
+
     number_of_generated_states = 0
     global matrix
     Cmax = float('inf')
@@ -123,6 +124,8 @@ def FPTAS(the_input, epsilon):
         # Taking into account the number of states which were generated during this iteration
         number_of_generated_states += len(chi_i)
         
+        may_log(i, chi_i)
+
         # Choosing the representative
         temp_set = sorted(chi_i, key=lambda my_tuple: my_tuple[0])
         d = 0
@@ -145,4 +148,15 @@ def FPTAS(the_input, epsilon):
     
     return (Cmax, number_of_generated_states)
 
-    #C:\Users\sarah\Documents\These\2,tree-merging,Cmax\FPTAS_for_tree_Pagination\Programmation\Tests
+log_result = []
+may_log = lambda *args : None
+
+def set_log_strategy(log):
+    global may_log
+
+    def log_states(i, chi_i):
+        log_result.append(f"{i}: {chi_i}")
+    
+    if log:
+        may_log = log_states
+        
