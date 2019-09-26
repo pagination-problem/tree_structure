@@ -13,7 +13,7 @@ if __name__ == '__main__':
 
     print(f"Beginning of the run at {datetime.datetime.now()}")
 
-    for i in range(1, 101): # ! Upper bound not included
+    for i in range(1, 7): # ! Upper bound not included
         filename = f"{root}{i:03}"
 
         Cmax1 = number_of_generated_states1 = 0

@@ -2,6 +2,7 @@
 from type_problem_input import ProblemInput
 from type_symbol import Symbol
 from type_tile import Tile
+import os
 
 import json
 
@@ -40,7 +41,7 @@ def transforming_a_tile_into_a_set_of_the_indexes_og_its_symbols(tile_in_str):
     return set_of_indexes_of_symbols_in_tile
 
 def load_json_instance_from(complete_path_to_input, input_name_without_extension):
-    whereToLoad = complete_path_to_input + "\\" + input_name_without_extension + ".json"
+    whereToLoad = os.path.join(complete_path_to_input, f"{input_name_without_extension}.json")
     input_in_set = json.loads(open(whereToLoad).read())
 
     tiles = set()
@@ -63,7 +64,7 @@ def load_json_instance_from(complete_path_to_input, input_name_without_extension
     tiles_on_m1 = set()
     tiles_on_m2 = set()
 
-    print("For now, the loading from json file does NOT load the optimal solution if the file.\n")
+    print("For now, the loading from json file does NOT load the optimal solution in the file.\n")
     return ProblemInput(tiles, input_name_without_extension, height, max_symbol_size, opt_value, tiles_on_m1, tiles_on_m2)
 
 def generating_one_recap_file(nb_of_tiles, epsilon, where_to_store_the_files):
