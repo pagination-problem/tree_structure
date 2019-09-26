@@ -6,21 +6,15 @@ from improved_fptas import improved_FPTAS
 import datetime
 
 if __name__ == '__main__':
-    dir_path_for_inputs = "C:\\Users\\sarah\\Documents\\These\\Sub-problems\\2__tree-merging__Cmax\\4-Shared_programmation\\tree_structure\\inputs\\200-tiles"
-    root = "H9-nbT200-"
+    dir_path_for_inputs = "inputs/200-tiles"
+    root = "H3-nbT5-"
     epsilon = 0.1
     path = f"results/txt/results_200-tiles_{epsilon}-epsilon.txt"  
 
     print(f"Beginning of the run at {datetime.datetime.now()}")
 
     for i in range(1, 101): # ! Upper bound not included
-        if 1 <= i <= 9:
-            filename = root + "00" + str(i)
-        elif 10 <= i <= 99:
-            filename = root + "0" + str(i)
-        else:
-            filename = root + str(i)
-
+        filename = f"{root}{i:03}"
 
         Cmax1 = number_of_generated_states1 = 0
         Cmax2 = number_of_generated_states2 = 0
