@@ -6,10 +6,10 @@ from improved_fptas import improved_FPTAS
 import datetime
 
 if __name__ == '__main__':
-    dir_path_for_inputs = "inputs/200-tiles"
+    dir_path_for_inputs = "inputs/5-tiles"
     root = "H3-nbT5-"
     epsilon = 0.1
-    path = f"results/txt/results_200-tiles_{epsilon}-epsilon.txt"  
+    path = f"results/txt/results_5-tiles_{epsilon}-epsilon.txt"  
 
     print(f"Beginning of the run at {datetime.datetime.now()}")
 
