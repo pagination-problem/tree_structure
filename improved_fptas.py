@@ -123,7 +123,7 @@ def run(the_input, epsilon):
 
     j = 0 #index of the tile we computed just before the current one. For example, if we are about to
     # compute the tile 4, j = 3. This variable is necessary because I cannot use i-1 to look into the
-    # matrix at M[i][i-1] as maybe the tile i = 7 was choosen in the input but the tile n°6 was not.
+    # matrix at M[i][i-1] as maybe the tile i = 7 was choosen in the input but the tile nb. 6 was not.
 
     for t in tile_set:
         chi_i = set()
