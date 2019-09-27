@@ -23,7 +23,7 @@ from type_problem_input import ProblemInput
 # 1 2  3  4  5  6  7   8
 # 1 <-> N8  ; 2  <-> N9  ; 3  <-> N10 ; 4  <-> N11 ;
 # 5 <-> N12 ; 6  <-> N13 ; 7  <-> N14 ; 8  <-> N15
-matrix = [[]]
+matrix = []
 
 def filling_the_matrix(the_input, nb_internal_nodes, nb_leaves):
     # As its name says, this function performs the computation of the matrix needed in the FPTAS.
@@ -43,8 +43,7 @@ def filling_the_matrix(the_input, nb_internal_nodes, nb_leaves):
     # Of course, all the indexes used in the matrix are in LEAF-ONLY index. See the top of
     # this document to have explanation of whats does this mean.
     
-    global matrix
-    matrix = [['x' for x in range(nb_leaves+1)] for y in range(nb_leaves+1)]
+    matrix.extend([['x' for x in range(nb_leaves+1)] for y in range(nb_leaves+1)])
 
     tile_set = sorted(the_input.tileSet, key=lambda tile: tile.index_of_leaf)
     for t in tile_set:
