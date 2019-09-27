@@ -7,8 +7,8 @@ class Tile:
     def __init__(self, symbols):
         self.symbols = set(symbols)
         self.hash = hash(tuple(self.symbols))
-        temp_set_of_symbols = sorted(self.symbols)
-        self.index_of_leaf = (temp_set_of_symbols.pop()).index
+        self.leaf_symbol = sorted(self.symbols)[-1]
+        self.leaf_index = self.leaf_symbol.index # in the order of a Breadth-first search
     
     def __str__(self):
         return "[%s]" % ", ".join(map(str, sorted(self.symbols)))
@@ -30,9 +30,6 @@ class Tile:
 
     def count_on_page(self, page):
         return sum(symbol in page for symbol in self.symbols)
-    
-    def get_leaf_symbol(self):
-        return sorted(self.symbols)[-1]
 
     def is_included_in(self, other):
         #other must be a tile
