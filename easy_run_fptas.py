@@ -35,7 +35,7 @@ if __name__ == '__main__':
 
     output_filename = f"{output_directory}/{output_prefix}_{tile_count}-tiles_{epsilon}-epsilon.txt"
     already_processed = set()
-    if os.path.isfile(f"{output_filename}"):
+    if not log and os.path.isfile(f"{output_filename}"):
         with open(output_filename) as f:
             already_processed = set(line.partition(";")[0] + ".json" for line in f.read().split("\n"))
     
@@ -64,9 +64,10 @@ if __name__ == '__main__':
         print("Time needed for iFPTAS: ", stop2 - start2)
         print(f"iFPTAS : Cmax =  {Cmax2}; number of states generated = {number_of_generated_states2}")
         
-        my_str = f"{filename[:-5]};{Cmax1};{stop1-start1};{number_of_generated_states1};{Cmax2};{stop2-start2};{number_of_generated_states2}"
-        with open(output_filename, output_mode) as f:
-            print(my_str, file=f)
+        if not log:
+            my_str = f"{filename[:-5]};{Cmax1};{stop1-start1};{number_of_generated_states1};{Cmax2};{stop2-start2};{number_of_generated_states2}"
+            with open(output_filename, output_mode) as f:
+                print(my_str, file=f)
 
         if log:
             log_filename = f"{output_directory}/{filename[:-5]}_{epsilon}-epsilon.txt"
