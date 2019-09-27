@@ -102,7 +102,7 @@ def run(the_input, epsilon):
     for t in tile_set:
         chi_i = set()
         leaf_index_t = t.leaf_index
-        i = leaf_index_t - nb_internal_nodes #index of the tile we are about to schedule
+        i = leaf_index_t - nb_internal_nodes #index (in the leaf-only index) of the tile we are about to schedule
         
         for my_tuple in chi_i_minus_one:
             a = my_tuple[0]

@@ -8,7 +8,7 @@ class Tile:
         self.symbols = set(symbols)
         self.hash = hash(tuple(self.symbols))
         self.leaf_symbol = sorted(self.symbols)[-1]
-        self.leaf_index = self.leaf_symbol.index
+        self.leaf_index = self.leaf_symbol.index # in the order of a Breadth-first search
     
     def __str__(self):
         return "[%s]" % ", ".join(map(str, sorted(self.symbols)))
