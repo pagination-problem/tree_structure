@@ -50,7 +50,7 @@ def filling_the_matrix(the_input, nb_internal_nodes, nb_leaves):
     for t in tile_set:
         leaf_index_t = t.get_leaf_symbol().index
         i = leaf_index_t - nb_internal_nodes
-        matrix[i][0]= t.size()
+        matrix[i][0]= len(t)
 
     for t1 in tile_set:
         for t2 in tile_set:

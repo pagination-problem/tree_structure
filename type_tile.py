@@ -17,10 +17,7 @@ class Tile:
         return iter(self.symbols)
     
     def __len__(self):
-        tile_size = 0
-        for symbol in self.symbols :
-            tile_size = tile_size + symbol.size()
-        return tile_size
+        return sum(symbol.size for symbol in self.symbols)
 
     def __repr__(self):
         return str(self)
@@ -35,29 +32,22 @@ class Tile:
         return sum(symbol in page for symbol in self.symbols)
     
     def get_leaf_symbol(self):
-        temp_set_of_symbols = sorted(self.symbols)
-        return temp_set_of_symbols.pop()
+        return sorted(self.symbols)[-1]
 
     def is_included_in(self, other):
         #other must be a tile
         return self.symbols.issubset(other.symbols)
     
-    def is_included_in_at_least_one_tile_of_the_set(self, tile_set) :
+    def is_included_in_at_least_one_tile_of_the_set(self, tile_set):
         for t in tile_set:
             if self.is_included_in(t):
                 return True
 
         return False
     
-    def includes_at_least_a_tile_of_the_set(self, tile_set) :
+    def includes_at_least_a_tile_of_the_set(self, tile_set):
         for t in tile_set:
             if t.is_included_in(self):
                 return True
 
         return False
-
-    def size(self):
-        tile_size = 0
-        for symbol in self.symbols :
-            tile_size = tile_size + symbol.size
-        return tile_size
