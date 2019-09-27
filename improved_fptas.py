@@ -69,17 +69,17 @@ def filling_the_matrix(the_input, nb_internal_nodes, nb_leaves):
     global matrix
     matrix = [['x' for x in range(nb_leaves+1)] for y in range(nb_leaves+1)]
 
-    tile_set = sorted(the_input.tileSet, key=lambda tile: tile.index_of_leaf)
+    tile_set = sorted(the_input.tileSet, key=lambda tile: tile.leaf_index)
     for t in tile_set:
-        leaf_index_t = t.get_leaf_symbol().index
+        leaf_index_t = t.leaf_index
         i = leaf_index_t - nb_internal_nodes
         matrix[i][0]= len(t)
 
     for t1 in tile_set:
         for t2 in tile_set:
             set_of_symbols_not_assigned_yet = (t1.symbols).difference(t2.symbols)
-            leaf_index_t1 = t1.get_leaf_symbol().index
-            leaf_index_t2 = t2.get_leaf_symbol().index
+            leaf_index_t1 = t1.leaf_index
+            leaf_index_t2 = t2.leaf_index
 
             i = leaf_index_t1 - nb_internal_nodes
             j = leaf_index_t2 - nb_internal_nodes
@@ -119,7 +119,7 @@ def run(the_input, epsilon):
     
     filling_the_matrix(the_input, nb_internal_nodes, nb_leaves)
 
-    tile_set = sorted(the_input.tileSet, key=lambda tile: tile.index_of_leaf)
+    tile_set = sorted(the_input.tileSet, key=lambda tile: tile.leaf_index)
 
     j = 0 #index of the tile we computed just before the current one. For example, if we are about to
     # compute the tile 4, j = 3. This variable is necessary because I cannot use i-1 to look into the
@@ -127,7 +127,7 @@ def run(the_input, epsilon):
 
     for t in tile_set:
         chi_i = set()
-        leaf_index_t = t.get_leaf_symbol().index
+        leaf_index_t = t.leaf_index
         i = leaf_index_t - nb_internal_nodes #index in the LEAF-ONLY index of the tile we are about to schedule
         
         for my_tuple in chi_i_minus_one:
