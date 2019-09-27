@@ -44,7 +44,7 @@ def filling_the_matrix(the_input, nb_internal_nodes, nb_leaves):
     # this document to have explanation of whats does this mean.
     
     global matrix
-    matrix = [['x' for x in range(nb_leaves+1)] for y in range(nb_leaves+1)]
+    matrix = [['x'] * (nb_leaves+1) for y in range(nb_leaves+1)]
 
     tile_set = sorted(the_input.tileSet, key=lambda tile: tile.index_of_leaf)
     for t in tile_set:
