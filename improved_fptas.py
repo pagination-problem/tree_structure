@@ -107,7 +107,6 @@ def selecting_a_representative_for_an_interval(begin, end, the_set):
 
 def run(the_input, epsilon):
     number_of_generated_states = 0
-    global matrix
     chi_i_minus_one = set()
     chi_i_minus_one.add((0,0,0,0)) #We still add the articifial tile t0 with |t0| = 0 and we don't care about the value of alpha in the first state
 
@@ -175,7 +174,7 @@ def run(the_input, epsilon):
         # Taking into account the number of states which were generated during this iteration
         number_of_generated_states += len(chi_i)
         
-        may_log(i, chi_i)
+        run.may_log(i, chi_i)
 
         # Choosing the representative
         temp_set = sorted(chi_i, key=lambda my_tuple: my_tuple[0])
@@ -201,14 +200,14 @@ def run(the_input, epsilon):
     return (Cmax, number_of_generated_states)
 
 log_result = []
-may_log = lambda *args : None
 
 def set_log_strategy(log):
-    global may_log
 
-    def log_states(i, chi_i):
-        log_result.append(f"{i}: {chi_i}")
+    def log_states(i, chi):
+        log_result.append(f"{i}: {chi}")
     
     if log:
-        may_log = log_states
+        run.may_log = log_states
+    else:
+        run.may_log = lambda *args : None
         
