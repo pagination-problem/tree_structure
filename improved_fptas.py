@@ -107,7 +107,6 @@ def selecting_a_representative_for_an_interval(begin, end, the_set):
 
 def run(the_input, epsilon):
     number_of_generated_states = 0
-    global matrix
     chi_i_minus_one = set()
     chi_i_minus_one.add((0,0,0,0)) #We still add the articifial tile t0 with |t0| = 0 and we don't care about the value of alpha in the first state
 
