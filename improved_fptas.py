@@ -187,14 +187,7 @@ def run(the_input, epsilon):
         chi_seed = select_representatives_on_grid(chi, delta, P)
 
     c_max = float('inf')
-    for my_tuple in chi_seed:
-        a = my_tuple[0]
-        b = my_tuple[1]
-
-        val = max(a,b)
-
-        if val < c_max:
-            c_max = val
+    c_max = min(chi_seed, key=lambda state: max(state[0], state[1]))
     
     return (c_max, generated_state_count)
 
