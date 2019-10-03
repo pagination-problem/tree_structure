@@ -117,10 +117,10 @@ def run(the_input, epsilon):
         
         run.may_log(i, chi)
 
-    foobar = []
+    c_maxes = []
     for state in chi_seed:
-        foobar.append(max(state[0], state[1]))
-    c_max = min(foobar)
+        c_maxes.append(max(state[0], state[1]))
+    c_max = min(c_maxes)
     return (c_max, generated_state_count)
 
 log_result = []
