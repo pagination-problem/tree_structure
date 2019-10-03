@@ -5,6 +5,8 @@ from type_tile import Tile
 from type_page import Page
 from type_problem_input import ProblemInput
 
+from numba import jit
+
 FLOAT_CORRECTION = 1e-6
 
 # matrix[i][j] = the quantity to add to a machine if we want to assign to it
@@ -27,6 +29,7 @@ FLOAT_CORRECTION = 1e-6
 # 5 <-> N12 ; 6  <-> N13 ; 7  <-> N14 ; 8  <-> N15
 matrix = []
 
+# @jit
 def filling_the_matrix(the_input, internal_node_offset, leaf_count):
     # As its name says, this function performs the computation of the matrix needed in the FPTAS.
     # It will create a square matrix with leaf_count + 1 rows and leaf_count + 1 columns.
@@ -61,6 +64,7 @@ def filling_the_matrix(the_input, internal_node_offset, leaf_count):
             if i >= j:
                 matrix[i][j] = sum(symbol.size for symbol in set_of_symbols_not_assigned_yet)
 
+@jit
 def select_representatives_on_grid(states, delta, upper_bound):
     result = {}
     for state in states:
@@ -69,6 +73,7 @@ def select_representatives_on_grid(states, delta, upper_bound):
             result[coords] = state
     return set(result.values())
 
+@jit
 def run(the_input, epsilon):
 
     generated_state_count = 0
@@ -82,7 +87,14 @@ def run(the_input, epsilon):
     
     filling_the_matrix(the_input, internal_node_offset, leaf_count)
 
-    tile_set = sorted(the_input.tileSet, key=lambda tile: tile.leaf_index)
+    # colored_tiles = [(tile.leaf_index, tile) for tile in the_input.tileSet]
+    colored_tiles = []
+    for tile in the_input.tileSet:
+        colored_tiles.append((tile.leaf_index, tile))
+    # tile_set = [tile for (_, tile) in sorted(colored_tiles)]
+    tile_set = []
+    for (_, tile) in sorted(colored_tiles):
+        tile_set.append(tile)
 
     for t in tile_set:
         chi = set()
@@ -105,7 +117,10 @@ def run(the_input, epsilon):
         # Choosing the representatives
         chi_seed = select_representatives_on_grid(chi, delta, P)
 
-    c_max = min(chi_seed, key=lambda state: max(state[0], state[1]))
+    foobar = []
+    for state in chi_seed:
+        foobar.append(max(state[0], state[1]))
+    c_max = min(foobar)
     return (c_max, generated_state_count)
 
 log_result = []
