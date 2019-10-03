@@ -115,7 +115,13 @@ def run(the_input, epsilon):
     
     filling_the_matrix(the_input, internal_node_offset, leaf_count)
 
-    tile_set = sorted(the_input.tileSet, key=lambda tile: tile.leaf_index)
+    colored_tiles = []
+    for tile in the_input.tileSet:
+        colored_tiles.append((tile.leaf_index, tile))
+    tile_set = []
+    for (_, tile) in sorted(colored_tiles):
+        tile_set.append(tile)
+    #tile_set = sorted(the_input.tileSet, key=lambda tile: tile.leaf_index)
 
     j = 0 #index of the tile we computed just before the current one. For example, if we are about to
     # compute the tile 4, j = 3. This variable is necessary because I cannot use i-1 to look into the
