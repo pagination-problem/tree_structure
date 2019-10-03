@@ -48,9 +48,9 @@ from type_problem_input import ProblemInput
 
 matrix = [[]]
 
-def filling_the_matrix(the_input, nb_internal_nodes, nb_leaves):
+def filling_the_matrix(the_input, internal_node_offset, leaf_count):
     # As its name says, this function performs the computation of the matrix needed in the FPTAS.
-    # It will create a square matrix with nb_leaves + 1 rows and nb_leaves + 1 columns.
+    # It will create a square matrix with leaf_count + 1 rows and leaf_count + 1 columns.
     # The first row will be left empty and shall never be looked at.
     # the first colomn should be interpreted as follows: if nothing has been scheduled on the machine, how
     # many symbols should I add to the machine to be able to assign the tile number i (with i a row number). Of
@@ -67,12 +67,12 @@ def filling_the_matrix(the_input, nb_internal_nodes, nb_leaves):
     # this document to have explanation of whats does this mean.
     
     global matrix
-    matrix = [['x' for x in range(nb_leaves+1)] for y in range(nb_leaves+1)]
+    matrix = [['x' for x in range(leaf_count+1)] for y in range(leaf_count+1)]
 
     tile_set = sorted(the_input.tileSet, key=lambda tile: tile.leaf_index)
     for t in tile_set:
         leaf_index_t = t.leaf_index
-        i = leaf_index_t - nb_internal_nodes
+        i = leaf_index_t - internal_node_offset
         matrix[i][0]= len(t)
 
     for t1 in tile_set:
@@ -81,8 +81,8 @@ def filling_the_matrix(the_input, nb_internal_nodes, nb_leaves):
             leaf_index_t1 = t1.leaf_index
             leaf_index_t2 = t2.leaf_index
 
-            i = leaf_index_t1 - nb_internal_nodes
-            j = leaf_index_t2 - nb_internal_nodes
+            i = leaf_index_t1 - internal_node_offset
+            j = leaf_index_t2 - internal_node_offset
 
             if i >= j:
                 size_to_add = 0
@@ -106,17 +106,17 @@ def selecting_a_representative_for_an_interval(begin, end, the_set):
     return save_tuple
 
 def run(the_input, epsilon):
-    number_of_generated_states = 0
+    generated_state_count = 0
     chi_seed = set()
     chi_seed.add((0,0,0,0)) #We still add the articifial tile t0 with |t0| = 0 and we don't care about the value of alpha in the first state
 
-    nb_leaves = 2**the_input.height
-    nb_internal_nodes = nb_leaves - 1
+    leaf_count = 2**the_input.height
+    internal_node_offset = leaf_count - 1
 
     P = the_input.get_sum_symbol_sizes()
     delta = (epsilon * P) /  (2 * len(the_input))
     
-    filling_the_matrix(the_input, nb_internal_nodes, nb_leaves)
+    filling_the_matrix(the_input, internal_node_offset, leaf_count)
 
     tile_set = sorted(the_input.tileSet, key=lambda tile: tile.leaf_index)
 
@@ -127,7 +127,7 @@ def run(the_input, epsilon):
     for t in tile_set:
         chi = set()
         leaf_index_t = t.leaf_index
-        i = leaf_index_t - nb_internal_nodes #index in the LEAF-ONLY index of the tile we are about to schedule
+        i = leaf_index_t - internal_node_offset #index in the LEAF-ONLY index of the tile we are about to schedule
         
         for my_tuple in chi_seed:
             a = my_tuple[0]
@@ -172,7 +172,7 @@ def run(the_input, epsilon):
         j = i
 
         # Taking into account the number of states which were generated during this iteration
-        number_of_generated_states += len(chi)
+        generated_state_count += len(chi)
         
         run.may_log(i, chi)
 
@@ -197,7 +197,7 @@ def run(the_input, epsilon):
         if val < Cmax:
             Cmax = val
     
-    return (Cmax, number_of_generated_states)
+    return (Cmax, generated_state_count)
 
 log_result = []
 
