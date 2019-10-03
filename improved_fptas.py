@@ -106,9 +106,13 @@ def selecting_a_representative_for_an_interval(begin, end, the_set):
     return save_tuple
 
 def run(the_input, epsilon):
+    #
+    # Quadruplet used in this version :
+    #     [a, b, k, alpha]
+    #
+
     generated_state_count = 0
-    chi_seed = set()
-    chi_seed.add((0,0,0,0)) #We still add the articifial tile t0 with |t0| = 0 and we don't care about the value of alpha in the first state
+    chi_seed = {(0, 0, 0, 0)} #We still add the articifial tile t0 with |t0| = 0 and we don't care about the value of alpha in the first state
 
     leaf_count = 2**the_input.height
     internal_node_offset = leaf_count - 1
@@ -126,15 +130,10 @@ def run(the_input, epsilon):
 
     for t in tile_set:
         chi = set()
-        leaf_index_t = t.leaf_index
-        i = leaf_index_t - internal_node_offset #index in the LEAF-ONLY index of the tile we are about to schedule
+        i = t.leaf_index - internal_node_offset #index in the LEAF-ONLY index of the tile we are about to schedule
         
-        for my_tuple in chi_seed:
-            a = my_tuple[0]
-            b = my_tuple[1]
-            k = my_tuple[2]
-            alpha = my_tuple[3]
-
+        for (a, b, k, alpha) in chi_seed:
+            
             if alpha == 1 : #the tile i-1 was scheduled on M1
                 #  We add the tile t on M1. The last tile on M1 is the tile before i in the tree.
                 if a == 0: #M1 is empty.
