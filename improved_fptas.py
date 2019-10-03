@@ -167,15 +167,8 @@ def run(the_input, epsilon):
         
         run.may_log(i, chi)
 
-    c_max = float('inf')
-    for my_tuple in chi_seed:
-        a = my_tuple[0]
-        b = my_tuple[1]
-
-        val = max(a,b)
-
-        if val < c_max:
-            c_max = val
+    best_sol = min(chi_seed, key=lambda state: max(state[0], state[1]))
+    c_max = max(best_sol[0], best_sol[1])
     
     return (c_max, number_of_generated_states)
 
