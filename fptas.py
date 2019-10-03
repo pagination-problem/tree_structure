@@ -27,7 +27,7 @@ FLOAT_CORRECTION = 1e-6
 # 5 <-> N12 ; 6  <-> N13 ; 7  <-> N14 ; 8  <-> N15
 matrix = []
 
-def filling_the_matrix(the_input, internal_node_count, leaf_count):
+def filling_the_matrix(the_input, internal_node_offset, leaf_count):
     # As its name says, this function performs the computation of the matrix needed in the FPTAS.
     # It will create a square matrix with leaf_count + 1 rows and leaf_count + 1 columns.
     # The first row will be left empty and shall never be looked at.
@@ -50,14 +50,14 @@ def filling_the_matrix(the_input, internal_node_count, leaf_count):
     tile_set = sorted(the_input.tileSet, key=lambda tile: tile.leaf_index)
     for t in tile_set:
         leaf_index_t = t.leaf_index
-        i = leaf_index_t - internal_node_count
+        i = leaf_index_t - internal_node_offset
         matrix[i][0]= len(t)
 
     for t1 in tile_set:
         for t2 in tile_set:
             set_of_symbols_not_assigned_yet = t1.symbols.difference(t2.symbols)
-            i = t1.leaf_index - internal_node_count
-            j = t2.leaf_index - internal_node_count
+            i = t1.leaf_index - internal_node_offset
+            j = t2.leaf_index - internal_node_offset
             if i >= j:
                 matrix[i][j] = sum(symbol.size for symbol in set_of_symbols_not_assigned_yet)
 
@@ -75,18 +75,18 @@ def run(the_input, epsilon):
     chi_seed = {(0, 0, 0, 0)}
 
     leaf_count = 2 ** the_input.height
-    internal_node_count = leaf_count - 1
+    internal_node_offset = leaf_count - 1
 
     P = the_input.get_sum_symbol_sizes()
     delta = (epsilon * P) /  (2 * len(the_input))
     
-    filling_the_matrix(the_input, internal_node_count, leaf_count)
+    filling_the_matrix(the_input, internal_node_offset, leaf_count)
 
     tile_set = sorted(the_input.tileSet, key=lambda tile: tile.leaf_index)
 
     for t in tile_set:
         chi = set()
-        i = t.leaf_index - internal_node_count #index (in the leaf-only index) of the tile we are about to schedule
+        i = t.leaf_index - internal_node_offset #index (in the leaf-only index) of the tile we are about to schedule
         
         for (a, b, j, k) in chi_seed:
             # We add tile t on M1
@@ -109,7 +109,6 @@ def run(the_input, epsilon):
     return (c_max, generated_state_count)
 
 log_result = []
-run.may_log = lambda *args : None
 
 def set_log_strategy(log):
 
@@ -118,4 +117,6 @@ def set_log_strategy(log):
     
     if log:
         run.may_log = log_states
+    else:
+        run.may_log = lambda *args : None
         
