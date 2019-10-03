@@ -29,22 +29,22 @@ class Tile:
         return self.symbols == other.symbols
 
     def count_on_page(self, page):
-        return sum(symbol in page for symbol in self.symbols)
+        return len(symbol in page for symbol in self.symbols)
 
-    def is_included_in(self, other):
-        #other must be a tile
-        return self.symbols.issubset(other.symbols)
+    # def is_included_in(self, other):
+    #     #other must be a tile
+    #     return self.symbols.issubset(other.symbols)
     
-    def is_included_in_at_least_one_tile_of_the_set(self, tile_set):
-        for t in tile_set:
-            if self.is_included_in(t):
-                return True
+    # def is_included_in_at_least_one_tile_of_the_set(self, tile_set):
+    #     for t in tile_set:
+    #         if self.is_included_in(t):
+    #             return True
 
-        return False
+    #     return False
     
-    def includes_at_least_a_tile_of_the_set(self, tile_set):
-        for t in tile_set:
-            if t.is_included_in(self):
-                return True
+    # def includes_at_least_a_tile_of_the_set(self, tile_set):
+    #     for t in tile_set:
+    #         if t.is_included_in(self):
+    #             return True
 
-        return False
+    #     return False
