@@ -186,17 +186,17 @@ def run(the_input, epsilon):
         # Choosing the representatives
         chi_seed = select_representatives_on_grid(chi, delta, P)
 
-    Cmax = float('inf')
+    c_max = float('inf')
     for my_tuple in chi_seed:
         a = my_tuple[0]
         b = my_tuple[1]
 
         val = max(a,b)
 
-        if val < Cmax:
-            Cmax = val
+        if val < c_max:
+            c_max = val
     
-    return (Cmax, generated_state_count)
+    return (c_max, generated_state_count)
 
 log_result = []
 
