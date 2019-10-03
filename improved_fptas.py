@@ -180,11 +180,11 @@ def run(the_input, epsilon):
 
         # Taking into account the number of states which were generated during this iteration
         generated_state_count += len(chi)
-        
-        run.may_log(i, chi)
 
         # Choosing the representatives
         chi_seed = select_representatives_on_grid(chi, delta, P)
+        
+        run.may_log(i, chi_seed)
 
     best_sol = min(chi_seed, key=lambda state: max(state[0], state[1]))
     c_max = max(best_sol[0], best_sol[1])
