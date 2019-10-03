@@ -28,8 +28,8 @@ class Tile:
     def __eq__(self, other): #eq(a, b) is equivalent to a == b
         return self.symbols == other.symbols
 
-    def count_on_page(self, page):
-        return len(symbol in page for symbol in self.symbols)
+    # def count_on_page(self, page):
+    #     return len(symbol in page for symbol in self.symbols)
 
     # def is_included_in(self, other):
     #     #other must be a tile
