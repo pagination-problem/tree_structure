@@ -111,11 +111,11 @@ def run(the_input, epsilon):
 
         # Taking into account the number of states which were generated during this iteration
         generated_state_count += len(chi)
-        
-        run.may_log(i, chi)
 
         # Choosing the representatives
         chi_seed = select_representatives_on_grid(chi, delta, P)
+        
+        run.may_log(i, chi)
 
     foobar = []
     for state in chi_seed:
