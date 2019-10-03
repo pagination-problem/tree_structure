@@ -105,7 +105,9 @@ def run(the_input, epsilon):
         # Choosing the representatives
         chi_seed = select_representatives_on_grid(chi, delta, P)
 
-    c_max = min(chi_seed, key=lambda state: max(state[0], state[1]))
+    # c_max = min(chi_seed, key=lambda state: max(state[0], state[1]))
+    best_sol = min(chi_seed, key=lambda state: max(state[0], state[1]))
+    c_max = max(best_sol[0], best_sol[1])
     return (c_max, generated_state_count)
 
 log_result = []
