@@ -61,21 +61,6 @@ def filling_the_matrix(the_input, internal_node_count, leaf_count):
             if i >= j:
                 matrix[i][j] = sum(symbol.size for symbol in set_of_symbols_not_assigned_yet)
 
-def selecting_a_representative_for_an_interval(begin, end, the_set):
-    """
-    In this function, we will go through the_set and for each value 'a' between 'begin' and 'end'
-    (begin <= a <= end), we will save the state with the smallest b
-    """
-    save_tuple = None
-    the_min = float('inf')
-    for t in the_set:
-        if begin <= t[0] <= end:
-            if t[1] < the_min:
-                save_tuple = t
-                the_min = t[1]
-
-    return save_tuple
-
 def select_representatives_on_grid(states, delta, upper_bound):
     result = {}
     for state in states:
@@ -115,7 +100,7 @@ def run(the_input, epsilon):
         # Taking into account the number of states which were generated during this iteration
         generated_state_count += len(chi)
         
-        may_log(i, chi)
+        run.may_log(i, chi)
 
         # Choosing the representatives
         chi_seed = select_representatives_on_grid(chi, delta, P)
@@ -124,14 +109,13 @@ def run(the_input, epsilon):
     return (c_max, generated_state_count)
 
 log_result = []
-may_log = lambda *args : None
+run.may_log = lambda *args : None
 
 def set_log_strategy(log):
-    global may_log
 
     def log_states(i, chi):
         log_result.append(f"{i}: {chi}")
     
     if log:
-        may_log = log_states
+        run.may_log = log_states
         
