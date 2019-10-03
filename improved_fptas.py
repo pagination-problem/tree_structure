@@ -5,6 +5,8 @@ from type_tile import Tile
 from type_page import Page
 from type_problem_input import ProblemInput
 
+from numba import jit
+
 # matrix[i][j] = the quantity to add to a machine if we want to assign to it
 # the tile i and if the last tile assigned to it was j
 # i and j are in the LEAF-ONLY INDEX
@@ -46,7 +48,7 @@ from type_problem_input import ProblemInput
 #  |_______|     |_______|          |_______|     |_______|          
 #     M1            M2                 M1            M2
 
-matrix = [[]]
+matrix = []
 
 def filling_the_matrix(the_input, internal_node_offset, leaf_count):
     # As its name says, this function performs the computation of the matrix needed in the FPTAS.
@@ -90,6 +92,7 @@ def filling_the_matrix(the_input, internal_node_offset, leaf_count):
                     size_to_add += s.size
                 matrix[i][j] = size_to_add
 
+@jit
 def select_representatives_on_grid(states, delta, upper_bound):
     result = {}
     for state in states:
@@ -98,6 +101,7 @@ def select_representatives_on_grid(states, delta, upper_bound):
             result[coords] = state
     return set(result.values())
 
+@jit
 def run(the_input, epsilon):
     generated_state_count = 0
     chi_seed = set()
