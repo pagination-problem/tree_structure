@@ -107,8 +107,8 @@ def selecting_a_representative_for_an_interval(begin, end, the_set):
 
 def run(the_input, epsilon):
     number_of_generated_states = 0
-    chi_i_minus_one = set()
-    chi_i_minus_one.add((0,0,0,0)) #We still add the articifial tile t0 with |t0| = 0 and we don't care about the value of alpha in the first state
+    chi_seed = set()
+    chi_seed.add((0,0,0,0)) #We still add the articifial tile t0 with |t0| = 0 and we don't care about the value of alpha in the first state
 
     nb_leaves = 2**the_input.height
     nb_internal_nodes = nb_leaves - 1
@@ -125,11 +125,11 @@ def run(the_input, epsilon):
     # matrix at M[i][i-1] as maybe the tile i = 7 was choosen in the input but the tile nb. 6 was not.
 
     for t in tile_set:
-        chi_i = set()
+        chi = set()
         leaf_index_t = t.leaf_index
         i = leaf_index_t - nb_internal_nodes #index in the LEAF-ONLY index of the tile we are about to schedule
         
-        for my_tuple in chi_i_minus_one:
+        for my_tuple in chi_seed:
             a = my_tuple[0]
             b = my_tuple[1]
             k = my_tuple[2]
@@ -142,7 +142,7 @@ def run(the_input, epsilon):
                 else:
                     m = matrix[i][j]
                 my_tuple = (a + m, b, k, 1)
-                chi_i.add(my_tuple)
+                chi.add(my_tuple)
 
                 # We add the tile t on M2. The last tile on M2 is k.
                 if b == 0: #M2 is empty.
@@ -150,7 +150,7 @@ def run(the_input, epsilon):
                 else:
                     m = matrix[i][k]
                 my_tuple = (a, b + m, j, 0)
-                chi_i.add(my_tuple)
+                chi.add(my_tuple)
 
             else: #the tile i-1 was scheduled on M2.
                 #  We add the tile t on M1. The last tile on M1 is k.
@@ -159,7 +159,7 @@ def run(the_input, epsilon):
                 else:
                     m = matrix[i][k]
                 my_tuple = (a + m, b, j, 1)
-                chi_i.add(my_tuple)
+                chi.add(my_tuple)
 
                 # We add the tile t on M2. The last tile on M2 is i-1.
                 if b == 0: #M2 is empty.
@@ -167,28 +167,28 @@ def run(the_input, epsilon):
                 else:
                     m = matrix[i][j]
                 my_tuple = (a, b + m, k, 0)
-                chi_i.add(my_tuple)
+                chi.add(my_tuple)
 
         j = i
 
         # Taking into account the number of states which were generated during this iteration
-        number_of_generated_states += len(chi_i)
+        number_of_generated_states += len(chi)
         
-        run.may_log(i, chi_i)
+        run.may_log(i, chi)
 
         # Choosing the representative
-        temp_set = sorted(chi_i, key=lambda my_tuple: my_tuple[0])
+        temp_set = sorted(chi, key=lambda my_tuple: my_tuple[0])
         d = 0
-        chi_i_minus_one = set()
+        chi_seed = set()
         while d <= P:
             end = d + delta
             the_representative = selecting_a_representative_for_an_interval(d, end, temp_set)
             if (the_representative != None):
-                chi_i_minus_one.add(the_representative)
+                chi_seed.add(the_representative)
             d = d + delta
 
     Cmax = float('inf')
-    for my_tuple in chi_i_minus_one:
+    for my_tuple in chi_seed:
         a = my_tuple[0]
         b = my_tuple[1]
 
