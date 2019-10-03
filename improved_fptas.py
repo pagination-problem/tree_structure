@@ -105,6 +105,14 @@ def selecting_a_representative_for_an_interval(begin, end, the_set):
 
     return save_tuple
 
+def select_representatives_on_grid(states, delta, upper_bound):
+    result = {}
+    for state in states:
+        coords = (int(state[0] / delta), int(state[1] / delta))
+        if coords not in result or state[0] < result[coords][0]:
+            result[coords] = state
+    return set(result.values())
+
 def run(the_input, epsilon):
     #
     # Quadruplet used in this version :
@@ -175,16 +183,8 @@ def run(the_input, epsilon):
         
         run.may_log(i, chi)
 
-        # Choosing the representative
-        temp_set = sorted(chi, key=lambda my_tuple: my_tuple[0])
-        d = 0
-        chi_seed = set()
-        while d <= P:
-            end = d + delta
-            the_representative = selecting_a_representative_for_an_interval(d, end, temp_set)
-            if (the_representative != None):
-                chi_seed.add(the_representative)
-            d = d + delta
+        # Choosing the representatives
+        chi_seed = select_representatives_on_grid(chi, delta, P)
 
     Cmax = float('inf')
     for my_tuple in chi_seed:
