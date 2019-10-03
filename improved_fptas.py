@@ -99,7 +99,7 @@ def select_representatives_on_grid(states, delta, upper_bound):
     return set(result.values())
 
 def run(the_input, epsilon):
-    number_of_generated_states = 0
+    generated_state_count = 0
     chi_seed = set()
     chi_seed.add((0,0,0,0)) #We still add the articifial tile t0 with |t0| = 0 and we don't care about the value of alpha in the first state
 
@@ -160,7 +160,7 @@ def run(the_input, epsilon):
         j = i
 
         # Taking into account the number of states which were generated during this iteration
-        number_of_generated_states += len(chi)
+        generated_state_count += len(chi)
 
         # Choosing the representative
         chi_seed = select_representatives_on_grid(chi, delta, P)
@@ -177,7 +177,7 @@ def run(the_input, epsilon):
         if val < c_max:
             c_max = val
     
-    return (c_max, number_of_generated_states)
+    return (c_max, generated_state_count)
 
 log_result = []
 
