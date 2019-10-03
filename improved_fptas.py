@@ -167,16 +167,10 @@ def run(the_input, epsilon):
         
         run.may_log(i, chi)
 
-    c_max = float('inf')
-    for my_tuple in chi_seed:
-        a = my_tuple[0]
-        b = my_tuple[1]
-
-        val = max(a,b)
-
-        if val < c_max:
-            c_max = val
-    
+    c_maxes = []
+    for state in chi_seed:
+        c_maxes.append(max(state[0], state[1]))
+    c_max = min(c_maxes)
     return (c_max, generated_state_count)
 
 log_result = []
