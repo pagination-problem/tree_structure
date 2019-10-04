@@ -66,8 +66,7 @@ def filling_the_matrix(the_input, internal_node_offset, leaf_count):
     # Of course, all the indexes used in the matrix are in LEAF-ONLY index. See the top of
     # this document to have explanation of whats does this mean.
     
-    global matrix
-    matrix = [['x' for x in range(leaf_count+1)] for y in range(leaf_count+1)]
+    matrix.extend([['x' for x in range(leaf_count+1)] for y in range(leaf_count+1)])
 
     tile_set = sorted(the_input.tileSet, key=lambda tile: tile.leaf_index)
     for t in tile_set:
