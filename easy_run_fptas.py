@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*
 import tools
 import time
-import fptas
+from fptas_object import Fptas
 import improved_fptas
 import datetime
 import sys
@@ -25,8 +25,9 @@ if __name__ == '__main__':
 
     # Apply log strategy
 
+    solver = Fptas()
     output_mode = "w" if log else "a"
-    fptas.set_log_strategy(log)
+    solver.set_log_strategy(log)
     improved_fptas.set_log_strategy(log)
 
     # Run
@@ -53,7 +54,8 @@ if __name__ == '__main__':
         print(f"input number : {filename} at {datetime.datetime.now()}")
 
         start1 = time.time()
-        (Cmax1, number_of_generated_states1) = fptas.run(my_input, epsilon)
+        solver.initialize(my_input)
+        (Cmax1, number_of_generated_states1) = solver.run(epsilon)
         stop1 = time.time()
         print("Time needed for FPTAS: ", stop1 - start1)
         print(f"FPTAS : Cmax =  {Cmax1}; number of states generated = {number_of_generated_states1}")
@@ -73,7 +75,7 @@ if __name__ == '__main__':
             log_filename = f"{output_directory}/{filename[:-5]}_{epsilon}-epsilon.txt"
             result = [
                 "FPTAS:",
-                "\n".join(fptas.log_result),
+                "\n".join(solver.log_result),
                 "Improved FPTAS:",
                 "\n".join(improved_fptas.log_result),
             ]
