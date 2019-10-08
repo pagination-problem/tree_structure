@@ -108,7 +108,7 @@ def select_representatives_on_grid(states, delta, upper_bound):
     result = {}
     for state in states:
         coords = (int(state[0] / delta), int(state[1] / delta))
-        if coords not in result or state[0] < result[coords][0]:
+        if coords not in result or state < result[coords]:
             result[coords] = state
     return set(result.values())
 
