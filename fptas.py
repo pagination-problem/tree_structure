@@ -65,7 +65,7 @@ def select_representatives_on_grid(states, delta, upper_bound):
     result = {}
     for state in states:
         coords = (int(state[0] / delta), int(state[1] / delta))
-        if coords not in result or state[0] < result[coords][0]:
+        if coords not in result or state < result[coords]:
             result[coords] = state
     return set(result.values())
 
@@ -99,13 +99,15 @@ def run(the_input, epsilon):
 
         # Taking into account the number of states which were generated during this iteration
         generated_state_count += len(chi)
-        
-        run.may_log(i, chi)
 
         # Choosing the representatives
         chi_seed = select_representatives_on_grid(chi, delta, P)
 
-    c_max = min(chi_seed, key=lambda state: max(state[0], state[1]))
+        run.may_log(i, chi_seed)
+
+    # c_max = min(chi_seed, key=lambda state: max(state[0], state[1]))
+    best_sol = min(chi_seed, key=lambda state: max(state[0], state[1]))
+    c_max = max(best_sol[0], best_sol[1])
     return (c_max, generated_state_count)
 
 log_result = []
@@ -113,7 +115,7 @@ log_result = []
 def set_log_strategy(log):
 
     def log_states(i, chi):
-        log_result.append(f"{i}: {chi}")
+        log_result.append(f"{i}: {sorted(chi)}")
     
     if log:
         run.may_log = log_states

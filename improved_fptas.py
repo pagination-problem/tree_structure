@@ -48,9 +48,9 @@ from type_problem_input import ProblemInput
 
 matrix = [[]]
 
-def filling_the_matrix(the_input, nb_internal_nodes, nb_leaves):
+def filling_the_matrix(the_input, internal_node_offset, leaf_count):
     # As its name says, this function performs the computation of the matrix needed in the FPTAS.
-    # It will create a square matrix with nb_leaves + 1 rows and nb_leaves + 1 columns.
+    # It will create a square matrix with leaf_count + 1 rows and leaf_count + 1 columns.
     # The first row will be left empty and shall never be looked at.
     # the first colomn should be interpreted as follows: if nothing has been scheduled on the machine, how
     # many symbols should I add to the machine to be able to assign the tile number i (with i a row number). Of
@@ -66,13 +66,12 @@ def filling_the_matrix(the_input, nb_internal_nodes, nb_leaves):
     # Of course, all the indexes used in the matrix are in LEAF-ONLY index. See the top of
     # this document to have explanation of whats does this mean.
     
-    global matrix
-    matrix = [['x' for x in range(nb_leaves+1)] for y in range(nb_leaves+1)]
+    matrix.extend([['x' for x in range(leaf_count+1)] for y in range(leaf_count+1)])
 
     tile_set = sorted(the_input.tileSet, key=lambda tile: tile.leaf_index)
     for t in tile_set:
         leaf_index_t = t.leaf_index
-        i = leaf_index_t - nb_internal_nodes
+        i = leaf_index_t - internal_node_offset
         matrix[i][0]= len(t)
 
     for t1 in tile_set:
@@ -81,8 +80,8 @@ def filling_the_matrix(the_input, nb_internal_nodes, nb_leaves):
             leaf_index_t1 = t1.leaf_index
             leaf_index_t2 = t2.leaf_index
 
-            i = leaf_index_t1 - nb_internal_nodes
-            j = leaf_index_t2 - nb_internal_nodes
+            i = leaf_index_t1 - internal_node_offset
+            j = leaf_index_t2 - internal_node_offset
 
             if i >= j:
                 size_to_add = 0
@@ -105,18 +104,30 @@ def selecting_a_representative_for_an_interval(begin, end, the_set):
 
     return save_tuple
 
-def run(the_input, epsilon):
-    number_of_generated_states = 0
-    chi_i_minus_one = set()
-    chi_i_minus_one.add((0,0,0,0)) #We still add the articifial tile t0 with |t0| = 0 and we don't care about the value of alpha in the first state
+def select_representatives_on_grid(states, delta, upper_bound):
+    result = {}
+    for state in states:
+        coords = (int(state[0] / delta), int(state[1] / delta))
+        if coords not in result or state < result[coords]:
+            result[coords] = state
+    return set(result.values())
 
-    nb_leaves = 2**the_input.height
-    nb_internal_nodes = nb_leaves - 1
+def run(the_input, epsilon):
+    #
+    # Quadruplet used in this version :
+    #     [a, b, k, alpha]
+    #
+
+    generated_state_count = 0
+    chi_seed = {(0, 0, 0, 0)} #We still add the articifial tile t0 with |t0| = 0 and we don't care about the value of alpha in the first state
+
+    leaf_count = 2**the_input.height
+    internal_node_offset = leaf_count - 1
 
     P = the_input.get_sum_symbol_sizes()
     delta = (epsilon * P) /  (2 * len(the_input))
     
-    filling_the_matrix(the_input, nb_internal_nodes, nb_leaves)
+    filling_the_matrix(the_input, internal_node_offset, leaf_count)
 
     tile_set = sorted(the_input.tileSet, key=lambda tile: tile.leaf_index)
 
@@ -125,16 +136,11 @@ def run(the_input, epsilon):
     # matrix at M[i][i-1] as maybe the tile i = 7 was choosen in the input but the tile nb. 6 was not.
 
     for t in tile_set:
-        chi_i = set()
-        leaf_index_t = t.leaf_index
-        i = leaf_index_t - nb_internal_nodes #index in the LEAF-ONLY index of the tile we are about to schedule
+        chi = set()
+        i = t.leaf_index - internal_node_offset #index in the LEAF-ONLY index of the tile we are about to schedule
         
-        for my_tuple in chi_i_minus_one:
-            a = my_tuple[0]
-            b = my_tuple[1]
-            k = my_tuple[2]
-            alpha = my_tuple[3]
-
+        for (a, b, k, alpha) in chi_seed:
+            
             if alpha == 1 : #the tile i-1 was scheduled on M1
                 #  We add the tile t on M1. The last tile on M1 is the tile before i in the tree.
                 if a == 0: #M1 is empty.
@@ -142,7 +148,7 @@ def run(the_input, epsilon):
                 else:
                     m = matrix[i][j]
                 my_tuple = (a + m, b, k, 1)
-                chi_i.add(my_tuple)
+                chi.add(my_tuple)
 
                 # We add the tile t on M2. The last tile on M2 is k.
                 if b == 0: #M2 is empty.
@@ -150,7 +156,7 @@ def run(the_input, epsilon):
                 else:
                     m = matrix[i][k]
                 my_tuple = (a, b + m, j, 0)
-                chi_i.add(my_tuple)
+                chi.add(my_tuple)
 
             else: #the tile i-1 was scheduled on M2.
                 #  We add the tile t on M1. The last tile on M1 is k.
@@ -159,7 +165,7 @@ def run(the_input, epsilon):
                 else:
                     m = matrix[i][k]
                 my_tuple = (a + m, b, j, 1)
-                chi_i.add(my_tuple)
+                chi.add(my_tuple)
 
                 # We add the tile t on M2. The last tile on M2 is i-1.
                 if b == 0: #M2 is empty.
@@ -167,44 +173,28 @@ def run(the_input, epsilon):
                 else:
                     m = matrix[i][j]
                 my_tuple = (a, b + m, k, 0)
-                chi_i.add(my_tuple)
+                chi.add(my_tuple)
 
         j = i
 
         # Taking into account the number of states which were generated during this iteration
-        number_of_generated_states += len(chi_i)
+        generated_state_count += len(chi)
+
+        # Choosing the representatives
+        chi_seed = select_representatives_on_grid(chi, delta, P)
         
-        run.may_log(i, chi_i)
+        run.may_log(i, chi_seed)
 
-        # Choosing the representative
-        temp_set = sorted(chi_i, key=lambda my_tuple: my_tuple[0])
-        d = 0
-        chi_i_minus_one = set()
-        while d <= P:
-            end = d + delta
-            the_representative = selecting_a_representative_for_an_interval(d, end, temp_set)
-            if (the_representative != None):
-                chi_i_minus_one.add(the_representative)
-            d = d + delta
-
-    Cmax = float('inf')
-    for my_tuple in chi_i_minus_one:
-        a = my_tuple[0]
-        b = my_tuple[1]
-
-        val = max(a,b)
-
-        if val < Cmax:
-            Cmax = val
-    
-    return (Cmax, number_of_generated_states)
+    best_sol = min(chi_seed, key=lambda state: max(state[0], state[1]))
+    c_max = max(best_sol[0], best_sol[1])
+    return (c_max, generated_state_count)
 
 log_result = []
 
 def set_log_strategy(log):
 
     def log_states(i, chi):
-        log_result.append(f"{i}: {chi}")
+        log_result.append(f"{i}: {sorted(chi)}")
     
     if log:
         run.may_log = log_states
