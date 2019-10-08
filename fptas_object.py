@@ -51,6 +51,30 @@ class Fptas:
             chi_seed = self.select_representatives_on_grid(chi)
         c_max = min(chi_seed, key=lambda state: max(state[0], state[1]))
         return (c_max, generated_state_count)
+    
+    def run_improved(self, epsilon):
+        generated_state_count = 0
+        chi_seed = {(0, 0, 0, 0)}
+        self.upper_bound = self.the_input.get_sum_symbol_sizes()
+        self.delta = (epsilon * self.upper_bound) /  (2 * len(self.the_input))
+        tile_set = sorted(self.the_input.tileSet, key=lambda tile: tile.leaf_index)
+        j = 0
+        for t in tile_set:
+            chi = set()
+            i = t.leaf_index - self.internal_node_offset #index (in the leaf-only index) of the tile we are about to schedule
+            for (a, b, k, alpha) in chi_seed:
+                if alpha == 1:
+                    chi.add((a + self.matrix[i][j if a else 0], b, k, 1))
+                    chi.add((a, b + self.matrix[i][k if b else 0], j, 0))
+                else:
+                    chi.add((a + self.matrix[i][k if a else 0], b, j, 1))
+                    chi.add((a, b + self.matrix[i][j if b else 0], k, 0))
+            j = i
+            generated_state_count += len(chi)
+            self.may_log(i, chi)
+            chi_seed = self.select_representatives_on_grid(chi)
+        c_max = min(chi_seed, key=lambda state: max(state[0], state[1]))
+        return (c_max, generated_state_count)
 
     def select_representatives_on_grid(self, states):
         result = {}

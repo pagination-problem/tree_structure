@@ -53,18 +53,22 @@ if __name__ == '__main__':
         Cmax2 = number_of_generated_states2 = 0
         print(f"input number : {filename} at {datetime.datetime.now()}")
 
-        start1 = time.time()
         solver.initialize(my_input)
+
+        start1 = time.time()
         (Cmax1, number_of_generated_states1) = solver.run(epsilon)
         stop1 = time.time()
         print("Time needed for FPTAS: ", stop1 - start1)
         print(f"FPTAS : Cmax =  {Cmax1}; number of states generated = {number_of_generated_states1}")
+        log_result_1 = solver.log_result[:]
+        solver.log_result = []
 
         start2 = time.time()
-        (Cmax2, number_of_generated_states2) =  improved_fptas.run(my_input, epsilon)
+        (Cmax2, number_of_generated_states2) =  solver.run_improved(epsilon)
         stop2 = time.time()
         print("Time needed for iFPTAS: ", stop2 - start2)
         print(f"iFPTAS : Cmax =  {Cmax2}; number of states generated = {number_of_generated_states2}")
+        log_result_2 = solver.log_result[:]
         
         if not log:
             my_str = f"{filename[:-5]};{Cmax1};{stop1-start1};{number_of_generated_states1};{Cmax2};{stop2-start2};{number_of_generated_states2}"
@@ -75,9 +79,9 @@ if __name__ == '__main__':
             log_filename = f"{output_directory}/{filename[:-5]}_{epsilon}-epsilon.txt"
             result = [
                 "FPTAS:",
-                "\n".join(solver.log_result),
+                "\n".join(log_result_1),
                 "Improved FPTAS:",
-                "\n".join(improved_fptas.log_result),
+                "\n".join(log_result_2),
             ]
             with open(log_filename, "w") as f:
                 f.write("\n".join(result))
