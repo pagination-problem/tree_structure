@@ -115,7 +115,7 @@ log_result = []
 def set_log_strategy(log):
 
     def log_states(i, chi):
-        log_result.append(f"{i}: {chi}")
+        log_result.append(f"{i}: {sorted(chi)}")
     
     if log:
         run.may_log = log_states
