@@ -21,13 +21,13 @@ class Fptas:
         leaf_count = 2 ** the_input.height
         self.internal_node_offset = leaf_count - 1
         self.matrix = [['x' for x in range(leaf_count+1)] for y in range(leaf_count+1)]
-        tile_set = sorted(the_input.tileSet, key=lambda tile: tile.leaf_index)
-        for t in tile_set:
+        tiles = sorted(the_input.tileSet, key=lambda tile: tile.leaf_index)
+        for t in tiles:
             leaf_index_t = t.leaf_index
             i = leaf_index_t - self.internal_node_offset
             self.matrix[i][0]= len(t)
-        for t1 in tile_set:
-            for t2 in tile_set:
+        for t1 in tiles:
+            for t2 in tiles:
                 set_of_symbols_not_assigned_yet = t1.symbols.difference(t2.symbols)
                 i = t1.leaf_index - self.internal_node_offset
                 j = t2.leaf_index - self.internal_node_offset
@@ -36,16 +36,16 @@ class Fptas:
 
     def run(self, epsilon):
         generated_state_count = 0
-        chi_seed = {(0, 0, 0, 0)}
+        chi_seed = [(0, 0, 0, 0)]
         self.upper_bound = self.the_input.get_sum_symbol_sizes()
         self.delta = (epsilon * self.upper_bound) /  (2 * len(self.the_input))
-        tile_set = sorted(self.the_input.tileSet, key=lambda tile: tile.leaf_index)
-        for t in tile_set:
-            chi = set()
+        tiles = sorted(self.the_input.tileSet, key=lambda tile: tile.leaf_index)
+        for t in tiles:
+            chi = []
             i = t.leaf_index - self.internal_node_offset #index (in the leaf-only index) of the tile we are about to schedule
             for (a, b, j, k) in chi_seed:
-                chi.add((a + self.matrix[i][j], b, i, k))
-                chi.add((a, b + self.matrix[i][k], j, i))
+                chi.append((a + self.matrix[i][j], b, i, k))
+                chi.append((a, b + self.matrix[i][k], j, i))
             generated_state_count += len(chi)
             self.may_log(i, chi)
             chi_seed = self.select_representatives_on_grid(chi)
@@ -54,21 +54,21 @@ class Fptas:
     
     def run_improved(self, epsilon):
         generated_state_count = 0
-        chi_seed = {(0, 0, 0, 0)}
+        chi_seed = [(0, 0, 0, 0)]
         self.upper_bound = self.the_input.get_sum_symbol_sizes()
         self.delta = (epsilon * self.upper_bound) /  (2 * len(self.the_input))
-        tile_set = sorted(self.the_input.tileSet, key=lambda tile: tile.leaf_index)
+        tiles = sorted(self.the_input.tileSet, key=lambda tile: tile.leaf_index)
         j = 0
-        for t in tile_set:
-            chi = set()
+        for t in tiles:
+            chi = []
             i = t.leaf_index - self.internal_node_offset #index (in the leaf-only index) of the tile we are about to schedule
             for (a, b, k, alpha) in chi_seed:
                 if alpha == 1:
-                    chi.add((a + self.matrix[i][j if a else 0], b, k, 1))
-                    chi.add((a, b + self.matrix[i][k if b else 0], j, 0))
+                    chi.append((a + self.matrix[i][j if a else 0], b, k, 1))
+                    chi.append((a, b + self.matrix[i][k if b else 0], j, 0))
                 else:
-                    chi.add((a + self.matrix[i][k if a else 0], b, j, 1))
-                    chi.add((a, b + self.matrix[i][j if b else 0], k, 0))
+                    chi.append((a + self.matrix[i][k if a else 0], b, j, 1))
+                    chi.append((a, b + self.matrix[i][j if b else 0], k, 0))
             j = i
             generated_state_count += len(chi)
             self.may_log(i, chi)
@@ -82,4 +82,4 @@ class Fptas:
             coords = (int(state[0] / self.delta), int(state[1] / self.delta))
             if coords not in result or state < result[coords]:
                 result[coords] = state
-        return set(result.values())
+        return list(result.values())
