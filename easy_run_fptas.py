@@ -73,9 +73,9 @@ if __name__ == '__main__':
             log_filename = f"{output_directory}/{filename[:-5]}_{epsilon}-epsilon.txt"
             result = [
                 "FPTAS:",
-                "\n".join(fptas.log_result),
+                "\n".join(sorted(fptas.log_result)),
                 "Improved FPTAS:",
-                "\n".join(improved_fptas.log_result),
+                "\n".join(sorted(improved_fptas.log_result)),
             ]
             with open(log_filename, "w") as f:
                 f.write("\n".join(result))
