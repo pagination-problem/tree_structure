@@ -5,26 +5,31 @@ from type_tile import Tile
 from type_page import Page
 from type_problem_input import ProblemInput
 
-FLOAT_CORRECTION = 1e-6
-
 class Fptas:
-
+    
     def set_log_strategy(self, log):
         self.log_result = []
         if log:
+            self.may_reset_log = lambda: self.log_result.clear()
             self.may_log = lambda i, chi: self.log_result.append(f"{i}: {sorted(chi)}")
         else:
-            self.may_log = lambda *args : None
+            self.may_reset_log = lambda: None
+            self.may_log = lambda *args: None
+    
+    def set_engine_strategy(self, engine_name):
+        if engine_name == "basic":
+            self.launch_engine = self.basic_engine
+        elif engine_name == "improved":
+            self.launch_engine = self.improved_engine
 
-    def initialize(self, the_input):
-        self.the_input = the_input
-        leaf_count = 2 ** the_input.height
+    def set_instance(self, instance):
+        self.instance = instance
+        leaf_count = 2 ** instance.height
         self.internal_node_offset = leaf_count - 1
         self.matrix = [['x' for x in range(leaf_count+1)] for y in range(leaf_count+1)]
-        tiles = sorted(the_input.tileSet, key=lambda tile: tile.leaf_index)
+        tiles = sorted(instance.tileSet, key=lambda tile: tile.leaf_index)
         for t in tiles:
-            leaf_index_t = t.leaf_index
-            i = leaf_index_t - self.internal_node_offset
+            i = t.leaf_index - self.internal_node_offset
             self.matrix[i][0]= len(t)
         for t1 in tiles:
             for t2 in tiles:
@@ -35,33 +40,31 @@ class Fptas:
                     self.matrix[i][j] = sum(symbol.size for symbol in set_of_symbols_not_assigned_yet)
 
     def run(self, epsilon):
-        generated_state_count = 0
+        self.may_reset_log()
+        self.generated_state_count = 0
+        self.upper_bound = self.instance.get_sum_symbol_sizes()
+        self.delta = (epsilon * self.upper_bound) /  (2 * len(self.instance))
+        self.tiles = sorted(self.instance.tileSet, key=lambda tile: tile.leaf_index)
         chi_seed = [(0, 0, 0, 0)]
-        self.upper_bound = self.the_input.get_sum_symbol_sizes()
-        self.delta = (epsilon * self.upper_bound) /  (2 * len(self.the_input))
-        tiles = sorted(self.the_input.tileSet, key=lambda tile: tile.leaf_index)
-        for t in tiles:
+        self.launch_engine(chi_seed)
+        self.c_max = max(min(chi_seed, key=lambda state: max(state[0], state[1]))[:2])
+
+    def basic_engine(self, chi_seed):
+        for t in self.tiles:
             chi = []
-            i = t.leaf_index - self.internal_node_offset #index (in the leaf-only index) of the tile we are about to schedule
+            i = t.leaf_index - self.internal_node_offset
             for (a, b, j, k) in chi_seed:
                 chi.append((a + self.matrix[i][j], b, i, k))
                 chi.append((a, b + self.matrix[i][k], j, i))
-            generated_state_count += len(chi)
-            self.may_log(i, chi)
+            self.generated_state_count += len(chi)
             chi_seed = self.select_representatives_on_grid(chi)
-        c_max = min(chi_seed, key=lambda state: max(state[0], state[1]))
-        return (c_max, generated_state_count)
-    
-    def run_improved(self, epsilon):
-        generated_state_count = 0
-        chi_seed = [(0, 0, 0, 0)]
-        self.upper_bound = self.the_input.get_sum_symbol_sizes()
-        self.delta = (epsilon * self.upper_bound) /  (2 * len(self.the_input))
-        tiles = sorted(self.the_input.tileSet, key=lambda tile: tile.leaf_index)
+            self.may_log(i, chi_seed)
+
+    def improved_engine(self, chi_seed):
         j = 0
-        for t in tiles:
+        for t in self.tiles:
             chi = []
-            i = t.leaf_index - self.internal_node_offset #index (in the leaf-only index) of the tile we are about to schedule
+            i = t.leaf_index - self.internal_node_offset
             for (a, b, k, alpha) in chi_seed:
                 if alpha == 1:
                     chi.append((a + self.matrix[i][j if a else 0], b, k, 1))
@@ -70,11 +73,9 @@ class Fptas:
                     chi.append((a + self.matrix[i][k if a else 0], b, j, 1))
                     chi.append((a, b + self.matrix[i][j if b else 0], k, 0))
             j = i
-            generated_state_count += len(chi)
-            self.may_log(i, chi)
+            self.generated_state_count += len(chi)
             chi_seed = self.select_representatives_on_grid(chi)
-        c_max = min(chi_seed, key=lambda state: max(state[0], state[1]))
-        return (c_max, generated_state_count)
+            self.may_log(i, chi_seed)
 
     def select_representatives_on_grid(self, states):
         result = {}
