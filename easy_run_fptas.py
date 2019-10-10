@@ -26,8 +26,6 @@ if __name__ == '__main__':
     # Apply log strategy
 
     output_mode = "w" if log else "a"
-    fptas.set_log_strategy(log)
-    improved_fptas.set_log_strategy(log)
 
     # Run
 
@@ -52,12 +50,14 @@ if __name__ == '__main__':
         Cmax2 = number_of_generated_states2 = 0
         print(f"input number : {filename} at {datetime.datetime.now()}")
 
+        fptas.set_log_strategy(log)
         start1 = time.time()
         (Cmax1, number_of_generated_states1) = fptas.run(my_input, epsilon)
         stop1 = time.time()
         print("Time needed for FPTAS: ", stop1 - start1)
         print(f"FPTAS : Cmax =  {Cmax1}; number of states generated = {number_of_generated_states1}")
 
+        improved_fptas.set_log_strategy(log)
         start2 = time.time()
         (Cmax2, number_of_generated_states2) =  improved_fptas.run(my_input, epsilon)
         stop2 = time.time()
@@ -73,9 +73,9 @@ if __name__ == '__main__':
             log_filename = f"{output_directory}/{filename[:-5]}_{epsilon}-epsilon.txt"
             result = [
                 "FPTAS:",
-                "\n".join(fptas.log_result),
+                "\n".join(fptas.run.log_result),
                 "Improved FPTAS:",
-                "\n".join(improved_fptas.log_result),
+                "\n".join(improved_fptas.run.log_result),
             ]
             with open(log_filename, "w") as f:
                 f.write("\n".join(result))
