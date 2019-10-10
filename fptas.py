@@ -47,32 +47,32 @@ def filling_the_matrix(the_input, internal_node_offset, leaf_count):
     
     matrix.extend([['x' for x in range(leaf_count+1)] for y in range(leaf_count+1)])
 
-    tiles = sorted(the_input.tileSet, key=lambda tile: tile.leaf_index)
-    for t in tiles:
+    tile_set = sorted(the_input.tileSet, key=lambda tile: tile.leaf_index)
+    for t in tile_set:
         leaf_index_t = t.leaf_index
         i = leaf_index_t - internal_node_offset
         matrix[i][0]= len(t)
 
-    for t1 in tiles:
-        for t2 in tiles:
+    for t1 in tile_set:
+        for t2 in tile_set:
             set_of_symbols_not_assigned_yet = t1.symbols.difference(t2.symbols)
             i = t1.leaf_index - internal_node_offset
             j = t2.leaf_index - internal_node_offset
             if i >= j:
                 matrix[i][j] = sum(symbol.size for symbol in set_of_symbols_not_assigned_yet)
 
-def select_representatives_on_grid(states, delta):
+def select_representatives_on_grid(states, delta, upper_bound):
     result = {}
     for state in states:
         coords = (int(state[0] / delta), int(state[1] / delta))
         if coords not in result or state < result[coords]:
             result[coords] = state
-    return list(result.values())
+    return set(result.values())
 
 def run(the_input, epsilon):
 
     generated_state_count = 0
-    chi_seed = [(0, 0, 0, 0)]
+    chi_seed = {(0, 0, 0, 0)}
 
     leaf_count = 2 ** the_input.height
     internal_node_offset = leaf_count - 1
@@ -82,26 +82,26 @@ def run(the_input, epsilon):
     
     filling_the_matrix(the_input, internal_node_offset, leaf_count)
 
-    tiles = sorted(the_input.tileSet, key=lambda tile: tile.leaf_index)
+    tile_set = sorted(the_input.tileSet, key=lambda tile: tile.leaf_index)
 
-    for t in tiles:
-        chi = []
+    for t in tile_set:
+        chi = set()
         i = t.leaf_index - internal_node_offset #index (in the leaf-only index) of the tile we are about to schedule
         
         for (a, b, j, k) in chi_seed:
             # We add tile t on M1
             m = matrix[i][j]
-            chi.append((a + m, b, i, k))
+            chi.add((a + m, b, i, k))
 
             # We add tile t on M2
             m = matrix[i][k]
-            chi.append((a, b + m, j, i))
+            chi.add((a, b + m, j, i))
 
         # Taking into account the number of states which were generated during this iteration
         generated_state_count += len(chi)
 
         # Choosing the representatives
-        chi_seed = select_representatives_on_grid(chi, delta)
+        chi_seed = select_representatives_on_grid(chi, delta, P)
 
         run.may_log(i, chi_seed)
 
@@ -110,14 +110,14 @@ def run(the_input, epsilon):
     c_max = max(best_sol[0], best_sol[1])
     return (c_max, generated_state_count)
 
-log_result = []
-
 def set_log_strategy(log):
 
     def log_states(i, chi):
-        log_result.append(f"{i}: {sorted(chi)}")
+        run.log_result.append(f"{i}: {sorted(chi)}")
     
     if log:
+        run.log_result = []
         run.may_log = log_states
     else:
         run.may_log = lambda *args : None
+        
