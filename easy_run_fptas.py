@@ -32,6 +32,7 @@ if __name__ == '__main__':
     print(f"Beginning of the run at {datetime.datetime.now()}")
 
     output_filename = f"{output_directory}/{output_prefix}_{tile_count}-tiles_{epsilon}-epsilon.txt"
+    print(output_filename)
     already_processed = set()
     if not log and os.path.isfile(f"{output_filename}"):
         with open(output_filename) as f:
