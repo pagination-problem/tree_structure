@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*
+import os
 from type_problem_input import ProblemInput
 from type_symbol import Symbol
 from type_tile import Tile
@@ -31,7 +32,9 @@ def test_of_the_creation_and_of_the_characterics():
     my_input = ProblemInput({t1, t2, t3}, "input_test")
     print(my_input)
     print(my_input.full_instance_to_str())
-    my_input.write_instance_in_text_file("C:\\Users\\sarah\\Documents\\These\\2,tree-merging,Cmax\\FPTAS_for_tree_Pagination\\Programmation\\Inputs\\test\\")
+    root = os.path.dirname(__file__)
+    abs_path = os.path.join(root, "data_for_tests")
+    my_input.write_instance_in_text_file(abs_path)
     print("test_of_the_creation_and_of_the_characterics : everything is fine.\n")
 
 def test_of_the_creation_and_of_the_characterics_with_opt():
