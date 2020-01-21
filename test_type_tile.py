@@ -4,7 +4,7 @@ from type_symbol import Symbol
 from type_tile import Tile
 import tools
 
-def creation_of_a_tile():
+def test_creation_of_a_tile():
     size1 = 4
     size2 = 2
     size3 = 7
@@ -22,7 +22,7 @@ def creation_of_a_tile():
 
     assert len(t1) == sum_size, "It says that the tile size is not equal to 6 : problem"
 
-# def creation_of_three_different_tiles():
+# def test_creation_of_three_different_tiles():
 #     size_s1 = 4
 #     size_s2 = 2
 #     sum_size_s1_s2 = size_s1 + size_s2
@@ -62,7 +62,7 @@ def test_of_getting_the_leaf_out_of_a_tile():
 
 if __name__ == '__main__':
     print("Begin.\n")
-    creation_of_a_tile()
-    #creation_of_three_different_tiles()
+    test_creation_of_a_tile()
+    # test_creation_of_three_different_tiles()
     test_of_getting_the_leaf_out_of_a_tile()
     print("End.")
