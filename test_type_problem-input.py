@@ -79,7 +79,9 @@ def test_of_json_writing():
     Cmax = max(C1, C2)
 
     my_input = ProblemInput({t1, t2, t3, t4}, "IMPORTANT", -1, -1, Cmax, {t1, t2}, {t3, t4})
-    my_input.write_instance_in_json_file("C:\\Users\\sarah\\Documents\\These\\2,tree-merging,Cmax\\FPTAS_for_tree_Pagination\\Programmation\\Inputs\\test\\")
+    root = os.path.dirname(__file__)
+    abs_path = os.path.join(root, "data_for_tests")
+    my_input.write_instance_in_json_file(abs_path)
     print("test_of_json_writing : everything is fine.\n")
 
 if __name__ == '__main__':
