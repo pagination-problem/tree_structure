@@ -65,7 +65,7 @@ def test_of_getting_the_leaf_out_of_a_tile():
 
 if __name__ == '__main__':
     print("Begin.\n")
-    #creation_of_a_tile()
+    creation_of_a_tile()
     #creation_of_three_different_tiles()
     test_of_getting_the_leaf_out_of_a_tile()
     print("End.")
