@@ -74,8 +74,8 @@ def test_of_json_writing():
     t3 = Tile({s4, s5})
     t4 = Tile({s5, s6})
 
-    C1 = t1.size() + t2.size() - s2.size
-    C2 = t3.size() + t4.size() - s5.size
+    C1 = len(t1) + len(t2) - s2.size
+    C2 = len(t3) + len(t4) - s5.size
     Cmax = max(C1, C2)
 
     my_input = ProblemInput({t1, t2, t3, t4}, "IMPORTANT", -1, -1, Cmax, {t1, t2}, {t3, t4})
