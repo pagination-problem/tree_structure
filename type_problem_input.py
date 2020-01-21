@@ -2,6 +2,7 @@
 
 import json
 import re
+import os
 
 from functools import reduce #For the reduce function 
 from collections import Counter #For the Counter function 
@@ -153,7 +154,7 @@ class ProblemInput(list) :
         return ",\n".join(result)
 
     def write_instance_in_json_file(self, directory_path):
-        directory_path = directory_path + self.name + ".json"
+        directory_path = os.path.join(directory_path, self.name + ".json")
 
         temp_L_1 = list()
         for t in self.tileSet:

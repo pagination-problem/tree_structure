@@ -92,5 +92,5 @@ if __name__ == '__main__':
     print("Begin.\n")
     # test_of_the_creation_and_of_the_characterics()
     # test_of_the_creation_and_of_the_characterics_with_opt()
-    # test_of_json_writing()
+    test_of_json_writing()
     print("End.")
