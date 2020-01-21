@@ -107,8 +107,8 @@ def truc():
 
 if __name__ == '__main__':
     print("Begin.\n")
-    #characteristics_of_a_page()
-    more_detailled_test_on_printing_a_page()
-    tests_on_the_functions_for_the_counts()
+    # test_characteristics_of_a_page()
+    test_more_detailled_test_on_printing_a_page()
+    test_on_the_functions_for_the_counts()
     test_on_the_containing_function()
     print("End.")
