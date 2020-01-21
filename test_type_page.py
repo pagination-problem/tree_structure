@@ -56,6 +56,14 @@ def test_on_converting_a_page_to_a_str():
     abs_path = os.path.join(abs_path, "test_page_to_text_file.txt")
     with open(abs_path, "w") as text_file:
         print(f"{page_to_str}", file=text_file)
+
+    reference_tile_set = {"[N1, N2]", "[N2, N4]", "[N1, N2, N3]"}
+    set_of_tiles = set()
+    print("The tiles on p :")
+    for t in p.tiles:
+        set_of_tiles.add(str(t))
+
+    assert set_of_tiles == reference_tile_set
     
     print("test_on_converting_a_page_to_a_str : everything is fine.\n")
 
