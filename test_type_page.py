@@ -15,7 +15,7 @@ from type_page import Page
 # def tile_count(self):
 # def symbol_count(self):
 
-def test_characteristics_of_a_page():
+def characteristics_of_a_page():
     p = Page()
 
     s1 = Symbol(1, 4)
@@ -32,7 +32,7 @@ def test_characteristics_of_a_page():
 
     print("characteristics_of_a_page : everything is fine.\n")  
 
-def test_more_detailled_test_on_printing_a_page():
+def more_detailled_test_on_printing_a_page():
     s1 = Symbol(1, 4)
     s2 = Symbol(2, 2)
     s3 = Symbol(3, 7)
@@ -52,7 +52,7 @@ def test_more_detailled_test_on_printing_a_page():
     
     print("more_detailled_test_on_printing_a_page : everything is fine.\n")
 
-def test_on_the_functions_for_the_counts():
+def tests_on_the_functions_for_the_counts():
     p = Page()
 
     s1 = Symbol(1, 4)
