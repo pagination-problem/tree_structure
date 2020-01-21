@@ -82,7 +82,7 @@ def test_of_json_writing():
     Cmax = max(C1, C2)
 
     #  tiles, name, height, max_symbol_size, seed, opt_value, opt_tiles_m1, opt_tiles_m2 ):
-    my_input = ProblemInput({t1, t2, t3, t4}, "IMPORTANT", -1, -1, -1, Cmax, {t1, t2}, {t3, t4})
+    my_input = ProblemInput({t1, t2, t3, t4}, "input_test_json_format", -1, -1, -1, Cmax, {t1, t2}, {t3, t4})
     root = os.path.dirname(__file__)
     abs_path = os.path.join(root, "data_for_tests")
     my_input.write_instance_in_json_file(abs_path)
