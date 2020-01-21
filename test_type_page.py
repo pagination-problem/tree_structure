@@ -100,10 +100,6 @@ def test_on_the_containing_function():
     assert s3 not in p, "It says that s3 is in p : problem"
     print("test_on_the_containing_function : everything is fine.\n")
 
-def truc():
-    
-    print("truc : everything is fine.\n")
-
 if __name__ == '__main__':
     print("Begin.\n")
     # test_characteristics_of_a_page()
