@@ -50,7 +50,7 @@ def test_on_converting_a_page_to_a_str():
 
     print("The page : ", p)
     
-    print("more_detailled_test_on_printing_a_page : everything is fine.\n")
+    print("test_on_converting_a_page_to_a_str : everything is fine.\n")
 
 def test_on_the_functions_for_the_counts():
     p = Page()
