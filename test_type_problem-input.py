@@ -82,10 +82,6 @@ def test_of_json_writing():
     my_input.write_instance_in_json_file("C:\\Users\\sarah\\Documents\\These\\2,tree-merging,Cmax\\FPTAS_for_tree_Pagination\\Programmation\\Inputs\\test\\")
     print("test_of_json_writing : everything is fine.\n")
 
-def truc():
-     
-    print("truc : everything is fine.\n")
-
 if __name__ == '__main__':
     print("Begin.\n")
     test_of_the_creation_and_of_the_characterics()
