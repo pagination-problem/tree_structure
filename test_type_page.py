@@ -49,7 +49,6 @@ def test_on_converting_a_page_to_a_str():
     p.add_tile(t3)
 
     page_to_str = str(p)
-    print("The page : ", p)
 
     root = os.path.dirname(__file__)
     abs_path = os.path.join(root, "data_for_tests")
@@ -59,7 +58,6 @@ def test_on_converting_a_page_to_a_str():
 
     reference_tile_set = {"[N1, N2]", "[N2, N4]", "[N1, N2, N3]"}
     set_of_tiles = set()
-    print("The tiles on p :")
     for t in p.tiles:
         set_of_tiles.add(str(t))
 
@@ -88,7 +86,6 @@ def test_on_the_functions_for_the_counts():
 
     reference_tile_set = {"[N1, N2]", "[N2, N4]", "[N1, N2, N3]"}
     set_of_tiles = set()
-    print("The tiles on p :")
     for t in p.tiles:
         set_of_tiles.add(str(t))
 
@@ -118,8 +115,8 @@ def test_on_the_containing_function():
 
 if __name__ == '__main__':
     print("Begin.\n")
-    # test_characteristics_of_a_page()
+    test_characteristics_of_a_page()
     test_on_converting_a_page_to_a_str()
-    # test_on_the_functions_for_the_counts()
-    # test_on_the_containing_function()
+    test_on_the_functions_for_the_counts()
+    test_on_the_containing_function()
     print("End.")
