@@ -20,8 +20,8 @@ class Symbol :
     def __repr__(self):
         return str(self)
 
-    # def __hash__(self):
-    #     return self.hash
+    def __hash__(self):
+        return self.hash
     
     def __eq__(self, other): #eq(a, b) is equivalent to a == b # maybe we should add the comparison of the sizes
         return self.index == other.index

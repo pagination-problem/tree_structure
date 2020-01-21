@@ -16,14 +16,11 @@ def creation_of_a_tile():
 
     t1 = Tile({s2, s3, s1})
 
-    print("Print of the tile (the symbols must be order by increasing number of index):", t1)
-    print("The symbols in t1 : ")
-    for s in t1.symbols:
-        print(s)
+    reference_values = "[N1, N2, N3]"
+    tile_in_str = str(t1)
+    assert tile_in_str == reference_values
 
     assert len(t1) == sum_size, "It says that the tile size is not equal to 6 : problem"
-
-    print("creation_of_a_tile : everything is fine.\n")
 
 # def creation_of_three_different_tiles():
 #     size_s1 = 4
