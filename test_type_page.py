@@ -64,7 +64,6 @@ def test_on_the_functions_for_the_counts():
     t1 = Tile({s1, s2})
     t2 = Tile({s2, s4})
     t3 = Tile({s3, s2, s1})
-    t4 = Tile ({s3, s5})
 
     p.add_tile(t1)
     p.add_tile(t2)
