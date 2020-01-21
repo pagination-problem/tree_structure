@@ -4,7 +4,7 @@ from type_symbol import Symbol
 from type_tile import Tile
 import tools
 
-def creation_of_a_tile():
+def test_creation_of_a_tile():
     size1 = 4
     size2 = 2
     size3 = 7
