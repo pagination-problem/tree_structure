@@ -71,13 +71,15 @@ def test_on_the_functions_for_the_counts():
     nb_symbols = p.symbol_count()
     nb_tiles = p.tile_count()
 
+    reference_tile_set = {"[N1, N2]", "[N2, N4]", "[N1, N2, N3]"}
+    set_of_tiles = set()
     print("The tiles on p :")
     for t in p.tiles:
-        print(t)
+        set_of_tiles.add(str(t))
 
+    assert set_of_tiles == reference_tile_set
     assert nb_symbols == 4, "It says that the number of symbols on the page is not equal to 4 : problem"
     assert nb_tiles == 3, "It says that the number of tiles on the page is not equal to 3 : problem"
-    
 
     print("tests_on_the_functions_for_the_counts : everything is fine.\n")
 
@@ -102,7 +104,7 @@ def test_on_the_containing_function():
 if __name__ == '__main__':
     print("Begin.\n")
     # test_characteristics_of_a_page()
-    test_more_detailled_test_on_printing_a_page()
-    test_on_the_functions_for_the_counts()
-    test_on_the_containing_function()
+    # test_more_detailled_test_on_printing_a_page()
+    # test_on_the_functions_for_the_counts()
+    # test_on_the_containing_function()
     print("End.")
