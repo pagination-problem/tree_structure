@@ -59,7 +59,6 @@ def test_on_the_functions_for_the_counts():
     s2 = Symbol(2, 2)
     s3 = Symbol(3, 7)
     s4 = Symbol(4, 1)
-    s5 = Symbol(5, 5)
 
     t1 = Tile({s1, s2})
     t2 = Tile({s2, s4})
