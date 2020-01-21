@@ -21,7 +21,7 @@ def creation_of_a_tile():
     for s in t1.symbols:
         print(s)
 
-    # assert t1.size() == sum_size, "It says that the tile size is not equal to 6 : problem"
+    assert t1.size() == sum_size, "It says that the tile size is not equal to 6 : problem"
 
     print("creation_of_a_tile : everything is fine.\n")
 
