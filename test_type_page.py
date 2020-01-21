@@ -32,7 +32,7 @@ def test_characteristics_of_a_page():
 
     print("characteristics_of_a_page : everything is fine.\n")  
 
-def test_more_detailled_test_on_printing_a_page():
+def test_on_converting_a_page_to_a_str():
     s1 = Symbol(1, 4)
     s2 = Symbol(2, 2)
     s3 = Symbol(3, 7)
@@ -104,7 +104,7 @@ def test_on_the_containing_function():
 if __name__ == '__main__':
     print("Begin.\n")
     # test_characteristics_of_a_page()
-    # test_more_detailled_test_on_printing_a_page()
+    # test_on_converting_a_page_to_a_str()
     # test_on_the_functions_for_the_counts()
     # test_on_the_containing_function()
     print("End.")
