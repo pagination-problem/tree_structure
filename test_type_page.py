@@ -26,7 +26,6 @@ def test_characteristics_of_a_page():
     t1 = Tile({s1, s2})
 
     p.add_tile(t1)
-    print("The page : ", p)
 
     assert s1 in p, "It says that p does not contain s1 : problem"
     assert s3 not in p, "It says that p contains s3 : problem"
