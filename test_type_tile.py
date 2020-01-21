@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*
-
+import os
 from type_symbol import Symbol
 from type_tile import Tile
 import tools
@@ -50,17 +50,22 @@ def creation_of_three_different_tiles():
     print("creation_of_three_different_tiles : everything is fine.\n")       
 
 def test_of_getting_the_leaf_out_of_a_tile():
-    my_input = tools.load_json_instance_from("C:\\Users\\sarah\\Documents\\These\\2,tree-merging,Cmax\\FPTAS_for_tree_Pagination\\Programmation\\Tests\\Inputs", "H3-nbT5-001")
     
-    print("the leaves of the input are : ")
+    root = os.path.dirname(__file__)
+    abs_path = os.path.join(root, "data_for_tests")
+    my_input = tools.load_json_instance_from(abs_path, "H3-nbT5-001")
+    
+    leaves_reference_values = {9, 10, 11, 14, 15}
+    set_of_leaves = set()
     for t in my_input.tileSet:
-        s= t.get_leaf_symbol()
-        print(s)
+        set_of_leaves.add(t.leaf_index)
+
+    assert leaves_reference_values == set_of_leaves
         
 
 if __name__ == '__main__':
     print("Begin.\n")
-    creation_of_a_tile()
-    creation_of_three_different_tiles()
+    #creation_of_a_tile()
+    #creation_of_three_different_tiles()
     test_of_getting_the_leaf_out_of_a_tile()
     print("End.")
