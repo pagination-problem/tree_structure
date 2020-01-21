@@ -55,11 +55,14 @@ def test_of_the_creation_and_of_the_characterics_with_opt():
     C2 = len(t3) + len(t4) - s5.size
     Cmax = max(C1, C2)
 
-    my_input = ProblemInput({t1, t2, t3, t4}, "input_test_with_opt", -1, -1, Cmax, {t1, t2}, {t3, t4})
+     #  tiles, name, height, max_symbol_size, seed, opt_value, opt_tiles_m1, opt_tiles_m2 ):
+    my_input = ProblemInput({t1, t2, t3, t4}, "input_test_with_opt", -1, -1, -1, Cmax, {t1, t2}, {t3, t4})
     print(my_input)
     print(my_input.full_instance_to_str())
-    my_input.write_instance_in_text_file("C:\\Users\\sarah\\Documents\\These\\2,tree-merging,Cmax\\FPTAS_for_tree_Pagination\\Programmation\\Inputs\\test\\")
-    print("test_of_the_creation_and_of_the_characterics : everything is fine.\n")
+    root = os.path.dirname(__file__)
+    abs_path = os.path.join(root, "data_for_tests")
+    my_input.write_instance_in_text_file(abs_path)
+    print("test_of_the_creation_and_of_the_characterics_with_opt : everything is fine.\n")
 
 def test_of_json_writing():
     s1 = Symbol(1, 4)
@@ -78,7 +81,8 @@ def test_of_json_writing():
     C2 = len(t3) + len(t4) - s5.size
     Cmax = max(C1, C2)
 
-    my_input = ProblemInput({t1, t2, t3, t4}, "IMPORTANT", -1, -1, Cmax, {t1, t2}, {t3, t4})
+    #  tiles, name, height, max_symbol_size, seed, opt_value, opt_tiles_m1, opt_tiles_m2 ):
+    my_input = ProblemInput({t1, t2, t3, t4}, "IMPORTANT", -1, -1, -1, Cmax, {t1, t2}, {t3, t4})
     root = os.path.dirname(__file__)
     abs_path = os.path.join(root, "data_for_tests")
     my_input.write_instance_in_json_file(abs_path)
@@ -86,7 +90,7 @@ def test_of_json_writing():
 
 if __name__ == '__main__':
     print("Begin.\n")
-    test_of_the_creation_and_of_the_characterics()
-    test_of_the_creation_and_of_the_characterics_with_opt()
-    test_of_json_writing()
+    # test_of_the_creation_and_of_the_characterics()
+    # test_of_the_creation_and_of_the_characterics_with_opt()
+    # test_of_json_writing()
     print("End.")
