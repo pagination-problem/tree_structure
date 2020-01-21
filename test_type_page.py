@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*
 
+import os
 
 from type_symbol import Symbol
 from type_tile import Tile
@@ -48,7 +49,14 @@ def test_on_converting_a_page_to_a_str():
     p.add_tile(t2)
     p.add_tile(t3)
 
+    page_to_str = str(p)
     print("The page : ", p)
+
+    root = os.path.dirname(__file__)
+    abs_path = os.path.join(root, "data_for_tests")
+    abs_path = os.path.join(abs_path, "test_page_to_text_file.txt")
+    with open(abs_path, "w") as text_file:
+        print(f"{page_to_str}", file=text_file)
     
     print("test_on_converting_a_page_to_a_str : everything is fine.\n")
 
@@ -104,7 +112,7 @@ def test_on_the_containing_function():
 if __name__ == '__main__':
     print("Begin.\n")
     # test_characteristics_of_a_page()
-    # test_on_converting_a_page_to_a_str()
+    test_on_converting_a_page_to_a_str()
     # test_on_the_functions_for_the_counts()
     # test_on_the_containing_function()
     print("End.")
