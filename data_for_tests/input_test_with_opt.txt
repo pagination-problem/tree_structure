@@ -1,6 +1,6 @@
 [
  {,
-"tiles" : {[N2, N3],[N1, N2],[N5, N6],[N4, N5]},
+"tiles" : {[N2, N3],[N5, N6],[N1, N2],[N4, N5]},
 "symbols" : [N1, N2, N3, N4, N5, N6],
 "height" : -1,
 "max_symbol_size" : -1,
