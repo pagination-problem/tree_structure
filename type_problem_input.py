@@ -222,7 +222,7 @@ class ProblemInput(list) :
         #  "seed" : ...
         #  }
         # ]
-        directory_path = directory_path + "\\" + self.name + ".txt"
+        directory_path = os.path.join(directory_path, f"{self.name}.txt")
 
         my_str = self.full_instance_to_str()
 

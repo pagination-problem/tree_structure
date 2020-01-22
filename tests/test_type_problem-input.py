@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*
 import os
+import context
 from type_problem_input import ProblemInput
 from type_symbol import Symbol
 from type_tile import Tile
@@ -29,9 +30,9 @@ def test_of_the_creation_and_of_the_characterics():
     t2 = Tile({s2, s4})
     t3 = Tile({s3, s2, s1})
 
-    my_input = ProblemInput({t1, t2, t3}, "input_test")
+    my_input = ProblemInput({t1, t2, t3}, "problem")
     root = os.path.dirname(__file__)
-    abs_path = os.path.join(root, "data_for_tests")
+    abs_path = os.path.join(root, "output")
     my_input.write_instance_in_text_file(abs_path)
     print("test_of_the_creation_and_of_the_characterics : everything is fine.\n")
 
@@ -54,9 +55,9 @@ def test_of_the_creation_and_of_the_characterics_with_opt():
     Cmax = max(C1, C2)
 
      #  tiles, name, height, max_symbol_size, seed, opt_value, opt_tiles_m1, opt_tiles_m2 ):
-    my_input = ProblemInput({t1, t2, t3, t4}, "input_test_with_opt", -1, -1, -1, Cmax, {t1, t2}, {t3, t4})
+    my_input = ProblemInput({t1, t2, t3, t4}, "problem_with_opt", -1, -1, -1, Cmax, {t1, t2}, {t3, t4})
     root = os.path.dirname(__file__)
-    abs_path = os.path.join(root, "data_for_tests")
+    abs_path = os.path.join(root, "output")
     my_input.write_instance_in_text_file(abs_path)
     print("test_of_the_creation_and_of_the_characterics_with_opt : everything is fine.\n")
 
@@ -78,9 +79,9 @@ def test_of_json_writing():
     Cmax = max(C1, C2)
 
     #  tiles, name, height, max_symbol_size, seed, opt_value, opt_tiles_m1, opt_tiles_m2 ):
-    my_input = ProblemInput({t1, t2, t3, t4}, "input_test_json_format", -1, -1, -1, Cmax, {t1, t2}, {t3, t4})
+    my_input = ProblemInput({t1, t2, t3, t4}, "problem_json_format", -1, -1, -1, Cmax, {t1, t2}, {t3, t4})
     root = os.path.dirname(__file__)
-    abs_path = os.path.join(root, "data_for_tests")
+    abs_path = os.path.join(root, "output")
     my_input.write_instance_in_json_file(abs_path)
     print("test_of_json_writing : everything is fine.\n")
 

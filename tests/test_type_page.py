@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*
 
 import os
-
+import context
 from type_symbol import Symbol
 from type_tile import Tile
 from type_page import Page
@@ -51,7 +51,7 @@ def test_on_converting_a_page_to_a_str():
     page_to_str = str(p)
 
     root = os.path.dirname(__file__)
-    abs_path = os.path.join(root, "data_for_tests")
+    abs_path = os.path.join(root, "output")
     abs_path = os.path.join(abs_path, "test_page_to_text_file.txt")
     with open(abs_path, "w") as text_file:
         print(f"{page_to_str}", file=text_file)

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*
+import context
 import os
 from type_symbol import Symbol
 from type_tile import Tile
@@ -49,7 +50,7 @@ def test_creation_of_a_tile():
 def test_of_getting_the_leaf_out_of_a_tile():
     
     root = os.path.dirname(__file__)
-    abs_path = os.path.join(root, "data_for_tests")
+    abs_path = os.path.join(root, "input")
     my_input = tools.load_json_instance_from(abs_path, "H3-nbT5-001")
     
     leaves_reference_values = {9, 10, 11, 14, 15}

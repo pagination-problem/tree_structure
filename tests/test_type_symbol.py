@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*
-
+import context
 from type_symbol import Symbol
 
 def test_characteristics_of_a_symbol():
