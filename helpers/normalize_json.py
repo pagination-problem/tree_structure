@@ -16,7 +16,7 @@ def normalize(path):
 
     for s in d.pop("symbols"):
         m = match(r"\[N(\d+) - (\d+)\]", s)
-        d["symbol_names"].append(int(m.group(1)))
+        d["symbol_indexes"].append(int(m.group(1)))
         d["symbol_sizes"].append(int(m.group(2)))
 
     text = json.dumps(d, indent=2)
@@ -26,4 +26,4 @@ def normalize(path):
 
 
 if __name__ == "__main__":
-    normalize(Path("tests/input/H3-nbT5-001.json"))
+    print(normalize(Path("tests/input/H3-nbT5-001.json")))
