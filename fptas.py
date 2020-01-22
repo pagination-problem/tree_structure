@@ -110,14 +110,13 @@ def run(the_input, epsilon):
     c_max = max(best_sol[0], best_sol[1])
     return (c_max, generated_state_count)
 
-log_result = []
-
 def set_log_strategy(log):
 
     def log_states(i, chi):
-        log_result.append(f"{i}: {sorted(chi)}")
+        run.log_result.append(f"{i}: {sorted(chi)}")
     
     if log:
+        run.log_result = []
         run.may_log = log_states
     else:
         run.may_log = lambda *args : None

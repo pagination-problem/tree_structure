@@ -20,23 +20,23 @@ class Symbol :
     def __repr__(self):
         return str(self)
 
-    # def __hash__(self):
-    #     return self.hash
+    def __hash__(self):
+        return self.hash
     
-    # def __eq__(self, other): #eq(a, b) is equivalent to a == b # maybe we should add the comparison of the sizes
-    #     return self.index == other.index
+    def __eq__(self, other): #eq(a, b) is equivalent to a == b # maybe we should add the comparison of the sizes
+        return self.index == other.index
 
-    # def __lt__(self, other): # self < other
-    #     return self.index < other.index
+    def __lt__(self, other): # self < other
+        return self.index < other.index
 
-    # def __le__(self, other): #self <= other
-    #     return self.index <= other.index
+    def __le__(self, other): #self <= other
+        return self.index <= other.index
 
-    # def __ne__(self, other): #self != other
-    #     return self.index != other.index
+    def __ne__(self, other): #self != other
+        return self.index != other.index
 
-    # def __gt__(self, other): # self > other
-    #     return self.index > other.index
+    def __gt__(self, other): # self > other
+        return self.index > other.index
 
-    # def __ge__(self, other):
-    #     return self.index >= other.index
+    def __ge__(self, other):
+        return self.index >= other.index
