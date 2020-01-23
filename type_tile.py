@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*
-
 from type_symbol import Symbol
 
 class Tile:

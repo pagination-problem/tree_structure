@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*
 import context
 import os
 from type_symbol import Symbol

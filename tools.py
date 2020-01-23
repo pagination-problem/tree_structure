@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*
 from type_problem_input import ProblemInput
 from type_symbol import Symbol
 from type_tile import Tile

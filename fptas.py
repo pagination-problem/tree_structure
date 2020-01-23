@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*
-
 from type_symbol import Symbol
 from type_tile import Tile
 from type_page import Page

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*
 import tools
 import time
 from fptas_object import Fptas

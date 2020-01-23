@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*
-
 class Symbol :
     # self.size. This class is useful when a symbol is not just a letter and so if the size of a
     # symbol can vary (from 0 to a certain maximum value) like in the FPTAS for 2 | merging, tree | Cmax.

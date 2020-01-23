@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*
 import os
 import context
 from type_problem_input import ProblemInput
