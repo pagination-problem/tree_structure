@@ -1,6 +1,6 @@
 {
-    "input_directory": "inputs/logs",
-    "output_directory": "logs",
+    "input_dir": "input/logs",
+    "output_dir": "logs",
     "output_prefix": "results",
     "log": true,
     "input_prefix": "H3-nbT5",

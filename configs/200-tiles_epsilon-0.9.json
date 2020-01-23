@@ -1,6 +1,6 @@
 {
-    "input_directory": "inputs/200-tiles",
-    "output_directory": "results/txt",
+    "input_dir": "input/200-tiles",
+    "output_dir": "results/txt",
     "output_prefix": "results",
     "log": false,
     "input_prefix": "H9-nbT200",
