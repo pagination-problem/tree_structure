@@ -1,6 +1,6 @@
 import tools
 import time
-from fptas_object import Fptas
+from fptas import Fptas
 import datetime
 import sys
 import os
