@@ -53,7 +53,7 @@ def test_of_the_creation_and_of_the_characterics_with_opt():
     C2 = len(t3) + len(t4) - s5.size
     Cmax = max(C1, C2)
 
-     #  tiles, name, height, max_symbol_size, seed, opt_value, opt_tiles_m1, opt_tiles_m2 ):
+     #  tiles, name, height, symbol_size_bound, seed, opt_value, opt_tiles_m1, opt_tiles_m2 ):
     my_input = ProblemInput({t1, t2, t3, t4}, "problem_with_opt", -1, -1, -1, Cmax, {t1, t2}, {t3, t4})
     root = os.path.dirname(__file__)
     abs_path = os.path.join(root, "output")
@@ -77,7 +77,7 @@ def test_of_json_writing():
     C2 = len(t3) + len(t4) - s5.size
     Cmax = max(C1, C2)
 
-    #  tiles, name, height, max_symbol_size, seed, opt_value, opt_tiles_m1, opt_tiles_m2 ):
+    #  tiles, name, height, symbol_size_bound, seed, opt_value, opt_tiles_m1, opt_tiles_m2 ):
     my_input = ProblemInput({t1, t2, t3, t4}, "problem_json_format", -1, -1, -1, Cmax, {t1, t2}, {t3, t4})
     root = os.path.dirname(__file__)
     abs_path = os.path.join(root, "output")

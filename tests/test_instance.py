@@ -9,7 +9,7 @@ def test_deserialize():
     text = """
         {
             "height": 3,
-            "max_symbol_size": 9,
+            "symbol_size_bound": 9,
             "opt_value": null,
             "opt_tiles_m1": [],
             "symbols_on_m1": [],
@@ -28,7 +28,7 @@ def test_deserialize():
     """
     expected = {
         "height": 3,
-        "max_symbol_size": 9,
+        "symbol_size_bound": 9,
         "opt_tiles_m1": [],
         "opt_tiles_m2": [],
         "opt_value": None,

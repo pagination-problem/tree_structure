@@ -29,7 +29,7 @@ class ProblemInput(list) :
     The optimal values can be unknown.
     """
 
-    def __init__(self, tiles, name, height = None, max_symbol_size = None, seed = None, opt_value = None, opt_tiles_m1 = set(), opt_tiles_m2 = set()):
+    def __init__(self, tiles, name, height = None, symbol_size_bound = None, seed = None, opt_value = None, opt_tiles_m1 = set(), opt_tiles_m2 = set()):
         """
         The format of 'name' given in input will be : H3-nbT5-001
         which means that this input comes from a tree of height = 3. It has 5 tiles and its the first one
@@ -39,7 +39,7 @@ class ProblemInput(list) :
         self.name = name
         self.tileSet = frozenset(tiles)
         self.height = height
-        self.max_symbol_size = max_symbol_size
+        self.symbol_size_bound = symbol_size_bound
         self.sum_symbol_sizes = -1
 
         self.opt_value = opt_value
@@ -141,7 +141,7 @@ class ProblemInput(list) :
         result.append(f'"tiles" : {self}')
         result.append(f'"symbols" : {symbol_set}')
         result.append(f'"height" : {self.height}')
-        result.append(f'"max_symbol_size" : {self.max_symbol_size}')
+        result.append(f'"symbol_size_bound" : {self.symbol_size_bound}')
         result.append(f'"opt_value" : {self.opt_value}')
         result.append(f'"opt_tiles_m1" : {str_for_tiles_on_m1}')
         result.append(f'"symbols_on_m1" : {symbol_set_on_m1}')
@@ -191,7 +191,7 @@ class ProblemInput(list) :
         my_dict["tiles"] = temp_L_1
         my_dict["symbols"] = temp_L_symbols
         my_dict["height"] = self.height
-        my_dict["max_symbol_size"] = self.max_symbol_size
+        my_dict["symbol_size_bound"] = self.symbol_size_bound
         my_dict["opt_value"] = self.opt_value
         my_dict["opt_tiles_m1"] = temp_L_2
         my_dict["symbols_on_m1"] = temp_L_symbols_m1

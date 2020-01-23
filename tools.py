@@ -45,7 +45,7 @@ def load_json_instance_from(complete_path_to_input, input_name_without_extension
 
     tiles = set()
     height = input_in_set["height"]
-    max_symbol_size = input_in_set["max_symbol_size"]
+    symbol_size_bound = input_in_set["symbol_size_bound"]
 
     symbols = set()
     symbols, set_of_symbol_indexes = creating_the_set_of_all_the_symbols_in_the_intput(input_in_set["symbols"], symbols)
@@ -64,7 +64,7 @@ def load_json_instance_from(complete_path_to_input, input_name_without_extension
     tiles_on_m2 = set()
 
     print("For now, the loading from json file does NOT load the optimal solution in the file.\n")
-    return ProblemInput(tiles, input_name_without_extension, height, max_symbol_size, opt_value, tiles_on_m1, tiles_on_m2)
+    return ProblemInput(tiles, input_name_without_extension, height, symbol_size_bound, opt_value, tiles_on_m1, tiles_on_m2)
 
 def generating_one_recap_file(nb_of_tiles, epsilon, where_to_store_the_files):
     #100-tiles_0.3_recap.txt
