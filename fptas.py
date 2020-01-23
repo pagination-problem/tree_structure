@@ -1,7 +1,6 @@
-from type_symbol import Symbol
-from type_tile import Tile
-from type_page import Page
-from type_problem_input import ProblemInput
+from symbol import Symbol
+from tile import Tile
+from page import Page
 
 class Fptas:
     
@@ -25,7 +24,7 @@ class Fptas:
         leaf_count = 2 ** instance.height
         self.internal_node_offset = leaf_count - 1
         self.matrix = [['x' for x in range(leaf_count+1)] for y in range(leaf_count+1)]
-        tiles = sorted(instance.tileSet, key=lambda tile: tile.leaf_index)
+        tiles = sorted(instance.tiles, key=lambda tile: tile.leaf_index)
         for t in tiles:
             i = t.leaf_index - self.internal_node_offset
             self.matrix[i][0]= len(t)
@@ -39,10 +38,10 @@ class Fptas:
 
     def run(self, epsilon):
         self.may_reset_log()
-        self.generated_state_count = 0
-        self.upper_bound = self.instance.get_sum_symbol_sizes()
-        self.delta = (epsilon * self.upper_bound) /  (2 * len(self.instance))
-        self.tiles = sorted(self.instance.tileSet, key=lambda tile: tile.leaf_index)
+        self.state_count = 0
+        self.upper_bound = self.instance.symbol_size_sum
+        self.delta = (epsilon * self.upper_bound) /  (2 * self.instance.tile_count)
+        self.tiles = sorted(self.instance.tiles, key=lambda tile: tile.leaf_index)
         chi_seed = [(0, 0, 0, 0)]
         self.launch_engine(chi_seed)
         self.c_max = max(min(chi_seed, key=lambda state: max(state[0], state[1]))[:2])
@@ -54,7 +53,7 @@ class Fptas:
             for (a, b, j, k) in chi_seed:
                 chi.append((a + self.matrix[i][j], b, i, k))
                 chi.append((a, b + self.matrix[i][k], j, i))
-            self.generated_state_count += len(chi)
+            self.state_count += len(chi)
             chi_seed = self.select_representatives_on_grid(chi)
             self.may_log(i, chi_seed)
 
@@ -71,7 +70,7 @@ class Fptas:
                     chi.append((a + self.matrix[i][k if a else 0], b, j, 1))
                     chi.append((a, b + self.matrix[i][j if b else 0], k, 0))
             j = i
-            self.generated_state_count += len(chi)
+            self.state_count += len(chi)
             chi_seed = self.select_representatives_on_grid(chi)
             self.may_log(i, chi_seed)
 
