@@ -39,8 +39,22 @@ def test_for_the_matrix ():
     assert reference_matrix == fptas.matrix
     print("test_for_the_matrix: everything is fine.\n")
 
+def test_of_the_run():
+    input_filename = "H3-nbT5-001"
+    root = os.path.dirname(__file__)
+    input_directory = os.path.join(root, "input")
+    my_input = tools.load_json_instance_from(input_directory, input_filename)
+    epsilon = 0.1
+
+    fptas.set_log_strategy(False)
+    (Cmax1, number_of_generated_states1) = fptas.run(my_input, epsilon)
+
+    assert Cmax1 == 17
+    assert number_of_generated_states1 == 42
+
 if __name__ == '__main__':
     print("Begin.\n")
     test_for_the_matrix ()
+    test_of_the_run()
     print("End.")
 
