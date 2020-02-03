@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*
 import os
-import tools
+from Pagination_tree_structure import tools
+#import tools
 
 # To test:
 # filling_the_matrix(the_input, internal_node_offset, leaf_count)
