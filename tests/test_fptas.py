@@ -13,9 +13,7 @@ import fptas
 def test_for_the_matrix ():
     input_filename = "H3-nbT5-001"
     root = os.path.dirname(__file__)
-    #input_directory = os.path.join(root, "tests") #remove line as soon as this test file is in the good folder and use only the line bellow
-    input_directory = os.path.join(root, "input")  #line to use when the test file will be in the good folder
-    #input_directory = os.path.join(input_directory, "input") #delete this line when the file is in the good folder
+    input_directory = os.path.join(root, "input")
     my_input = tools.load_json_instance_from(input_directory, input_filename)
     leaf_count = 8
     internal_node_offset = 7
