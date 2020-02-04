@@ -9,6 +9,15 @@ import fptas
 # select_representatives_on_grid(states, delta, upper_bound)
 # run(the_input, epsilon):
 
+def test_of_the_selection_of_representatives_on_grid():
+    states =  [(0.5,0.5),(1.5,1.5),(2.5,2.5),(2.75,2.75)]
+    delta = 2
+    upper_bound = 4
+    representative_set = fptas.select_representatives_on_grid(states, delta, upper_bound)
+    state_reference_set =  {(0.5,0.5),(2.5,2.5)}
+    assert representative_set == state_reference_set
+    print("test_of_the_selection_of_representatives_on_grid: everything is fine.\n")
+
 
 def test_for_the_matrix ():
     input_filename = "H3-nbT5-001"
@@ -54,5 +63,6 @@ if __name__ == '__main__':
     print("Begin.\n")
     test_for_the_matrix ()
     test_of_the_run()
+    test_of_the_selection_of_representatives_on_grid()
     print("End.")
 
