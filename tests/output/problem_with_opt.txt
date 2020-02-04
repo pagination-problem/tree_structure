@@ -1,11 +1,11 @@
 [
  {,
-"tiles" : {[N5, N6],[N2, N3],[N4, N5],[N1, N2]},
+"tiles" : {[N5, N6],[N4, N5],[N1, N2],[N2, N3]},
 "symbols" : [N1, N2, N3, N4, N5, N6],
 "height" : -1,
 "max_symbol_size" : -1,
 "opt_value" : 11,
-"opt_tiles_m1" : {[N2, N3], [N1, N2]},
+"opt_tiles_m1" : {[N1, N2], [N2, N3]},
 "symbols_on_m1" : [N1, N2, N3],
 "opt_tiles_m2" : {[N5, N6], [N4, N5]},
 "symbols_on_m2" : [N4, N5, N6],

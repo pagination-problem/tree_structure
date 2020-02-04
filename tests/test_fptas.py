@@ -20,21 +20,17 @@ def test_for_the_matrix ():
 
     fptas.filling_the_matrix(my_input, internal_node_offset, leaf_count)
 
-    reference_matrix = [['x' for i in range(9)] for i in range(9)]
-    reference_matrix[2][0] = 8
-    reference_matrix[2][2] = 0
-    reference_matrix[3][0] = 8
-    reference_matrix[3][2] = 3
-    reference_matrix[3][3] = 0
-    reference_matrix[4][0] = 11
-    reference_matrix[4][2] = 6
-    reference_matrix[4][3] = 4
-    reference_matrix[4][4] = 0
-    reference_matrix[7][0] = reference_matrix[7][2] = reference_matrix[7][3] = reference_matrix[7][4] = 12   
-    reference_matrix[7][7] = 0
-    reference_matrix[8][0] = reference_matrix[8][2] = reference_matrix[8][3] = reference_matrix[8][4] = 14
-    reference_matrix[8][7] = 5
-    reference_matrix[8][8] = 0
+    reference_matrix = [
+        ['x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x'],
+        ['x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x'], 
+        [  8, 'x',   0, 'x', 'x', 'x', 'x', 'x', 'x'], 
+        [  8, 'x',   3,   0, 'x', 'x', 'x', 'x', 'x'], 
+        [ 11, 'x',   6,   4,   0, 'x', 'x', 'x', 'x'], 
+        ['x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x'], 
+        ['x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x'], 
+        [ 12, 'x',  12,  12,  12, 'x', 'x',   0, 'x'], 
+        [ 14, 'x',  14,  14,  14, 'x', 'x',   5,   0],
+    ]
 
     assert reference_matrix == fptas.matrix
     print("test_for_the_matrix: everything is fine.\n")
@@ -51,6 +47,8 @@ def test_of_the_run():
 
     assert Cmax1 == 17
     assert number_of_generated_states1 == 42
+    
+    print("test_of_the_run: everything is fine.\n")
 
 if __name__ == '__main__':
     print("Begin.\n")
