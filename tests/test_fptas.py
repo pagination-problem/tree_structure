@@ -2,7 +2,7 @@ from pathlib import Path
 from pprint import pprint
 
 import context
-from fptas import Fptas
+from fptas import Fptas, NA
 from instance import Instance
 
 fptas = Fptas()
@@ -22,15 +22,15 @@ def test_set_instance():
     actual_matrix = fptas.matrix
     # fmt: off
     expected_matrix = [
-        ['x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x'],
-        ['x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x'], 
-        [  8, 'x',   0, 'x', 'x', 'x', 'x', 'x', 'x'], 
-        [  8, 'x',   3,   0, 'x', 'x', 'x', 'x', 'x'], 
-        [ 11, 'x',   6,   4,   0, 'x', 'x', 'x', 'x'], 
-        ['x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x'], 
-        ['x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x'], 
-        [ 12, 'x',  12,  12,  12, 'x', 'x',   0, 'x'], 
-        [ 14, 'x',  14,  14,  14, 'x', 'x',   5,   0],
+        [NA, NA, NA, NA, NA, NA, NA, NA, NA],
+        [NA, NA, NA, NA, NA, NA, NA, NA, NA], 
+        [ 8, NA,  0, NA, NA, NA, NA, NA, NA], 
+        [ 8, NA,  3,  0, NA, NA, NA, NA, NA], 
+        [11, NA,  6,  4,  0, NA, NA, NA, NA], 
+        [NA, NA, NA, NA, NA, NA, NA, NA, NA], 
+        [NA, NA, NA, NA, NA, NA, NA, NA, NA], 
+        [12, NA, 12, 12, 12, NA, NA,  0, NA], 
+        [14, NA, 14, 14, 14, NA, NA,  5,  0],
     ]
     # fmt: on
     pprint(actual_matrix)

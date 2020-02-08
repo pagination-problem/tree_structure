@@ -2,6 +2,8 @@ from symbol import Symbol
 from tile import Tile
 from page import Page
 
+NA = -1
+
 class Fptas:
     
     def set_log_strategy(self, log):
@@ -23,7 +25,7 @@ class Fptas:
         self.instance = instance
         leaf_count = 2 ** instance.height
         self.internal_node_offset = leaf_count - 1
-        self.matrix = [['x' for x in range(leaf_count+1)] for y in range(leaf_count+1)]
+        self.matrix = [[NA for x in range(leaf_count+1)] for y in range(leaf_count+1)]
         tiles = sorted(instance.tiles, key=lambda tile: tile.leaf_index)
         for t in tiles:
             i = t.leaf_index - self.internal_node_offset
