@@ -42,8 +42,7 @@ class Fptas:
         self.upper_bound = self.instance.symbol_size_sum
         self.delta = (epsilon * self.upper_bound) /  (2 * self.instance.tile_count)
         self.tiles = sorted(self.instance.tiles, key=lambda tile: tile.leaf_index)
-        chi_seed = [(0, 0, 0, 0)]
-        self.launch_engine(chi_seed)
+        chi_seed = self.launch_engine([(0, 0, 0, 0)])
         self.c_max = max(min(chi_seed, key=lambda state: max(state[0], state[1]))[:2])
 
     def basic_engine(self, chi_seed):
@@ -56,6 +55,7 @@ class Fptas:
             self.state_count += len(chi)
             chi_seed = self.select_representatives_on_grid(chi)
             self.may_log(i, chi_seed)
+        return chi_seed
 
     def improved_engine(self, chi_seed):
         j = 0
@@ -73,6 +73,7 @@ class Fptas:
             self.state_count += len(chi)
             chi_seed = self.select_representatives_on_grid(chi)
             self.may_log(i, chi_seed)
+        return chi_seed
 
     def select_representatives_on_grid(self, states):
         result = {}
