@@ -1,3 +1,27 @@
+"""
+    Some explanation of how works the matrix used in the FPTAS and the tree it relies on.
+
+    matrix[i][j] = the quantity to add to a machine if we want to assign to it
+    the tile i and if the last tile assigned to it was j.
+    i and j are in the LEAF-ONLY INDEX which means that
+    if j = 4 and i = 7 : we are considering adding the tile [N1, N3, N7, N14]
+    with the tile [N1, N2, N5, N11] already assigned.
+    
+    The tree :
+              N1
+            /    \
+           /      \
+          /        \
+         /          \
+        N2          N3
+       /  \       /    \
+      N4   N5    N6    N7
+     / \  / \   /  \  /  \
+     1 2  3  4  5  6  7   8
+     1 <-> N8  ; 2  <-> N9  ; 3  <-> N10 ; 4  <-> N11 ;
+     5 <-> N12 ; 6  <-> N13 ; 7  <-> N14 ; 8  <-> N15
+"""
+
 from symbol import Symbol
 from tile import Tile
 from page import Page
