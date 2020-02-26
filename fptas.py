@@ -9,14 +9,14 @@
     
     The tree :
               N1
-            /    \
-           /      \
-          /        \
-         /          \
+            //   \\
+           //     \\
+          //       \\
+         //         \\
         N2          N3
-       /  \       /    \
+       // \\      //   \\
       N4   N5    N6    N7
-     / \  / \   /  \  /  \
+     //\\ //\\  // \\ // \\
      1 2  3  4  5  6  7   8
      1 <-> N8  ; 2  <-> N9  ; 3  <-> N10 ; 4  <-> N11 ;
      5 <-> N12 ; 6  <-> N13 ; 7  <-> N14 ; 8  <-> N15
@@ -66,7 +66,7 @@ class Fptas:
         self.may_reset_log()
         self.state_count = 0
         self.upper_bound = self.instance.symbol_size_sum
-        self.delta = (epsilon * self.upper_bound) /  (2 * self.instance.tile_count)
+        self.delta = (epsilon * self.upper_bound) / (2 * self.instance.tile_count)
         self.tiles = sorted(self.instance.tiles, key=lambda tile: tile.leaf_index)
         chi_seed = self.launch_engine([(0, 0, 0, 0)])
         self.c_max = max(min(chi_seed, key=lambda state: max(state[0], state[1]))[:2])
