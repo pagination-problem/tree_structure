@@ -30,6 +30,7 @@ output_mode = "w" if log else "a"
 print(f"Beginning of the run at {datetime.datetime.now()}")
 
 output_path = Path(f"{output_dir}/{output_prefix}_{tile_count}-tiles_{epsilon}-epsilon.txt")
+Path(output_dir).mkdir(parents=True, exist_ok=True) # make the output directory if it doesn't exist
 already_processed = set()
 if not log and output_path.is_file():
     for line in output_path.read_text().split("\n"):
@@ -37,7 +38,7 @@ if not log and output_path.is_file():
 
 for instance_path in Path(input_dir).glob("*.json"):
 
-    if str(instance_path) in already_processed:
+    if instance_path.name in already_processed:
         print(f"{instance_path} already generated!")
         continue
 
