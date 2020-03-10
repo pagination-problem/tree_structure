@@ -16,7 +16,7 @@ class MakeInstance:
         self.height = height
 
     def ancestors(self, node):
-        """Return all the ancestors of a node in a complete binary tree, including itself."""
+        """Return all the ancestors of a node in a complete n-ary tree, including itself."""
         result = [node]
         while node:
             node //= self.arity
@@ -24,7 +24,7 @@ class MakeInstance:
         return result[::-1]
 
     def create_path_sample(self, leaf_rate):
-        """Create all paths from the root to a random sample of leaves in a binary tree."""
+        """Create all paths from the root to a random sample of leaves in a complete n-ary tree."""
         self.paths = [
             self.ancestors(leaf)
             for leaf in sample(self.leaves, round(len(self.leaves) * leaf_rate))
@@ -72,11 +72,10 @@ def dump_instances(config_path):
     cfg = json.loads(Path(config_path).read_text())
     directory = Path(cfg["output_directory"])
     directory.mkdir(parents=True, exist_ok=True)
-    arity = cfg["arity"]
     seed(cfg["seed"])
     for i in range(1, cfg["instance_count"] + 1):
         height = randint(cfg["min_height"], cfg["max_height"])
-        maker = MakeInstance(height, arity)
+        maker = MakeInstance(height, cfg["arity"])
         leaf_rate = randint(cfg["min_tile_percentage"], cfg["max_tile_percentage"]) / 100.0
         kill_rate = randint(cfg["min_kill_percentage"], cfg["max_kill_percentage"]) / 100.0
         symbol_size_bound = randint(cfg["min_symbol_size_bound"], cfg["max_symbol_size_bound"])
