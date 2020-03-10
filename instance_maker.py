@@ -72,11 +72,9 @@ def dump_instances(config_path):
     cfg = json.loads(Path(config_path).read_text())
     directory = Path(cfg["output_directory"])
     directory.mkdir(parents=True, exist_ok=True)
-    i = 0
     arity = cfg["arity"]
     seed(cfg["seed"])
-    column = 0
-    while i < cfg["instance_count"]:
+    for i in range(1, cfg["instance_count"] + 1):
         height = randint(cfg["min_height"], cfg["max_height"])
         maker = MakeInstance(height, arity)
         leaf_rate = randint(cfg["min_tile_percentage"], cfg["max_tile_percentage"]) / 100.0
@@ -91,9 +89,7 @@ def dump_instances(config_path):
             hash_value=sha256(f"{d['tiles']},{d['symbol_sizes']}".encode("utf8")).hexdigest()[:16],
         )
         (directory / name).write_text(instance_to_json(d))
-        i += 1
-        column = (column + 1) % 80
-        print(".", end="" if column else "\n", flush=True)
+        print(".", end="" if i % 80 else "\n", flush=True)
 
 
 if __name__ == "__main__":
