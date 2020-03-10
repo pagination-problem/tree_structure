@@ -1,0 +1,14 @@
+{
+    "output_directory": "instances/1_results/",
+    "instance_count": 200,
+    "min_height": 4,
+    "max_height": 10,
+    "min_tile_percentage": 20,
+    "max_tile_percentage": 80,
+    "min_kill_percentage": 10,
+    "max_kill_percentage": 60,
+    "min_symbol_size_bound": 1,
+    "max_symbol_size_bound": 10,
+    "arity": 2,
+    "seed": 42
+}
