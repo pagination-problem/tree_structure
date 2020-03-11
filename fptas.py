@@ -22,10 +22,6 @@
      5 <-> N12 ; 6  <-> N13 ; 7  <-> N14 ; 8  <-> N15
 """
 
-from symbol import Symbol
-from tile import Tile
-from page import Page
-
 NA = -1
 
 class Fptas:
