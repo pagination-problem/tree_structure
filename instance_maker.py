@@ -23,6 +23,7 @@ class MakeInstance:
 
     def create_path_sample(self, leaf_rate):
         """Create all paths from the root to a random sample of leaves in a complete n-ary tree."""
+        assert 0 <= leaf_rate <= 1
         self.paths = [
             self.ancestors(leaf)
             for leaf in sample(self.leaves, round(len(self.leaves) * leaf_rate))
@@ -30,16 +31,15 @@ class MakeInstance:
 
     def remove_random_nodes(self, kill_rate):
         """
-        Suppress a certain percentage of the distinct nodes occurring in self.paths,
-        excluding the root and the leaves.
+        Suppress a certain percentage (expressed as a floating-point value in [0, 1]) of the distinct
+        nodes occurring in self.paths, excluding the root and the leaves.
         """
-        if not kill_rate:
-            return
-        candidates = set.union(*map(set, self.paths)).difference({0}).difference(self.leaves)
-        to_kill = set(sample(candidates, round(len(candidates) * kill_rate)))
-        for path in self.paths:
-            path[:] = [node for node in path if node not in to_kill]
-        self.paths.sort()
+        if 0 < kill_rate <= 1:
+            candidates = set.union(*map(set, self.paths)).difference({0}).difference(self.leaves)
+            to_kill = set(sample(candidates, round(len(candidates) * kill_rate)))
+            for path in self.paths:
+                path[:] = [node for node in path if node not in to_kill]
+            self.paths.sort()
 
     def renumber_symbols(self):
         """Update self.paths with all their nodes renumbered consecutively."""
