@@ -3,8 +3,6 @@ from random import sample, randint, randrange, seed
 from hashlib import sha256
 from pathlib import Path
 
-import regex
-
 from goodies import data_to_json
 
 
@@ -60,6 +58,13 @@ class MakeInstance:
         self.renumber_symbols()
         self.create_random_weights(symbol_size_bound)
         return {
+            "name": "h={height:02}_t={tiles:03}_s={symbols:03}_m={max_weight:02}__{hash_value}.json".format(
+                height=self.height,
+                tiles=len(self.paths),
+                symbols=self.node_count,
+                max_weight=max(self.weights),
+                hash_value=sha256(f"{self.paths},{self.weights}".encode("utf8")).hexdigest()[:16],
+            ),
             "height": self.height,  # seems useless
             "symbol_size_bound": max(self.weights),  # may be less than symbol_size_bound
             "symbol_count": self.node_count,
@@ -79,15 +84,8 @@ def dump_instances(config_path):
         leaf_rate = randint(cfg["min_tile_percentage"], cfg["max_tile_percentage"]) / 100.0
         kill_rate = randint(cfg["min_kill_percentage"], cfg["max_kill_percentage"]) / 100.0
         symbol_size_bound = randint(cfg["min_symbol_size_bound"], cfg["max_symbol_size_bound"])
-        d = maker(leaf_rate, kill_rate, symbol_size_bound)
-        name = "h={height:02}_t={tiles:03}_s={symbols:03}_m={max_weight:02}__{hash_value}.json".format(
-            height=d["height"],
-            tiles=len(d["tiles"]),
-            symbols=d["symbol_count"],
-            max_weight=d["symbol_size_bound"],
-            hash_value=sha256(f"{d['tiles']},{d['symbol_sizes']}".encode("utf8")).hexdigest()[:16],
-        )
-        (directory / name).write_text(data_to_json(d))
+        instance = maker(leaf_rate, kill_rate, symbol_size_bound)
+        (directory / instance["name"]).write_text(data_to_json(instance))
         print(".", end="" if i % 80 else "\n", flush=True)
 
 
