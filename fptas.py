@@ -51,12 +51,11 @@ class Fptas:
             i = t.leaf_index - self.internal_node_offset
             self.matrix[i][0]= len(t)
         for t1 in tiles:
+            i = t1.leaf_index - self.internal_node_offset
             for t2 in tiles:
-                set_of_symbols_not_assigned_yet = t1.symbols.difference(t2.symbols)
-                i = t1.leaf_index - self.internal_node_offset
                 j = t2.leaf_index - self.internal_node_offset
                 if i >= j:
-                    self.matrix[i][j] = sum(symbol.size for symbol in set_of_symbols_not_assigned_yet)
+                    self.matrix[i][j] = sum(symbol.size for symbol in t1.symbols.difference(t2.symbols))
 
     def run(self, epsilon):
         self.may_reset_log()
