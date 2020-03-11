@@ -6,6 +6,7 @@ from regex import sub
 
 from tile import Tile
 from symbol import Symbol
+from goodies import data_to_json
 
 
 def unwrap_int_list(m):
@@ -58,9 +59,7 @@ class Instance:
         }
 
     def get_json(self) -> str:
-        text = json.dumps(self.get_data(), indent=2)
-        text = sub(r"\[\s+((?P<n>\d+),?\s+)+\]", unwrap_int_list, text)
-        return text
+        return data_to_json(self.get_data())
 
     def dump_json(self, json_path: Path) -> None:
         json_path.write_text(self.get_json())

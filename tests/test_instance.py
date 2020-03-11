@@ -45,7 +45,7 @@ def test_init_with_json_path():
 
 def test_round_trip():
     path = Path("tests/input/H3-nbT5-001.json")
-    text = path.read_text().strip()
+    text = path.read_text()
     data = json.loads(text)
     instance_1 = Instance(data)
     instance_2 = Instance(path)
