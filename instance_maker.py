@@ -5,7 +5,7 @@ from pathlib import Path
 
 import regex
 
-from tools import instance_to_json
+from goodies import data_to_json
 
 
 class MakeInstance:
@@ -87,7 +87,7 @@ def dump_instances(config_path):
             max_weight=d["symbol_size_bound"],
             hash_value=sha256(f"{d['tiles']},{d['symbol_sizes']}".encode("utf8")).hexdigest()[:16],
         )
-        (directory / name).write_text(instance_to_json(d))
+        (directory / name).write_text(data_to_json(d))
         print(".", end="" if i % 80 else "\n", flush=True)
 
 
