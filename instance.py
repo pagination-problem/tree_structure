@@ -9,10 +9,6 @@ from symbol import Symbol
 from goodies import data_to_json
 
 
-def unwrap_int_list(m):
-    return f"[{', '.join(m.captures('n'))}]"
-
-
 class Instance:
     def __init__(self, path_or_data: Union[Path, Dict]):
 
