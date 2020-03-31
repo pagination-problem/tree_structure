@@ -2,16 +2,16 @@ import context
 from symbol import Symbol
 
 def test_attributes():
-    """A symbol has two attributes: its index and its size."""
+    """A symbol has two attributes: its index and its weight."""
     s1 = Symbol(4, 2)
     assert s1.index == 4
-    assert s1.size == 2
+    assert s1.weight == 2
     s2 = Symbol(4)
     assert s2.index == 4
-    assert s2.size == 1 # default value
-    s3 = Symbol(size=2, index=4)
+    assert s2.weight == 1 # default value
+    s3 = Symbol(weight=2, index=4)
     assert s3.index == 4
-    assert s3.size == 2
+    assert s3.weight == 2
 
 
 def test_equality():

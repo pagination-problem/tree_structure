@@ -1,13 +1,13 @@
 {
   "height": 3,
-  "symbol_size_bound": 9,
+  "symbol_weight_bound": 9,
   "opt_value": null,
   "opt_tiles_m1": [],
   "symbols_on_m1": [],
   "opt_tiles_m2": [],
   "symbols_on_m2": [],
   "symbol_indexes": [1, 2, 3, 4, 5, 7, 9, 10, 11, 14, 15],
-  "symbol_sizes": [0, 5, 3, 1, 2, 6, 2, 1, 4, 3, 5],
+  "symbol_weights": [0, 5, 3, 1, 2, 6, 2, 1, 4, 3, 5],
   "tiles": [
     [1, 2, 4, 9],
     [1, 2, 5, 10],

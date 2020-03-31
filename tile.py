@@ -7,7 +7,7 @@ class Tile:
         self.hash = hash(tuple(self.symbols))
         self.leaf_symbol = max(self.symbols)
         self.leaf_index = self.leaf_symbol.index  # in the order of a Breadth-first search
-        self.length = sum(symbol.size for symbol in self.symbols)
+        self.weight = sum(symbol.weight for symbol in self.symbols)
         self.string = f"{{{', '.join([str(symbol.index) for symbol in sorted(self.symbols)])}}}"
 
     def __str__(self):
@@ -15,9 +15,6 @@ class Tile:
 
     def __iter__(self):
         return iter(self.symbols)
-
-    def __len__(self):
-        return self.length
 
     def __repr__(self):
         return self.string
@@ -27,3 +24,7 @@ class Tile:
 
     def __eq__(self, other):  # a.__eq__(b) is equivalent to a == b
         return self.symbols == other.symbols
+    
+    def __sub__(self, other):
+        """Return the set difference between this tile and another tile."""
+        return self.symbols - other.symbols

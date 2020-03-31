@@ -7,8 +7,8 @@
     "max_tile_percentage": 80,
     "min_kill_percentage": 10,
     "max_kill_percentage": 60,
-    "min_symbol_size_bound": 1,
-    "max_symbol_size_bound": 10,
+    "min_symbol_weight_bound": 1,
+    "max_symbol_weight_bound": 10,
     "arity": 2,
     "seed": 42
 }

@@ -13,5 +13,5 @@ def test_init():
     assert hasattr(t, "hash")
     assert t.leaf_symbol == s3
     assert t.leaf_index == 3
-    assert t.length == 13
+    assert t.weight == 13
     assert t.string == "{1, 2, 3}"

@@ -8,43 +8,37 @@ from symbol import Symbol
 
 
 def test_init_with_json_path():
-    instance = Instance(Path("tests/input/H3-nbT5-001.json"))
+    name = "tests/input/h=03_t=005_s=011_m=06.json"
+    instance = Instance(Path(name))
     assert instance.height == 3
-    assert instance.symbol_size_bound == 9
-    assert instance.opt_tiles_m1 == []
-    assert instance.opt_tiles_m2 == []
-    assert instance.opt_value == None
-    assert instance.symbols_on_m1 == []
-    assert instance.symbols_on_m2 == []
-    assert instance.name == "tests/input/H3-nbT5-001.json"
+    assert instance.symbol_weight_bound == 6
+    assert instance.name == Path(name).name
     assert instance.symbols == frozenset(
         {
-            Symbol(1, 0),
-            Symbol(2, 5),
-            Symbol(3, 3),
-            Symbol(4, 1),
-            Symbol(5, 2),
-            Symbol(7, 6),
-            Symbol(9, 2),
-            Symbol(10, 1),
-            Symbol(11, 4),
-            Symbol(14, 3),
-            Symbol(15, 5),
+            Symbol(0, 0),
+            Symbol(1, 5),
+            Symbol(2, 3),
+            Symbol(3, 1),
+            Symbol(4, 2),
+            Symbol(5, 6),
+            Symbol(6, 2),
+            Symbol(7, 1),
+            Symbol(8, 4),
+            Symbol(9, 3),
+            Symbol(10, 5),
         }
     )
-    assert instance.tiles == frozenset(
-        {
-            Tile([Symbol(1, 0), Symbol(2, 5), Symbol(5, 2), Symbol(10, 1)]),
-            Tile([Symbol(1, 0), Symbol(2, 5), Symbol(5, 2), Symbol(11, 4)]),
-            Tile([Symbol(1, 0), Symbol(3, 3), Symbol(7, 6), Symbol(14, 3)]),
-            Tile([Symbol(1, 0), Symbol(2, 5), Symbol(4, 1), Symbol(9, 2)]),
-            Tile([Symbol(1, 0), Symbol(3, 3), Symbol(7, 6), Symbol(15, 5)]),
-        }
-    )
+    assert instance.tiles == [
+        Tile([Symbol(0, 0), Symbol(1, 5), Symbol(3, 1), Symbol(6, 2)]),
+        Tile([Symbol(0, 0), Symbol(1, 5), Symbol(4, 2), Symbol(7, 1)]),
+        Tile([Symbol(0, 0), Symbol(1, 5), Symbol(4, 2), Symbol(8, 4)]),
+        Tile([Symbol(0, 0), Symbol(2, 3), Symbol(5, 6), Symbol(9, 3)]),
+        Tile([Symbol(0, 0), Symbol(2, 3), Symbol(5, 6), Symbol(10, 5)]),
+    ]
 
 
 def test_round_trip():
-    path = Path("tests/input/H3-nbT5-001.json")
+    path = Path("tests/input/h=03_t=005_s=011_m=06.json")
     text = path.read_text()
     data = json.loads(text)
     instance_1 = Instance(data)
@@ -55,4 +49,3 @@ def test_round_trip():
     print(json_2)
     assert json_1 == json_2
     assert json_1 == text
-
