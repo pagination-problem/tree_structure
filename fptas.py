@@ -14,8 +14,10 @@ class Fptas:
     def set_engine_strategy(self, engine_name):
         if engine_name == "basic":
             self.launch_engine = self.basic_engine
+            self.reconstruct_solution = self.reconstruct_basic_solution
         elif engine_name == "improved":
             self.launch_engine = self.improved_engine
+            self.reconstruct_solution = self.reconstruct_improved_solution
 
     def set_instance(self, instance):
         self.instance = instance
@@ -27,7 +29,6 @@ class Fptas:
     def run(self, epsilon):
         self.may_reset_log()
         self.delta = (epsilon * self.instance.symbol_weight_sum) / (2 * self.instance.tile_count)
-        self.tiles = sorted(self.instance.tiles, key=lambda tile: tile.leaf_index)
         selected_states = [(0, 0, NO_LAST_TILE, NO_LAST_TILE)]
         self.may_log(selected_states)
         selected_states = self.launch_engine(selected_states)
@@ -42,6 +43,27 @@ class Fptas:
             selected_states = self.select_representatives_on_grid(states)
             self.may_log(selected_states)
         return selected_states
+    
+    def reconstruct_basic_solution(self):
+        """Backtrack the logged states to tell which tiles are assigned to which bins."""
+        log_result = self.log_result[:]
+        assert log_result
+        self.best_states = [min(log_result.pop(), key=lambda state: max(state[0], state[1]))]
+        while log_result:
+            bin1 = self.best_states[-1][0::2]
+            bin2 = self.best_states[-1][1::2]
+            states = log_result.pop()
+            for state in states:
+                if state[0::2] == bin1 or state[1::2] == bin2:
+                    self.best_states.append(state)
+                    break
+            else:
+                raise ValueError(f"Cannot match {self.best_states[-1]} in {states}.")
+        bin1 = set(t for (_, _, t, _) in self.best_states if t != NO_LAST_TILE)
+        bin2 = set(t for (_, _, _, t) in self.best_states if t != NO_LAST_TILE)
+        assert not bin1.intersection(bin2)
+        assert len(bin1.union(bin2)) == self.instance.tile_count
+        return (sorted(bin1), sorted(bin2))
 
     def improved_engine(self, selected_states):
         last1 = 0
@@ -58,7 +80,10 @@ class Fptas:
             selected_states = self.select_representatives_on_grid(states)
             self.may_log(selected_states)
         return selected_states
-
+    
+    def reconstruct_improved_solution(self):
+        raise NotImplementedError
+    
     def select_representatives_on_grid(self, states):
         result = {}
         for state in states:

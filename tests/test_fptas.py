@@ -17,9 +17,9 @@ def test_select_representatives_on_grid():
 
 
 instance = Instance(Path("tests/input/h=03_t=005_s=011_m=06.json"))
-# 
+#
 #     Symbol indexes         Symbol weights
-#                           
+#
 #            0                      0
 #          /   \                  /   \
 #         1     2                5     3
@@ -27,8 +27,9 @@ instance = Instance(Path("tests/input/h=03_t=005_s=011_m=06.json"))
 #       3   4     5            1   2     6
 #      /   / \   / \          /   / \   / \
 #     6   7   8 9  10        2   1   4 3   5
-#    
+#
 #            Tile weights    8   8  11 12  14
+
 
 def test_set_instance():
     fptas.set_instance(instance)
@@ -71,6 +72,16 @@ def test_run_basic_fptas():
     for (i, (expected, actual)) in enumerate(zip(expected_log_result, fptas.log_result)):
         print(f"Step {i}: {actual}")
         assert expected == actual
+    (bin1, bin2) = fptas.reconstruct_solution()
+    assert (bin1, bin2) == ([0, 1, 2], [3, 4])
+    assert fptas.best_states == [
+        (15, 17, 2, 4),
+        (15, 12, 2, 3),
+        (15, 0, 2, -1),
+        (11, 0, 1, -1),
+        (8, 0, 0, -1),
+        (0, 0, -1, -1),
+    ]
 
 
 def test_run_improved_fptas():
