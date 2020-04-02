@@ -35,7 +35,7 @@ class MakeInstance:
         nodes occurring in self.paths, excluding the root and the leaves.
         """
         if 0 < kill_rate <= 1:
-            candidates = set.union(*map(set, self.paths)).difference({0}).difference(self.leaves)
+            candidates = set.union(*map(set, self.paths))
             to_kill = set(sample(candidates, round(len(candidates) * kill_rate)))
             for path in self.paths:
                 path[:] = [node for node in path if node not in to_kill]
