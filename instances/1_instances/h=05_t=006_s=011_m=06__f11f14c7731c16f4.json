@@ -1,0 +1,16 @@
+{
+  "name": "h=05_t=006_s=011_m=06__f11f14c7731c16f4.json",
+  "height": 5,
+  "symbol_weight_bound": 6,
+  "symbol_count": 11,
+  "common_symbols": [],
+  "symbol_weights": [1, 6, 5, 6, 1, 4, 6, 4, 6, 6, 4],
+  "tiles": [
+    [0, 3],
+    [0, 3, 7],
+    [1, 4, 8],
+    [1, 4, 9],
+    [1, 5, 10],
+    [2, 6]
+  ]
+}
