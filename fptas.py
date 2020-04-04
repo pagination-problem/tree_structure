@@ -29,12 +29,12 @@ class Fptas:
     def run(self, epsilon):
         self.may_reset_log()
         self.delta = (epsilon * self.instance.symbol_weight_sum) / (2 * self.instance.tile_count)
-        selected_states = [(0, 0, NO_LAST_TILE, NO_LAST_TILE)]
-        self.may_log(selected_states)
-        selected_states = self.launch_engine(selected_states)
+        selected_states = self.launch_engine()
         self.c_max = max(min(selected_states, key=lambda state: max(state[0], state[1]))[:2])
 
-    def basic_engine(self, selected_states):
+    def basic_engine(self):
+        selected_states = [(0, 0, NO_LAST_TILE, NO_LAST_TILE)]
+        self.may_log(selected_states)
         for new in range(self.instance.tile_count):
             states = []
             for (w1, w2, last1, last2) in selected_states:
@@ -43,7 +43,7 @@ class Fptas:
             selected_states = self.select_representatives_on_grid(states)
             self.may_log(selected_states)
         return selected_states
-    
+
     def reconstruct_basic_solution(self):
         """Backtrack the logged states to tell which tiles are assigned to which bins."""
         log_result = self.log_result[:]
@@ -65,25 +65,27 @@ class Fptas:
         assert len(bin1.union(bin2)) == self.instance.tile_count
         return (sorted(bin1), sorted(bin2))
 
-    def improved_engine(self, selected_states):
-        last1 = 0
+    def improved_engine(self):
+        selected_states = [(0, 0, NO_LAST_TILE, 2)]
+        self.may_log(selected_states)
+        last1 = NO_LAST_TILE
         for new in range(self.instance.tile_count):
             states = []
             for (w1, w2, last2, alpha) in selected_states:
                 if alpha == 1:
-                    states.append((w1 + self.costs[new][last1 if w1 else 0], w2, last2, 1))
-                    states.append((w1, w2 + self.costs[new][last2 if w2 else 0], last1, 0))
+                    states.append((w1 + self.costs[new][last1], w2, last2, 1))
+                    states.append((w1, w2 + self.costs[new][last2], last1, 2))
                 else:
-                    states.append((w1 + self.costs[new][last2 if w1 else 0], w2, last1, 1))
-                    states.append((w1, w2 + self.costs[new][last1 if w2 else 0], last2, 0))
+                    states.append((w1 + self.costs[new][last2], w2, last1, 1))
+                    states.append((w1, w2 + self.costs[new][last1], last2, 2))
             last1 = new
             selected_states = self.select_representatives_on_grid(states)
             self.may_log(selected_states)
         return selected_states
-    
+
     def reconstruct_improved_solution(self):
         raise NotImplementedError
-    
+
     def select_representatives_on_grid(self, states):
         result = {}
         for state in states:
