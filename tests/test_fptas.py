@@ -56,7 +56,8 @@ def test_run_basic_fptas():
     fptas.set_instance(instance)
     fptas.set_log_strategy(True)
     fptas.set_engine_strategy("basic")
-    fptas.run(epsilon=0.1)
+    fptas.set_parameters(epsilon=0.1)
+    fptas.run()
     assert fptas.c_max == 17
     pprint(fptas.log_result)
     # fmt: off
@@ -72,7 +73,7 @@ def test_run_basic_fptas():
     for (i, (expected, actual)) in enumerate(zip(expected_log_result, fptas.log_result)):
         print(f"Step {i}: {actual}")
         assert expected == actual
-    (bin1, bin2) = fptas.reconstruct_solution()
+    (bin1, bin2) = fptas.retrieve_solution()
     assert (bin1, bin2) == ([0, 1, 2], [3, 4])
     assert fptas.best_states == [
         (15, 17, 2, 4),
@@ -88,7 +89,8 @@ def test_run_improved_fptas():
     fptas.set_instance(instance)
     fptas.set_log_strategy(True)
     fptas.set_engine_strategy("improved")
-    fptas.run(epsilon=0.1)
+    fptas.set_parameters(epsilon=0.1)
+    fptas.run()
     assert fptas.c_max == 17
     pprint(fptas.log_result)
     # fmt: off

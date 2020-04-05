@@ -14,21 +14,24 @@ class Fptas:
     def set_engine_strategy(self, engine_name):
         if engine_name == "basic":
             self.launch_engine = self.basic_engine
-            self.reconstruct_solution = self.reconstruct_basic_solution
+            self.retrieve_solution = self.retrieve_basic_solution
         elif engine_name == "improved":
             self.launch_engine = self.improved_engine
-            self.reconstruct_solution = self.reconstruct_improved_solution
+            self.retrieve_solution = self.retrieve_improved_solution
+
+    def set_parameters(self, epsilon):
+        self.epsilon = epsilon
 
     def set_instance(self, instance):
         self.instance = instance
         self.costs = [[tile.weight] * instance.tile_count for tile in instance.tiles]
         for (new, new_tile) in enumerate(instance.tiles):
-            for (last, lasttile) in enumerate(instance.tiles[:new]):
-                self.costs[new][last] = sum(symbol.weight for symbol in new_tile - lasttile)
+            for (last, last_tile) in enumerate(instance.tiles[:new]):
+                self.costs[new][last] = sum(symbol.weight for symbol in new_tile - last_tile)
 
-    def run(self, epsilon):
+    def run(self):
         self.may_reset_log()
-        self.delta = (epsilon * self.instance.symbol_weight_sum) / (2 * self.instance.tile_count)
+        self.delta = self.epsilon * self.instance.symbol_weight_sum / 2 / self.instance.tile_count
         selected_states = self.launch_engine()
         self.c_max = max(min(selected_states, key=lambda state: max(state[0], state[1]))[:2])
 
@@ -44,7 +47,7 @@ class Fptas:
             self.may_log(selected_states)
         return selected_states
 
-    def reconstruct_basic_solution(self):
+    def retrieve_basic_solution(self):
         """Backtrack the logged states to tell which tiles are assigned to which bins."""
         log_result = self.log_result[:]
         assert log_result
@@ -83,7 +86,7 @@ class Fptas:
             self.may_log(selected_states)
         return selected_states
 
-    def reconstruct_improved_solution(self):
+    def retrieve_improved_solution(self):
         raise NotImplementedError
 
     def select_representatives_on_grid(self, states):

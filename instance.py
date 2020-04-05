@@ -22,7 +22,6 @@ class Instance:
         # Convert raw symbols and tiles (simple lists of integers) into appropriate objects
         d = {s[0]: Symbol(*s) for s in enumerate(data.pop("symbol_weights"))}
         data["symbols"] = frozenset(d.values())
-        print(data["tiles"])
         data["tiles"] = [Tile([d[i] for i in t]) for t in data.pop("tiles")]
 
         # Populate the other fields without touching the raw values
