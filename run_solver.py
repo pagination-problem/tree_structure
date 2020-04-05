@@ -41,7 +41,7 @@ class Runner:
         self.solved_instance_count += 1
         solution = self.solver.retrieve_solution()
         report = {
-            "duration_magnitude": int(math.log(elapsed_time, 10)),
+            "duration_magnitude": int(math.log10(elapsed_time)),
             "c_max": self.solver.c_max,
         }
         if self.solver.log_result:
@@ -65,11 +65,12 @@ class Runner:
             print(f"{i:4} | {now} | {instance.name} | ", end="", flush=True)
             output_path = self.output_dir / instance.name
             if output_path.exists():
-                print(f"existing")
+                print(f"already solved")
                 continue
             report = self.solve_one(instance)
             text = data_to_json(report)
             output_path.write_text(text)
+        print()
         if self.solved_instance_count:
             print(f"{self.solved_instance_count} instances solved", end=" ")
             print(f"in {self.total_elapsed_time:0.02} seconds.")
