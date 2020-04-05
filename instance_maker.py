@@ -5,6 +5,8 @@ from hashlib import sha256
 from pathlib import Path
 from random import randint, randrange, sample, seed
 
+from numpy import base_repr
+
 from goodies import data_to_json
 
 
@@ -76,13 +78,14 @@ class InstanceMaker:
         self.remove_random_nodes(kill_rate)
         self.renumber_symbols()
         self.create_random_weights(symbol_weight_bound)
+        identifier = f"{self.paths},{self.weights}".encode("utf8")
         return {
             "name": "h={height:02}_t={tiles:03}_s={symbols:03}_m={max_weight:02}__{hash_value}.json".format(
                 height=self.height,
                 tiles=len(self.paths),
                 symbols=self.node_count,
                 max_weight=max(self.weights),
-                hash_value=sha256(f"{self.paths},{self.weights}".encode("utf8")).hexdigest()[:16],
+                hash_value=base_repr(int(sha256(identifier).hexdigest(), 16), base=36)[:4],
             ),
             "height": self.height,  # seems useless
             "symbol_weight_bound": max(self.weights),  # may be less than symbol_weight_bound

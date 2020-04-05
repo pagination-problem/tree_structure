@@ -1,0 +1,14 @@
+{
+  "name": "h=05_t=004_s=007_m=02__YZP6.json",
+  "height": 5,
+  "symbol_weight_bound": 2,
+  "symbol_count": 7,
+  "common_symbols": [0],
+  "symbol_weights": [2, 1, 1, 1, 1, 2, 2],
+  "tiles": [
+    [0, 2, 1],
+    [0, 3],
+    [0, 4],
+    [0, 6, 5]
+  ]
+}

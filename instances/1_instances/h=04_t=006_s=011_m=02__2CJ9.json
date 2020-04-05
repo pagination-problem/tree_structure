@@ -1,0 +1,16 @@
+{
+  "name": "h=04_t=006_s=011_m=02__2CJ9.json",
+  "height": 4,
+  "symbol_weight_bound": 2,
+  "symbol_count": 11,
+  "common_symbols": [],
+  "symbol_weights": [2, 2, 2, 1, 2, 1, 2, 2, 2, 1, 1],
+  "tiles": [
+    [0, 2, 5],
+    [0, 3, 6],
+    [1, 4, 9],
+    [1, 4, 10],
+    [1, 7],
+    [1, 8]
+  ]
+}

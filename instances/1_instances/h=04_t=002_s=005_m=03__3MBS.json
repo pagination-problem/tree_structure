@@ -1,0 +1,12 @@
+{
+  "name": "h=04_t=002_s=005_m=03__3MBS.json",
+  "height": 4,
+  "symbol_weight_bound": 3,
+  "symbol_count": 5,
+  "common_symbols": [],
+  "symbol_weights": [1, 2, 3, 2, 1],
+  "tiles": [
+    [0, 2, 4],
+    [1, 3]
+  ]
+}

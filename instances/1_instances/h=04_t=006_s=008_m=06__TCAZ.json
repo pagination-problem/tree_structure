@@ -1,0 +1,16 @@
+{
+  "name": "h=04_t=006_s=008_m=06__TCAZ.json",
+  "height": 4,
+  "symbol_weight_bound": 6,
+  "symbol_count": 8,
+  "common_symbols": [0, 1],
+  "symbol_weights": [4, 2, 4, 5, 4, 6, 3, 4],
+  "tiles": [
+    [0, 1],
+    [0, 1, 2, 3],
+    [0, 1, 2, 4],
+    [0, 1, 2, 4, 7],
+    [0, 1, 5],
+    [0, 1, 6]
+  ]
+}
