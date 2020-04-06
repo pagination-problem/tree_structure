@@ -6,6 +6,7 @@ from solver_fptas import Fptas
 from instance import Instance
 
 fptas = Fptas()
+fptas.set_log_strategy(True)
 
 
 def test_select_representatives_on_grid():
@@ -54,7 +55,6 @@ def test_set_instance():
 
 def test_run_basic_fptas():
     fptas.set_instance(instance)
-    fptas.set_log_strategy(True)
     fptas.set_engine_strategy("basic")
     fptas.set_parameters(epsilon=0.1)
     fptas.run()
@@ -87,7 +87,6 @@ def test_run_basic_fptas():
 
 def test_run_improved_fptas():
     fptas.set_instance(instance)
-    fptas.set_log_strategy(True)
     fptas.set_engine_strategy("improved")
     fptas.set_parameters(epsilon=0.1)
     fptas.run()
