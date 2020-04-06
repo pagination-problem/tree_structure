@@ -1,0 +1,9 @@
+{
+  "duration_magnitude": -1,
+  "c_max": 66,
+  "solution": [
+    [0, 1, 2, 3, 4, 5, 9],
+    [6, 7, 8, 10, 11, 12, 13]
+  ],
+  "log": "not dumped (too long)."
+}
