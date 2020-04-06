@@ -9,7 +9,7 @@ from instance import Instance
 from goodies import data_to_json
 
 SOLVERS = {
-    "FPTAS": __import__("fptas").Fptas,
+    "FPTAS": __import__("solver_fptas").Fptas,
 }
 
 MAX_LOG_SIZE = 10
@@ -73,7 +73,7 @@ class Runner:
         print()
         if self.solved_instance_count:
             print(f"{self.solved_instance_count} instances solved", end=" ")
-            print(f"in {self.total_elapsed_time:0.02} seconds.")
+            print(f"in {round(self.total_elapsed_time, 2)} seconds.")
         else:
             print(f"All {i} instances already solved.")
 

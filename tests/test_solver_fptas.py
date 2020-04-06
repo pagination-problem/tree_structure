@@ -2,7 +2,7 @@ from pathlib import Path
 from pprint import pprint
 
 import context
-from fptas import Fptas
+from solver_fptas import Fptas
 from instance import Instance
 
 fptas = Fptas()
