@@ -1,15 +1,9 @@
+from solver import AbstractSolver
+
 NO_LAST_TILE = -1  # index of the last column of the cost matrix
 
 
-class Fptas:
-    def set_log_strategy(self, log):
-        self.log_result = []
-        if log:
-            self.may_reset_log = lambda: self.log_result.clear()
-            self.may_log = lambda states: self.log_result.append(states)
-        else:
-            self.may_reset_log = lambda: None
-            self.may_log = lambda *args: None
+class Fptas(AbstractSolver):
 
     def set_engine_strategy(self, engine_name):
         if engine_name == "basic":
@@ -23,6 +17,7 @@ class Fptas:
         self.epsilon = epsilon
 
     def set_instance(self, instance):
+        self.may_reset_log()
         self.instance = instance
         self.costs = [[tile.weight] * instance.tile_count for tile in instance.tiles]
         for (new, new_tile) in enumerate(instance.tiles):
@@ -30,7 +25,6 @@ class Fptas:
                 self.costs[new][last] = sum(symbol.weight for symbol in new_tile - last_tile)
 
     def run(self):
-        self.may_reset_log()
         self.delta = self.epsilon * self.instance.symbol_weight_sum / 2 / self.instance.tile_count
         selected_states = self.launch_engine()
         self.c_max = max(min(selected_states, key=lambda state: max(state[0], state[1]))[:2])

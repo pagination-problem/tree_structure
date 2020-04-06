@@ -10,6 +10,7 @@ from goodies import data_to_json
 
 SOLVERS = {
     "FPTAS": __import__("solver_fptas").Fptas,
+    "naive_cut": __import__("solver_naive_cut").NaiveCut,
 }
 
 MAX_LOG_SIZE = 10
@@ -36,7 +37,7 @@ class Runner:
         starting_time = time()
         self.solver.run()
         elapsed_time = time() - starting_time
-        print(f"solved in {elapsed_time:.2e} s.")
+        print(f"{self.solver.c_max:4} | solved in {elapsed_time:.2e} s.")
         self.total_elapsed_time += elapsed_time
         self.solved_instance_count += 1
         solution = self.solver.retrieve_solution()
@@ -57,15 +58,16 @@ class Runner:
         print(f"Input directory: {self.input_dir}")
         print(f"Output directory: {self.output_dir}")
         print()
-        print("   # |     time | name                             | outcome")
-        print("-----+----------+----------------------------------+-----------------------")
+        print("   # |     time | name                             | best | duration")
+        print("-----+----------+----------------------------------+------+-----------------------")
         for (i, instance_path) in enumerate(sorted(self.input_dir.glob("*.json")), 1):
             now = datetime.now().isoformat(timespec="seconds").partition("T")[2]
             instance = Instance(instance_path)
             print(f"{i:4} | {now} | {instance.name} | ", end="", flush=True)
             output_path = self.output_dir / instance.name
             if output_path.exists():
-                print(f"already solved")
+                c_max = json.loads(output_path.read_text())["c_max"]
+                print(f"{c_max:4} | already solved")
                 continue
             report = self.solve_one(instance)
             text = data_to_json(report)
@@ -79,8 +81,16 @@ class Runner:
 
 
 if __name__ == "__main__":
-    filename = "1_config"
     if len(sys.argv) > 1:
         filename = sys.argv[1]
-    run = Runner(filename)
-    run()
+        run = Runner(filename)
+        run()
+    else:
+        filenames = [
+            "1_config_basic_fptas.json",
+            "1_config_naive_cut.json",
+        ]
+        for filename in filenames:
+            run = Runner(filename)
+            run()
+            print()
