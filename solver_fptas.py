@@ -4,7 +4,6 @@ NO_LAST_TILE = -1  # index of the last column of the cost matrix
 
 
 class Fptas(AbstractSolver):
-
     def set_engine_strategy(self, engine_name):
         if engine_name == "basic":
             self.launch_engine = self.basic_engine
@@ -12,9 +11,6 @@ class Fptas(AbstractSolver):
         elif engine_name == "improved":
             self.launch_engine = self.improved_engine
             self.retrieve_solution = self.retrieve_improved_solution
-
-    def set_parameters(self, epsilon):
-        self.epsilon = epsilon
 
     def set_instance(self, instance):
         self.may_reset_log()
@@ -24,22 +20,25 @@ class Fptas(AbstractSolver):
             for (last, last_tile) in enumerate(instance.tiles[:new]):
                 self.costs[new][last] = sum(symbol.weight for symbol in new_tile - last_tile)
 
+    def set_parameters(self, epsilon):
+        self.epsilon = epsilon
+
     def run(self):
-        self.delta = self.epsilon * self.instance.symbol_weight_sum / 2 / self.instance.tile_count
-        selected_states = self.launch_engine()
-        self.c_max = max(min(selected_states, key=lambda state: max(state[0], state[1]))[:2])
+        self.grid = Grid(self.epsilon, self.instance.symbol_weight_sum, self.instance.tile_count)
+        states = self.launch_engine()
+        self.c_max = max(min(states, key=lambda state: max(state[0], state[1]))[:2])
 
     def basic_engine(self):
-        selected_states = [(0, 0, NO_LAST_TILE, NO_LAST_TILE)]
-        self.may_log(selected_states)
+        states = [(0, 0, NO_LAST_TILE, NO_LAST_TILE)]
+        self.may_log(states)
         for new in range(self.instance.tile_count):
-            states = []
-            for (w1, w2, last1, last2) in selected_states:
-                states.append((w1 + self.costs[new][last1], w2, new, last2))
-                states.append((w1, w2 + self.costs[new][last2], last1, new))
-            selected_states = self.select_representatives_on_grid(states)
-            self.may_log(selected_states)
-        return selected_states
+            self.grid.reset()
+            for (w1, w2, last1, last2) in states:
+                self.grid.may_add_state((w1 + self.costs[new][last1], w2, new, last2))
+                self.grid.may_add_state((w1, w2 + self.costs[new][last2], last1, new))
+            states = self.grid.get_states()
+            self.may_log(states)
+        return states
 
     def retrieve_basic_solution(self):
         """Backtrack the logged states to tell which tiles are assigned to which bins."""
@@ -63,30 +62,40 @@ class Fptas(AbstractSolver):
         return (sorted(bin1), sorted(bin2))
 
     def improved_engine(self):
-        selected_states = [(0, 0, NO_LAST_TILE, 2)]
-        self.may_log(selected_states)
+        states = [(0, 0, NO_LAST_TILE, 2)]
+        self.may_log(states)
         last1 = NO_LAST_TILE
         for new in range(self.instance.tile_count):
-            states = []
-            for (w1, w2, last2, alpha) in selected_states:
+            self.grid.reset()
+            for (w1, w2, last2, alpha) in states:
                 if alpha == 1:
-                    states.append((w1 + self.costs[new][last1], w2, last2, 1))
-                    states.append((w1, w2 + self.costs[new][last2], last1, 2))
+                    self.grid.may_add_state((w1 + self.costs[new][last1], w2, last2, 1))
+                    self.grid.may_add_state((w1, w2 + self.costs[new][last2], last1, 2))
                 else:
-                    states.append((w1 + self.costs[new][last2], w2, last1, 1))
-                    states.append((w1, w2 + self.costs[new][last1], last2, 2))
+                    self.grid.may_add_state((w1 + self.costs[new][last2], w2, last1, 1))
+                    self.grid.may_add_state((w1, w2 + self.costs[new][last1], last2, 2))
             last1 = new
-            selected_states = self.select_representatives_on_grid(states)
-            self.may_log(selected_states)
-        return selected_states
+            states = self.grid.get_states()
+            self.may_log(states)
+        return states
 
     def retrieve_improved_solution(self):
         raise NotImplementedError
 
-    def select_representatives_on_grid(self, states):
-        result = {}
-        for state in states:
-            coords = (state[0] // self.delta, state[1] // self.delta)
-            if coords not in result or state < result[coords]:
-                result[coords] = state
-        return list(result.values())
+
+class Grid:
+    """Grid keeping only the “representative” states."""
+
+    def __init__(self, epsilon, symbol_weight_sum, tile_count):
+        self.delta = epsilon * symbol_weight_sum / 2 / tile_count
+
+    def reset(self):
+        self.grid = {}
+
+    def may_add_state(self, state):
+        coords = (state[0] // self.delta, state[1] // self.delta)
+        if coords not in self.grid or state < self.grid[coords]:
+            self.grid[coords] = state
+
+    def get_states(self):
+        return list(self.grid.values())

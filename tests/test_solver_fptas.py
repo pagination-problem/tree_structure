@@ -2,21 +2,24 @@ from pathlib import Path
 from pprint import pprint
 
 import context
-from solver_fptas import Fptas
+from solver_fptas import Fptas, Grid
 from instance import Instance
+
+
+def test_grid():
+    grid = Grid(epsilon=0.1, symbol_weight_sum=200, tile_count=5)
+    assert grid.delta == 2
+    grid.reset()
+    states = [(0, 1), (1, 5), (2, 0), (3, 1), (3, 3), (4, 1), (5, 0), (5, 1), (5, 3), (5, 4)]
+    for state in states:
+        grid.may_add_state(state)
+    filtered_states = grid.get_states()
+    print(filtered_states)
+    assert filtered_states == [(0, 1), (1, 5), (2, 0), (3, 3), (4, 1), (5, 3), (5, 4)]
+
 
 fptas = Fptas()
 fptas.set_log_strategy(True)
-
-
-def test_select_representatives_on_grid():
-    fptas.delta = 2
-    states = [(0.5, 0.5), (1.5, 1.5), (2.5, 2.5), (2.75, 2.75)]
-    actual = fptas.select_representatives_on_grid(states)
-    print(actual)
-    assert actual == [(0.5, 0.5), (2.5, 2.5)]
-
-
 instance = Instance(Path("tests/input/h=03_t=005_s=011_m=06.json"))
 #
 #     Symbol indexes         Symbol weights
