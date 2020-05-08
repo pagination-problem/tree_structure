@@ -94,8 +94,9 @@ class Grid:
 
     def may_add_state(self, state):
         coords = (state[0] // self.delta, state[1] // self.delta)
-        if coords not in self.grid or state < self.grid[coords]:
-            self.grid[coords] = state
+        key = coords + state[2:4]
+        if key not in self.grid or state[:2] < self.grid[key][:2]:
+            self.grid[key] = state
 
     def get_states(self):
         return list(self.grid.values())
