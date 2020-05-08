@@ -1,8 +1,8 @@
 {
     "input_dir": "instances/1_instances/",
-    "output_dir": "solutions/1_solutions/FPTAS/basic/",
+    "output_dir": "solutions/1_solutions/FPTAS/improved/",
     "solver": "FPTAS",
-    "engine": "basic",
+    "engine": "improved",
     "parameters": {
         "epsilon": 1
     },
