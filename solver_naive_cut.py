@@ -17,13 +17,11 @@ class NaiveCut(AbstractSolver):
 
         tiles = self.instance.tiles
         differences = [abs(weight(tiles[:i]) - weight(tiles[i:])) for i in range(len(tiles))]
-        self.may_log(tuple(differences))
         minimal_difference = min(differences)
         i = differences.index(minimal_difference)
-        self.may_log(i)
+        self.solution = i
         self.c_max = max(weight(tiles[:i]), weight(tiles[i:]))
 
     def retrieve_solution(self):
-        assert self.log_result
-        i = self.log_result[-1]
+        i = self.solution
         return (list(range(i)), list(range(i, len(self.instance.tiles))))
