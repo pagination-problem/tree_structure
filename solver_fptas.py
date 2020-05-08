@@ -33,9 +33,9 @@ class Fptas(AbstractSolver):
         self.may_log(states)
         for new in range(self.instance.tile_count):
             self.grid.reset()
-            for (w1, w2, last1, last2) in states:
-                self.grid.may_add_state((w1 + self.costs[new][last1], w2, new, last2))
-                self.grid.may_add_state((w1, w2 + self.costs[new][last2], last1, new))
+            for (w1, w2, top1, top2) in states:
+                self.grid.may_add_state((w1 + self.costs[new][top1], w2, new, top2))
+                self.grid.may_add_state((w1, w2 + self.costs[new][top2], top1, new))
             states = self.grid.get_states()
             self.may_log(states)
         return states
