@@ -13,7 +13,7 @@ SOLVERS = {
     "naive_cut": __import__("solver_naive_cut").NaiveCut,
 }
 
-MAX_LOG_SIZE = 10
+MAX_LOG_SIZE = 1000
 
 
 class Runner:
@@ -37,37 +37,50 @@ class Runner:
         starting_time = time()
         self.solver.run()
         elapsed_time = time() - starting_time
-        print(f"{self.solver.c_max:4} | solved in {elapsed_time:.2e} s.")
         self.total_elapsed_time += elapsed_time
         self.solved_instance_count += 1
-        solution = self.solver.retrieve_solution()
         report = {
             "duration_magnitude": int(math.log10(elapsed_time)),
             "c_max": self.solver.c_max,
+            "solution": self.solver.retrieve_solution(),
         }
         if self.solver.log_result:
-            report["solution"] = solution
+            report["step_count"] = sum(map(len, self.solver.log_result))
             report["log"] = (
                 self.solver.log_result
-                if len(self.solver.log_result) < MAX_LOG_SIZE
+                if report["step_count"] < MAX_LOG_SIZE
                 else f"not dumped (too long)."
             )
+        columns = [
+            f"{report.get('step_count', '       N/A'):10}",
+            f"{self.solver.c_max:4}",
+            f"solved in {elapsed_time:.2e} s.",
+        ]
+        print(" | ".join(columns))
         return report
 
-    def __call__(self):
-        print(f"Input directory: {self.input_dir}")
-        print(f"Output directory: {self.output_dir}")
-        print()
-        print("   # |     time | name                             | best | duration")
-        print("-----+----------+----------------------------------+------+-----------------------")
+    def __call__(self, skip_existing=True):
+        preamble = [
+            f"Input directory: {self.input_dir}",
+            f"Output directory: {self.output_dir}",
+            "",
+            "   # |     time | name                             | step count | best | duration",
+            "-----+----------+----------------------------------+------------+------+------------------------",
+        ]
+        print("\n".join(preamble))
         for (i, instance_path) in enumerate(sorted(self.input_dir.glob("*.json")), 1):
             now = datetime.now().isoformat(timespec="seconds").partition("T")[2]
             instance = Instance(instance_path)
             print(f"{i:4} | {now} | {instance.name} | ", end="", flush=True)
             output_path = self.output_dir / instance.name
-            if output_path.exists():
-                c_max = json.loads(output_path.read_text())["c_max"]
-                print(f"{c_max:4} | already solved")
+            if skip_existing and output_path.exists():
+                report = json.loads(output_path.read_text())
+                columns = [
+                    f"{report.get('step_count', '       N/A'):10}",
+                    f"{report['c_max']:4}",
+                    f"previously in ~1e{report['duration_magnitude']} s.",
+                ]
+                print(" | ".join(columns))
                 continue
             report = self.solve_one(instance)
             text = data_to_json(report)
@@ -78,6 +91,7 @@ class Runner:
             print(f"in {round(self.total_elapsed_time, 2)} seconds.")
         else:
             print(f"All {i} instances already solved.")
+        print()
 
 
 if __name__ == "__main__":
@@ -88,9 +102,10 @@ if __name__ == "__main__":
     else:
         filenames = [
             "1_config_basic_fptas.json",
+            "1_config_improved_fptas.json",
             "1_config_naive_cut.json",
         ]
         for filename in filenames:
             run = Runner(filename)
-            run()
+            run(skip_existing=True)
             print()
