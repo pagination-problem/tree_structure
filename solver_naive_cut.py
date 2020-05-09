@@ -21,6 +21,7 @@ class NaiveCut(AbstractSolver):
         i = differences.index(minimal_difference)
         self.solution = i
         self.c_max = max(weight(tiles[:i]), weight(tiles[i:]))
+        self.step_count = "N/A"
 
     def retrieve_solution(self):
         i = self.solution

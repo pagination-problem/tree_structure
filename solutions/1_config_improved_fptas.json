@@ -6,5 +6,7 @@
     "parameters": {
         "epsilon": 1
     },
-    "log": true
+    "log": true,
+    "recalculate_existing": true,
+    "rewrite_existing": true
 }

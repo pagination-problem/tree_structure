@@ -4,9 +4,11 @@ class AbstractSolver:
         if log:
             self.may_reset_log = lambda: self.log_result.clear()
             self.may_log = lambda states: self.log_result.append(states)
+            self.may_retrieve_solution = self.retrieve_solution
         else:
             self.may_reset_log = lambda: None
             self.may_log = lambda *args: None
+            self.may_retrieve_solution = lambda *args: None
 
     def set_engine_strategy(self, engine_name):
         pass

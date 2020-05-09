@@ -23,26 +23,28 @@ class Fptas(AbstractSolver):
 
     def run(self):
         self.grid = Grid(self.epsilon, self.instance.symbol_weight_sum, self.instance.tile_count)
+        self.step_count = 0
         states = self.launch_engine()
         self.c_max = max(min(states, key=lambda state: max(state[0], state[1]))[:2])
 
     def basic_engine(self):
-        states = [(0, 0, NO_LAST_TILE, NO_LAST_TILE)]
+        states = [(self.instance.tiles[0].weight, 0, 0, NO_LAST_TILE)]
         self.may_log(states)
-        for new in range(self.instance.tile_count):
+        for new in range(1, self.instance.tile_count):
             self.grid.reset()
             for (w1, w2, top1, top2) in states:
                 self.grid.may_add_state((w1 + self.costs[new][top1], w2, new, top2))
                 self.grid.may_add_state((w1, w2 + self.costs[new][top2], top1, new))
             states = self.grid.get_states()
+            self.step_count += len(states)
             self.may_log(states)
         return states
 
     def improved_engine(self):
-        states = [(0, 0, NO_LAST_TILE, 2, NO_LAST_TILE, NO_LAST_TILE)]
+        states = [(self.instance.tiles[0].weight, 0, NO_LAST_TILE, 1, 0, NO_LAST_TILE)]
         self.may_log(states)
-        last1 = NO_LAST_TILE
-        for new in range(self.instance.tile_count):
+        last1 = 0
+        for new in range(1, self.instance.tile_count):
             self.grid.reset()
             for (w1, w2, last2, alpha, top1, top2) in states:
                 if alpha == 1:
@@ -53,6 +55,7 @@ class Fptas(AbstractSolver):
                     self.grid.may_add_state((w1, w2 + self.costs[new][last1], last2, 2, top1, new))
             last1 = new
             states = self.grid.get_states()
+            self.step_count += len(states)
             self.may_log(states)
         return states
 

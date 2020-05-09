@@ -29,6 +29,8 @@ class Runner:
         self.input_dir = Path(config["input_dir"])
         self.output_dir = Path(config["output_dir"])
         self.output_dir.mkdir(parents=True, exist_ok=True)
+        self.recalculate_existing = config["recalculate_existing"]
+        self.rewrite_existing = config["rewrite_existing"]
         self.total_elapsed_time = 0
         self.solved_instance_count = 0
 
@@ -42,27 +44,28 @@ class Runner:
         report = {
             "duration_magnitude": int(math.log10(elapsed_time)),
             "c_max": self.solver.c_max,
-            "solution": self.solver.retrieve_solution(),
+            "solution": self.solver.may_retrieve_solution(),
+            "step_count": self.solver.step_count,
         }
         if self.solver.log_result:
-            report["step_count"] = sum(map(len, self.solver.log_result))
             report["log"] = (
                 self.solver.log_result
                 if report["step_count"] < MAX_LOG_SIZE
                 else f"not dumped (too long)."
             )
         columns = [
-            f"{report.get('step_count', '       N/A'):10}",
+            f"{report['step_count']:10}",
             f"{self.solver.c_max:4}",
             f"solved in {elapsed_time:.2e} s.",
         ]
         print(" | ".join(columns))
         return report
 
-    def __call__(self, skip_existing=True):
+    def __call__(self):
         preamble = [
             f"Input directory: {self.input_dir}",
-            f"Output directory: {self.output_dir}",
+            f"Output directory: {self.output_dir}"
+            + ("" if self.rewrite_existing else " (not rewritten)"),
             "",
             "   # |     time | name                             | step count | best | duration",
             "-----+----------+----------------------------------+------------+------+------------------------",
@@ -73,18 +76,18 @@ class Runner:
             instance = Instance(instance_path)
             print(f"{i:4} | {now} | {instance.name} | ", end="", flush=True)
             output_path = self.output_dir / instance.name
-            if skip_existing and output_path.exists():
+            if self.recalculate_existing or not output_path.exists():
+                report = self.solve_one(instance)
+                if self.rewrite_existing:
+                    output_path.write_text(data_to_json(report))
+            else:
                 report = json.loads(output_path.read_text())
                 columns = [
-                    f"{report.get('step_count', '       N/A'):10}",
+                    f"{report['step_count']:10}",
                     f"{report['c_max']:4}",
                     f"previously in ~1e{report['duration_magnitude']} s.",
                 ]
                 print(" | ".join(columns))
-                continue
-            report = self.solve_one(instance)
-            text = data_to_json(report)
-            output_path.write_text(text)
         print()
         if self.solved_instance_count:
             print(f"{self.solved_instance_count} instances solved", end=" ")
@@ -107,5 +110,5 @@ if __name__ == "__main__":
         ]
         for filename in filenames:
             run = Runner(filename)
-            run(skip_existing=True)
+            run()
             print()
