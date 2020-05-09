@@ -1,0 +1,12 @@
+{
+    "input_dir": "instances/1_instances/",
+    "output_dir": "solutions/1_solutions/FPTAS/basic_with_c_max_bound/",
+    "solver": "FPTAS",
+    "engine": "basic_with_c_max_bound",
+    "parameters": {
+        "epsilon": 1
+    },
+    "log": false,
+    "recalculate_existing": true,
+    "rewrite_existing": false
+}

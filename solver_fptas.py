@@ -9,6 +9,8 @@ class Fptas(AbstractSolver):
             self.launch_engine = self.basic_engine
         elif engine_name == "improved":
             self.launch_engine = self.improved_engine
+        elif engine_name == "basic_with_c_max_bound":
+            self.launch_engine = self.basic_engine_with_c_max_bound
 
     def set_instance(self, instance):
         self.may_reset_log()
@@ -26,6 +28,15 @@ class Fptas(AbstractSolver):
         self.step_count = 0
         states = self.launch_engine()
         self.c_max = max(min(states, key=lambda state: max(state[0], state[1]))[:2])
+    
+    def basic_engine_with_c_max_bound(self):
+        bound_calculator = __import__("solver_naive_cut").NaiveCut()
+        bound_calculator.set_log_strategy(False)
+        bound_calculator.set_instance(self.instance)
+        bound_calculator.run()
+        c_max_bound = bound_calculator.c_max
+        self.grid.set_c_max_bound(c_max_bound)
+        return self.basic_engine()
 
     def basic_engine(self):
         states = [(self.instance.tiles[0].weight, 0, 0, NO_LAST_TILE)]
@@ -87,11 +98,21 @@ class Grid:
 
     def __init__(self, epsilon, symbol_weight_sum, tile_count):
         self.delta = epsilon * symbol_weight_sum / 2 / tile_count
+        self.may_add_state = self.may_add_state_without_bound_check
+
+    def set_c_max_bound(self, c_max_bound):
+        """If a c_max is already known, use its value to cut states."""
+        self.c_max_bound = c_max_bound
+        self.may_add_state = self.may_add_state_with_bound_check
 
     def reset(self):
         self.grid = {}
 
-    def may_add_state(self, state):
+    def may_add_state_with_bound_check(self, state):
+        if state[0] <= self.c_max_bound and state[1] <= self.c_max_bound:
+            self.may_add_state_without_bound_check(state)
+
+    def may_add_state_without_bound_check(self, state):
         coords = (state[0] // self.delta, state[1] // self.delta)
         key = coords + state[2:4]
         if key not in self.grid or state[:2] < self.grid[key][:2]:
