@@ -10,12 +10,12 @@ def test_grid():
     grid = Grid(epsilon=0.1, symbol_weight_sum=200, tile_count=5)
     assert grid.delta == 2
     grid.reset()
-    states = [(0, 1), (1, 5), (2, 0), (3, 1), (3, 3), (4, 1), (5, 0), (5, 1), (5, 3), (5, 4)]
+    states = [(0, 1, 42, 42), (1, 5, 42, 42), (2, 0, 42, 42), (3, 1, 42, 42), (3, 3, 42, 42), (4, 1, 42, 42), (5, 0, 42, 42), (5, 1, 42, 42), (5, 3, 42, 42), (5, 4, 42, 42)]
     for state in states:
-        grid.may_add_state(state)
-    filtered_states = grid.get_states()
+        grid.may_add_state(*state)
+    filtered_states = list(grid.get_states())
     print(filtered_states)
-    assert filtered_states == [(0, 1), (1, 5), (2, 0), (3, 3), (4, 1), (5, 3), (5, 4)]
+    assert filtered_states == [(0, 1, 42, 42), (1, 5, 42, 42), (2, 0, 42, 42), (3, 3, 42, 42), (4, 1, 42, 42), (5, 3, 42, 42), (5, 4, 42, 42)]
 
 
 fptas = Fptas()
@@ -109,48 +109,3 @@ def test_run_basic_fptas():
         (11, 0, 1, -1),
         (8, 0, 0, -1),
     ]
-
-
-def test_run_improved_fptas():
-    fptas.set_instance(instance)
-    fptas.set_engine_strategy("improved")
-    fptas.set_parameters(epsilon=1)
-    fptas.run()
-    assert fptas.c_max == 17
-    pprint(fptas.log_result)
-    expected_log_result = [
-        [(8, 0, -1, 1, 0, -1)],
-        [(11, 0, -1, 1, 1, -1), (8, 8, 0, 2, 0, 1)],
-        [(15, 0, -1, 1, 2, -1), (11, 11, 1, 2, 1, 2), (14, 8, 1, 1, 2, 1), (8, 12, 0, 2, 0, 2)],
-        [
-            (27, 0, -1, 1, 3, -1),
-            (15, 12, 2, 2, 2, 3),
-            (23, 11, 2, 1, 3, 2),
-            (11, 23, 1, 2, 1, 3),
-            (26, 8, 1, 1, 3, 1),
-            (14, 20, 2, 2, 2, 3),
-            (20, 12, 2, 1, 3, 2),
-            (8, 24, 0, 2, 0, 3),
-        ],
-        [
-            (32, 0, -1, 1, 4, -1),
-            (27, 14, 3, 2, 3, 4),
-            (29, 12, 3, 1, 4, 3),
-            (15, 17, 2, 2, 2, 4),
-            (28, 11, 2, 1, 4, 2),
-            (23, 25, 3, 2, 3, 4),
-            (25, 23, 3, 1, 4, 3),
-            (11, 28, 1, 2, 1, 4),
-            (31, 8, 1, 1, 4, 1),
-            (26, 22, 3, 2, 3, 4),
-            (28, 20, 3, 1, 4, 3),
-            (14, 25, 2, 2, 2, 4),
-            (25, 12, 2, 1, 4, 2),
-            (20, 26, 3, 2, 3, 4),
-            (22, 24, 3, 1, 4, 3),
-            (8, 29, 0, 2, 0, 4),
-        ],
-    ]
-    for (i, (expected, actual)) in enumerate(zip(expected_log_result, fptas.log_result)):
-        print(f"Step {i}: {actual}")
-        assert expected == actual

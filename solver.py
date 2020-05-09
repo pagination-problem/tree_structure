@@ -3,7 +3,7 @@ class AbstractSolver:
         self.log_result = []
         if log:
             self.may_reset_log = lambda: self.log_result.clear()
-            self.may_log = lambda states: self.log_result.append(states)
+            self.may_log = lambda states: self.log_result.append(list(states))
             self.may_retrieve_solution = self.retrieve_solution
         else:
             self.may_reset_log = lambda: None

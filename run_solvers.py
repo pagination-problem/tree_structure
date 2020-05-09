@@ -104,9 +104,8 @@ if __name__ == "__main__":
         run()
     else:
         filenames = [
-            "1_config_basic_fptas.json",
-            "1_config_improved_fptas.json",
-            "1_config_naive_cut.json",
+            # "1_config_basic_fptas.json",
+            # "1_config_naive_cut.json",
             "1_config_basic_fptas_with_c_max_bound",
         ]
         for filename in filenames:

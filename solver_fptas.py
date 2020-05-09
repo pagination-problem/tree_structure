@@ -7,8 +7,6 @@ class Fptas(AbstractSolver):
     def set_engine_strategy(self, engine_name):
         if engine_name == "basic":
             self.launch_engine = self.basic_engine
-        elif engine_name == "improved":
-            self.launch_engine = self.improved_engine
         elif engine_name == "basic_with_c_max_bound":
             self.launch_engine = self.basic_engine_with_c_max_bound
 
@@ -41,30 +39,13 @@ class Fptas(AbstractSolver):
     def basic_engine(self):
         states = [(self.instance.tiles[0].weight, 0, 0, NO_LAST_TILE)]
         self.may_log(states)
+        may_add_state = self.grid.may_add_state
         for new in range(1, self.instance.tile_count):
             self.grid.reset()
+            cost = self.costs[new]
             for (w1, w2, top1, top2) in states:
-                self.grid.may_add_state((w1 + self.costs[new][top1], w2, new, top2))
-                self.grid.may_add_state((w1, w2 + self.costs[new][top2], top1, new))
-            states = self.grid.get_states()
-            self.step_count += len(states)
-            self.may_log(states)
-        return states
-
-    def improved_engine(self):
-        states = [(self.instance.tiles[0].weight, 0, NO_LAST_TILE, 1, 0, NO_LAST_TILE)]
-        self.may_log(states)
-        last1 = 0
-        for new in range(1, self.instance.tile_count):
-            self.grid.reset()
-            for (w1, w2, last2, alpha, top1, top2) in states:
-                if alpha == 1:
-                    self.grid.may_add_state((w1 + self.costs[new][last1], w2, last2, 1, new, top2))
-                    self.grid.may_add_state((w1, w2 + self.costs[new][last2], last1, 2, top1, new))
-                else:
-                    self.grid.may_add_state((w1 + self.costs[new][last2], w2, last1, 1, new, top2))
-                    self.grid.may_add_state((w1, w2 + self.costs[new][last1], last2, 2, top1, new))
-            last1 = new
+                may_add_state(w1 + cost[top1], w2, new, top2)
+                may_add_state(w1, w2 + cost[top2], top1, new)
             states = self.grid.get_states()
             self.step_count += len(states)
             self.may_log(states)
@@ -108,15 +89,14 @@ class Grid:
     def reset(self):
         self.grid = {}
 
-    def may_add_state_with_bound_check(self, state):
-        if state[0] <= self.c_max_bound and state[1] <= self.c_max_bound:
-            self.may_add_state_without_bound_check(state)
+    def may_add_state_with_bound_check(self, w1, w2, i1, i2):
+        if w1 <= self.c_max_bound and w2 <= self.c_max_bound:
+            self.may_add_state_without_bound_check(w1, w2, i1, i2)
 
-    def may_add_state_without_bound_check(self, state):
-        coords = (state[0] // self.delta, state[1] // self.delta)
-        key = coords + state[2:4]
-        if key not in self.grid or state[:2] < self.grid[key][:2]:
-            self.grid[key] = state
+    def may_add_state_without_bound_check(self, w1, w2, i1, i2):
+        key = (w1 // self.delta, w2 // self.delta, i1, i2)
+        if key not in self.grid or (w1, w2) < self.grid[key]:
+            self.grid[key] = (w1, w2, i1, i2)
 
     def get_states(self):
-        return list(self.grid.values())
+        return self.grid.values()
