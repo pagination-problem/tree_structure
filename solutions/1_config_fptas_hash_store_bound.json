@@ -1,0 +1,12 @@
+{
+    "input_dir": "instances/1_instances/",
+    "output_dir": "solutions/1_solutions/FPTAS/hash/store/bound/",
+    "solver": "FPTAS",
+    "parameters": {
+        "store_hash_epsilon": 1,
+        "c_max_bound_calculator": "solver_naive_cut"
+    },
+    "log": true,
+    "recalculate_existing": true,
+    "rewrite_existing": true
+}

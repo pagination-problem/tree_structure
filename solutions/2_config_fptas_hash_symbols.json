@@ -1,0 +1,11 @@
+{
+    "input_dir": "instances/2_small/",
+    "output_dir": "solutions/2_solutions/FPTAS/hash/symbols/",
+    "solver": "FPTAS",
+    "parameters": {
+        "symbol_hash_epsilon": 0.2
+    },
+    "log": true,
+    "recalculate_existing": true,
+    "rewrite_existing": true
+}
