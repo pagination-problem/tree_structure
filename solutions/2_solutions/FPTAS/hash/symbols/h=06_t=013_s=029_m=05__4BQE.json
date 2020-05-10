@@ -1,6 +1,6 @@
 {
   "solver_parameters": {
-    "symbol_hash_epsilon": 0.2
+    "symbol_hash_epsilon": 0.5
   },
   "duration_magnitude": -1,
   "c_max": 43,

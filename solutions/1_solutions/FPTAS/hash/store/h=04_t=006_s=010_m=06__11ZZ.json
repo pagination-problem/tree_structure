@@ -3,7 +3,7 @@
     "store_hash_epsilon": 1
   },
   "duration_magnitude": -4,
-  "c_max": 23,
+  "c_max": 26,
   "solution": [
     [0, 1, 2, 4, 5],
     [3]

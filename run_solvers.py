@@ -36,13 +36,13 @@ class Runner:
     def solve_one(self, instance):
         self.solver.set_instance(instance)
         starting_time = time()
-        self.solver.run()
+        quick_c_max = self.solver.run()
         elapsed_time = time() - starting_time
         self.total_elapsed_time += elapsed_time
         self.solved_instance_count += 1
         report = {
             "duration_magnitude": int(math.log10(elapsed_time)),
-            "c_max": self.solver.c_max,
+            "c_max": quick_c_max,
             "solution": self.solver.may_retrieve_solution(),
             "step_count": self.solver.step_count,
         }
@@ -52,9 +52,10 @@ class Runner:
                 if report["step_count"] < MAX_LOG_SIZE
                 else f"not dumped (too long)."
             )
+            report["c_max"] = self.solver.c_max
         columns = [
             f"{report['step_count']:10}",
-            f"{self.solver.c_max:4}",
+            f"{report['c_max']:4}",
             f"solved in {elapsed_time:.2e} s.",
         ]
         print(" | ".join(columns))

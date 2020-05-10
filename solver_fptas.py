@@ -4,29 +4,34 @@ NO_LAST_TILE = -1  # index of the last column of the cost matrix
 
 
 class Solver(AbstractSolver):
-
     def __init__(self, parameters):
         self.store = StateStore(parameters)
-        self.may_preprocess_instance = lambda instance: instance
-        
+
         if parameters.get("symbol_hash_epsilon"):
 
             def hash_on_symbol_weights(instance):
-                self.original_instance = instance
                 return instance.copy_with_hashed_symbols(parameters["symbol_hash_epsilon"])
 
             self.may_preprocess_instance = hash_on_symbol_weights
+            self.computed_c_max = lambda states: "?"
+
+        else:
+            self.may_preprocess_instance = lambda instance: instance
+            self.computed_c_max = lambda states: max(
+                min(states, key=lambda state: max(state[0], state[1]))[:2]
+            )
 
     def set_instance(self, instance):
         self.may_reset_log()
-        self.instance = self.may_preprocess_instance(instance)
+        self.original_tiles = instance.tiles
+        instance = self.may_preprocess_instance(instance)
         self.tile_count = instance.tile_count
         self.tiles = instance.tiles
         self.costs = [[tile.weight] * self.tile_count for tile in self.tiles]
         for (new, new_tile) in enumerate(self.tiles):
             for (last, last_tile) in enumerate(self.tiles[:new]):
                 self.costs[new][last] = sum(symbol.weight for symbol in new_tile - last_tile)
-        self.store.set_instance(self.instance)
+        self.store.set_instance(instance)
 
     def run(self):
         self.step_count = 0
@@ -42,8 +47,7 @@ class Solver(AbstractSolver):
             states = self.store.get_states()
             self.step_count += len(states)
             self.may_log(states)
-        self.c_max = max(min(states, key=lambda state: max(state[0], state[1]))[:2])
-        return self.c_max
+        return self.computed_c_max(states)
 
     def retrieve_solution(self):
         """Backtrack the logged states to tell which tiles are assigned to which bins."""
@@ -63,6 +67,9 @@ class Solver(AbstractSolver):
                 raise ValueError(f"Cannot match {self.best_states[-1]} in {states}.")
         bin1 = set(state[-2] for state in self.best_states if state[-2] != NO_LAST_TILE)
         bin2 = set(state[-1] for state in self.best_states if state[-1] != NO_LAST_TILE)
+        w1 = sum(s.weight for s in set().union(*(self.original_tiles[i].symbols for i in bin1)))
+        w2 = sum(s.weight for s in set().union(*(self.original_tiles[i].symbols for i in bin2)))
+        self.c_max = max(w1, w2)
         assert not bin1.intersection(bin2)
         assert len(bin1.union(bin2)) == self.tile_count
         return (sorted(bin1), sorted(bin2))
@@ -89,7 +96,7 @@ class StateStore:
             self.may_set_instance_hash_parameters = set_instance_hash_parameters
             self.may_add_state = may_add_hashed_state
             self.get_states = lambda: self.store.values()
-        
+
         else:
 
             def add_state(w1, w2, i1, i2):
@@ -115,7 +122,7 @@ class StateStore:
             self.may_compute_c_max_bound = compute_c_max_bound
             self.may_add_state_after_c_max_bound_check = self.may_add_state
             self.may_add_state = may_add_state_with_c_max_bound_check
-        
+
         else:
             self.may_compute_c_max_bound = lambda _: None
 

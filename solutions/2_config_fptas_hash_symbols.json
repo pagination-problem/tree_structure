@@ -3,7 +3,7 @@
     "output_dir": "solutions/2_solutions/FPTAS/hash/symbols/",
     "solver": "FPTAS",
     "parameters": {
-        "symbol_hash_epsilon": 0.2
+        "symbol_hash_epsilon": 0.5
     },
     "log": true,
     "recalculate_existing": true,

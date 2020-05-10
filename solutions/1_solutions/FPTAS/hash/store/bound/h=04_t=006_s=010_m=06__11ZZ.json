@@ -3,8 +3,8 @@
     "store_hash_epsilon": 1,
     "c_max_bound_calculator": "solver_naive_cut"
   },
-  "duration_magnitude": -3,
-  "c_max": 23,
+  "duration_magnitude": -4,
+  "c_max": 26,
   "solution": [
     [0, 1, 2, 4, 5],
     [3]
