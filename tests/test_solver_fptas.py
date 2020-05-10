@@ -1,25 +1,27 @@
 from pathlib import Path
 from pprint import pprint
+from collections import namedtuple
 
 import context
-from solver_fptas import Fptas, Grid
+from solver_fptas import Solver, StateStore
 from instance import Instance
 
+InstanceStub = namedtuple('InstanceStub', ["symbol_weight_sum", "tile_count"])
 
-def test_grid():
-    grid = Grid(epsilon=0.1, symbol_weight_sum=200, tile_count=5)
-    assert grid.delta == 2
-    grid.reset()
+def test_state_store():
+    store = StateStore({"store_hash_epsilon": 0.1})
+    instance = InstanceStub(symbol_weight_sum=200, tile_count=5)
+    store.set_instance(instance)
+    assert store.delta == 2
+    store.reset()
     states = [(0, 1, 42, 42), (1, 5, 42, 42), (2, 0, 42, 42), (3, 1, 42, 42), (3, 3, 42, 42), (4, 1, 42, 42), (5, 0, 42, 42), (5, 1, 42, 42), (5, 3, 42, 42), (5, 4, 42, 42)]
     for state in states:
-        grid.may_add_state(*state)
-    filtered_states = list(grid.get_states())
+        store.may_add_state(*state)
+    filtered_states = list(store.get_states())
     print(filtered_states)
     assert filtered_states == [(0, 1, 42, 42), (1, 5, 42, 42), (2, 0, 42, 42), (3, 3, 42, 42), (4, 1, 42, 42), (5, 3, 42, 42), (5, 4, 42, 42)]
 
 
-fptas = Fptas()
-fptas.set_log_strategy(True)
 instance = Instance(Path("tests/input/h=03_t=005_s=011_m=06.json"))
 #
 #     Symbol indexes         Symbol weights
@@ -36,6 +38,8 @@ instance = Instance(Path("tests/input/h=03_t=005_s=011_m=06.json"))
 
 
 def test_set_instance():
+    fptas = Solver({})
+    fptas.set_log_strategy(True)
     fptas.set_instance(instance)
     # fmt: off
     expected_costs = [
@@ -56,10 +60,10 @@ def test_set_instance():
     assert expected_costs == fptas.costs
 
 
-def test_run_basic_fptas():
+def test_run_fptas_hash_store():
+    fptas = Solver({"store_hash_epsilon": 1})
+    fptas.set_log_strategy(True)
     fptas.set_instance(instance)
-    fptas.set_engine_strategy("basic")
-    fptas.set_parameters(epsilon=1)
     fptas.run()
     assert fptas.c_max == 17
     pprint(fptas.log_result)

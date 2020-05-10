@@ -9,8 +9,8 @@ from instance import Instance
 from goodies import data_to_json
 
 SOLVERS = {
-    "FPTAS": __import__("solver_fptas").Fptas,
-    "naive_cut": __import__("solver_naive_cut").NaiveCut,
+    "FPTAS": __import__("solver_fptas").Solver,
+    "naive_cut": __import__("solver_naive_cut").Solver,
 }
 
 MAX_LOG_SIZE = 1000
@@ -22,10 +22,9 @@ class Runner:
             filename += ".json"
         path = Path("solutions") / filename
         config = json.loads(path.read_text())
-        self.solver = SOLVERS[config["solver"]]()
-        self.solver.set_engine_strategy(config["engine"])
+        self.solver_parameters = config.get("parameters", {})
+        self.solver = SOLVERS[config["solver"]](self.solver_parameters)
         self.solver.set_log_strategy(config["log"])
-        self.solver.set_parameters(**config["parameters"])
         self.input_dir = Path(config["input_dir"])
         self.output_dir = Path(config["output_dir"])
         self.output_dir.mkdir(parents=True, exist_ok=True)
@@ -77,7 +76,8 @@ class Runner:
             print(f"{i:4} | {now} | {instance.name} | ", end="", flush=True)
             output_path = self.output_dir / instance.name
             if self.recalculate_existing or not output_path.exists():
-                report = self.solve_one(instance)
+                report = {"solver_parameters": self.solver_parameters}
+                report.update(self.solve_one(instance))
                 if self.rewrite_existing:
                     output_path.write_text(data_to_json(report))
             else:
@@ -104,9 +104,11 @@ if __name__ == "__main__":
         run()
     else:
         filenames = [
-            # "1_config_basic_fptas.json",
-            # "1_config_naive_cut.json",
-            "1_config_basic_fptas_with_c_max_bound",
+            "1_config_cut_naive",
+            "1_config_fptas_hash_store_bound",
+            "1_config_fptas_hash_store",
+            "2_config_fptas_hash_symbols",
+            "2_config_fptas_no_hash",
         ]
         for filename in filenames:
             run = Runner(filename)

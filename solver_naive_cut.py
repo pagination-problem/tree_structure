@@ -9,7 +9,8 @@ simple linear search finds the “cut” i minimizing |weight(tiles[:i]) - weigh
 from abstract_solver import AbstractSolver
 
 
-class NaiveCut(AbstractSolver):
+class Solver(AbstractSolver):
+
     def run(self):
         def weight(tiles):
             symbols = set().union(*(tile.symbols for tile in tiles))
@@ -22,6 +23,7 @@ class NaiveCut(AbstractSolver):
         self.solution = i
         self.c_max = max(weight(tiles[:i]), weight(tiles[i:]))
         self.step_count = "N/A"
+        return self.c_max
 
     def retrieve_solution(self):
         i = self.solution
