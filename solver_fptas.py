@@ -1,4 +1,4 @@
-from solver import AbstractSolver
+from abstract_solver import AbstractSolver
 
 NO_LAST_TILE = -1  # index of the last column of the cost matrix
 

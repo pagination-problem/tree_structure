@@ -6,7 +6,7 @@ a way that most tiles of bin1 have an index lesser than that of all tiles of bin
 simple linear search finds the “cut” i minimizing |weight(tiles[:i]) - weight(tiles[i:])|.
 """
 
-from solver import AbstractSolver
+from abstract_solver import AbstractSolver
 
 
 class NaiveCut(AbstractSolver):
