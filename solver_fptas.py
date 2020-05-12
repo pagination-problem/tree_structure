@@ -1,11 +1,12 @@
+from collections import namedtuple
+
 from abstract_solver import AbstractSolver
+from tile import merge_tiles
 
 NO_LAST_TILE = -1  # index of the last column of the cost matrix
 
-
 class Solver(AbstractSolver):
     def __init__(self, parameters):
-        self.store = StateStore(parameters)
 
         if parameters.get("symbol_hash_epsilon"):
 
@@ -16,10 +17,15 @@ class Solver(AbstractSolver):
             self.computed_c_max = lambda states: "?"
 
         else:
+
+            def computed_c_max(states):
+                min_state = min(states, key=lambda state: max(state[0], state[1]))
+                return max(min_state[0], min_state[1])
+
             self.may_preprocess_instance = lambda instance: instance
-            self.computed_c_max = lambda states: max(
-                min(states, key=lambda state: max(state[0], state[1]))[:2]
-            )
+            self.computed_c_max = computed_c_max
+        
+        self.store = StateStore(parameters)
 
     def set_instance(self, instance):
         self.may_reset_log()
@@ -67,8 +73,8 @@ class Solver(AbstractSolver):
                 raise ValueError(f"Cannot match {self.best_states[-1]} in {states}.")
         bin1 = set(state[-2] for state in self.best_states if state[-2] != NO_LAST_TILE)
         bin2 = set(state[-1] for state in self.best_states if state[-1] != NO_LAST_TILE)
-        w1 = sum(s.weight for s in set().union(*(self.original_tiles[i].symbols for i in bin1)))
-        w2 = sum(s.weight for s in set().union(*(self.original_tiles[i].symbols for i in bin2)))
+        w1 = sum(s.weight for s in merge_tiles(self.original_tiles[i] for i in bin1))
+        w2 = sum(s.weight for s in merge_tiles(self.original_tiles[i] for i in bin2))
         self.c_max = max(w1, w2)
         assert not bin1.intersection(bin2)
         assert len(bin1.union(bin2)) == self.tile_count

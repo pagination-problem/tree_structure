@@ -7,15 +7,12 @@ simple linear search finds the “cut” i minimizing |weight(tiles[:i]) - weigh
 """
 
 from abstract_solver import AbstractSolver
-
+from tile import merge_tiles
 
 class Solver(AbstractSolver):
 
     def run(self):
-        def weight(tiles):
-            symbols = set().union(*(tile.symbols for tile in tiles))
-            return sum(symbol.weight for symbol in symbols)
-
+        weight = lambda t: sum(symbol.weight for symbol in merge_tiles(t))
         tiles = self.instance.tiles
         differences = [abs(weight(tiles[:i]) - weight(tiles[i:])) for i in range(len(tiles))]
         minimal_difference = min(differences)
