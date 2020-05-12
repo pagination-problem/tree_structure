@@ -64,8 +64,8 @@ def test_run_fptas_hash_store():
     fptas = Solver({"store_hash_epsilon": 1})
     fptas.set_log_strategy(True)
     fptas.set_instance(instance)
-    fptas.run()
-    assert fptas.c_max == 17
+    computed_c_max = fptas.run()
+    assert computed_c_max == 17
     pprint(fptas.log_result)
     expected_log_result = [
         [(8, 0, 0, -1)],
@@ -104,6 +104,7 @@ def test_run_fptas_hash_store():
         print(f"Step {i}: {actual}")
         assert expected == actual
     (bin1, bin2) = fptas.retrieve_solution()
+    assert fptas.c_max == 17
     assert (bin1, bin2) == ([0, 1, 2], [3, 4])
     print(fptas.best_states)
     assert fptas.best_states == [
