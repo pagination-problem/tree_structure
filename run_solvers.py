@@ -30,19 +30,21 @@ class Runner:
         self.output_dir.mkdir(parents=True, exist_ok=True)
         self.recalculate_existing = config["recalculate_existing"]
         self.rewrite_existing = config["rewrite_existing"]
+        self.start = config.get("start", 0)
+        self.stop = config.get("stop")
         self.total_elapsed_time = 0
         self.solved_instance_count = 0
 
     def solve_one(self, instance):
         self.solver.set_instance(instance)
         starting_time = time()
-        quick_c_max = self.solver.run()
+        c_max = self.solver.run()
         elapsed_time = time() - starting_time
         self.total_elapsed_time += elapsed_time
         self.solved_instance_count += 1
         report = {
             "duration_magnitude": int(math.log10(elapsed_time)),
-            "c_max": quick_c_max,
+            "c_max": c_max,
             "solution": self.solver.may_retrieve_solution(),
             "step_count": self.solver.step_count,
         }
@@ -52,7 +54,6 @@ class Runner:
                 if report["step_count"] < MAX_LOG_SIZE
                 else f"not dumped (too long)."
             )
-            report["c_max"] = self.solver.c_max
         columns = [
             f"{report['step_count']:10}",
             f"{report['c_max']:4}",
@@ -71,7 +72,8 @@ class Runner:
             "-----+----------+----------------------------------+------------+------+------------------------",
         ]
         print("\n".join(preamble))
-        for (i, instance_path) in enumerate(sorted(self.input_dir.glob("*.json")), 1):
+        files = sorted(self.input_dir.glob("*.json"))
+        for (i, instance_path) in enumerate(files[self.start : self.stop], self.start):
             now = datetime.now().isoformat(timespec="seconds").partition("T")[2]
             instance = Instance(instance_path)
             print(f"{i:4} | {now} | {instance.name} | ", end="", flush=True)
@@ -108,7 +110,6 @@ if __name__ == "__main__":
             "1_config_cut_naive",
             "1_config_fptas_hash_store_bound",
             "1_config_fptas_hash_store",
-            "2_config_fptas_hash_symbols",
             "2_config_fptas_no_hash",
         ]
         for filename in filenames:
