@@ -1,6 +1,6 @@
 {
-    "input_dir": "instances/1_instances/",
-    "output_dir": "solutions/1_solutions/FPTAS/hash/store/bound/",
+    "input_dir": "instances/snapshots/",
+    "output_dir": "solutions/snapshots/FPTAS/hash_with_bound/",
     "solver": "FPTAS",
     "parameters": {
         "hash_epsilon": 1,
