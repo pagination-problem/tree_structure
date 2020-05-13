@@ -3,7 +3,7 @@
 "tiles" : {[N2, N4],[N1, N2],[N1, N2, N3]},
 "symbols" : [N1, N2, N3, N4],
 "height" : None,
-"max_symbol_size" : None,
+"symbol_weight_bound" : None,
 "opt_value" : None,
 "opt_tiles_m1" : None,
 "symbols_on_m1" : None,

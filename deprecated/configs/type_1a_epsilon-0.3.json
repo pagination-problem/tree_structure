@@ -1,0 +1,9 @@
+{
+    "input_dir": "input/type_1/a",
+    "output_dir": "results/type_1/a",
+    "output_prefix": "results",
+    "log": false,
+    "input_prefix": "H7-nbT100",
+    "epsilon": 0.3,
+    "tile_count": 100
+}

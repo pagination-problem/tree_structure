@@ -1,0 +1,9 @@
+{
+    "input_dir": "input/logs",
+    "output_dir": "logs",
+    "output_prefix": "results",
+    "log": true,
+    "input_prefix": "H3-nbT5",
+    "epsilon": 0.1,
+    "tile_count": 5
+}

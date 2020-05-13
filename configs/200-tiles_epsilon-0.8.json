@@ -1,9 +1,0 @@
-{
-    "input_directory": "inputs/200-tiles",
-    "output_directory": "results/txt",
-    "output_prefix": "results",
-    "log": false,
-    "input_prefix": "H9-nbT200",
-    "epsilon": 0.8,
-    "tile_count": 200
-}

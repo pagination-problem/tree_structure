@@ -1,0 +1,13 @@
+{
+    "input_dir": "instances/snapshots/",
+    "output_dir": "solutions/snapshots/FPTAS/hash/",
+    "start": 0,
+    "stop": null,
+    "solver": "FPTAS",
+    "parameters": {
+        "hash_epsilon": 1
+    },
+    "log": true,
+    "recalculate_existing": true,
+    "rewrite_existing": true
+}
