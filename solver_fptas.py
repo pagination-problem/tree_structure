@@ -1,36 +1,14 @@
-from collections import namedtuple
-
 from abstract_solver import AbstractSolver
-from tile import merge_tiles
 
 NO_LAST_TILE = -1  # index of the last column of the cost matrix
 
+
 class Solver(AbstractSolver):
     def __init__(self, parameters):
-
-        if parameters.get("symbol_hash_epsilon"):
-
-            def hash_on_symbol_weights(instance):
-                return instance.copy_with_hashed_symbols(parameters["symbol_hash_epsilon"])
-
-            self.may_preprocess_instance = hash_on_symbol_weights
-            self.computed_c_max = lambda states: "?"
-
-        else:
-
-            def computed_c_max(states):
-                min_state = min(states, key=lambda state: max(state[0], state[1]))
-                return max(min_state[0], min_state[1])
-
-            self.may_preprocess_instance = lambda instance: instance
-            self.computed_c_max = computed_c_max
-        
         self.store = StateStore(parameters)
 
     def set_instance(self, instance):
         self.may_reset_log()
-        self.original_tiles = instance.tiles
-        instance = self.may_preprocess_instance(instance)
         self.tile_count = instance.tile_count
         self.tiles = instance.tiles
         self.costs = [[tile.weight] * self.tile_count for tile in self.tiles]
@@ -53,7 +31,8 @@ class Solver(AbstractSolver):
             states = self.store.get_states()
             self.step_count += len(states)
             self.may_log(states)
-        return self.computed_c_max(states)
+        min_state = min(states, key=lambda state: max(state[:2]))
+        return max(min_state[:2])
 
     def retrieve_solution(self):
         """Backtrack the logged states to tell which tiles are assigned to which bins."""
@@ -62,20 +41,17 @@ class Solver(AbstractSolver):
         self.best_states = [min(log_result.pop(), key=lambda state: max(state[0], state[1]))]
         while log_result:
             best_state = self.best_states[-1]
-            bin1 = [best_state[0], best_state[-2]]
-            bin2 = [best_state[1], best_state[-1]]
+            bin1 = [best_state[0], best_state[2]]
+            bin2 = [best_state[1], best_state[3]]
             states = log_result.pop()
             for state in states:
-                if bin1 == [state[0], state[-2]] or bin2 == [state[1], state[-1]]:
+                if bin1 == [state[0], state[2]] or bin2 == [state[1], state[3]]:
                     self.best_states.append(state)
                     break
             else:
                 raise ValueError(f"Cannot match {self.best_states[-1]} in {states}.")
-        bin1 = set(state[-2] for state in self.best_states if state[-2] != NO_LAST_TILE)
-        bin2 = set(state[-1] for state in self.best_states if state[-1] != NO_LAST_TILE)
-        w1 = sum(s.weight for s in merge_tiles(self.original_tiles[i] for i in bin1))
-        w2 = sum(s.weight for s in merge_tiles(self.original_tiles[i] for i in bin2))
-        self.c_max = max(w1, w2)
+        bin1 = set(state[2] for state in self.best_states if state[2] != NO_LAST_TILE)
+        bin2 = set(state[3] for state in self.best_states if state[3] != NO_LAST_TILE)
         assert not bin1.intersection(bin2)
         assert len(bin1.union(bin2)) == self.tile_count
         return (sorted(bin1), sorted(bin2))
@@ -87,48 +63,25 @@ class StateStore:
     def __init__(self, parameters):
         self.parameters = parameters
 
-        if parameters.get("store_hash_epsilon"):
-
-            def set_instance_hash_parameters(instance):
-                epsilon = parameters["store_hash_epsilon"]
-                self.delta = epsilon * instance.symbol_weight_sum / 2 / instance.tile_count
-
-            def may_add_hashed_state(w1, w2, i1, i2):
-                key = (w1 // self.delta, w2 // self.delta, i1, i2)
-                if key not in self.store or (w1, w2) < self.store[key]:
-                    self.store[key] = (w1, w2, i1, i2)
-
+        if parameters.get("hash_epsilon"):
             self.empty_store = lambda: {}
-            self.may_set_instance_hash_parameters = set_instance_hash_parameters
-            self.may_add_state = may_add_hashed_state
+            self.may_set_instance_hash_parameters = self._set_instance_hash_parameters
+            self.may_add_state = self._may_add_hashed_state
             self.get_states = lambda: self.store.values()
-
         else:
-
-            def add_state(w1, w2, i1, i2):
-                self.store.append((w1, w2, i1, i2))
-
             self.empty_store = lambda: []
             self.may_set_instance_hash_parameters = lambda _: None
-            self.may_add_state = add_state
+            self.may_add_state = self._add_raw_state
             self.get_states = lambda: self.store
 
         if parameters.get("c_max_bound_calculator"):
-
-            def compute_c_max_bound(instance):
-                c_max_bound_calculator.set_instance(instance)
-                self.c_max_bound = c_max_bound_calculator.run()
-
-            def may_add_state_with_c_max_bound_check(w1, w2, i1, i2):
-                if w1 <= self.c_max_bound and w2 <= self.c_max_bound:
-                    self.may_add_state_after_c_max_bound_check(w1, w2, i1, i2)
-
-            c_max_bound_calculator = __import__(parameters["c_max_bound_calculator"]).Solver()
-            c_max_bound_calculator.set_log_strategy(False)
-            self.may_compute_c_max_bound = compute_c_max_bound
+            # Set up the computation of a c_max upper bound by a given (supposedly fast) heuristics
+            self.c_max_bound_calculator = __import__(parameters["c_max_bound_calculator"]).Solver()
+            self.c_max_bound_calculator.set_log_strategy(False)  # no need to track the heuristics
+            self.may_compute_c_max_bound = self._compute_c_max_bound
+            # insert a filter with c_max bound before the call of the current may_add_state method
             self.may_add_state_after_c_max_bound_check = self.may_add_state
-            self.may_add_state = may_add_state_with_c_max_bound_check
-
+            self.may_add_state = self._may_add_state_with_c_max_bound_check
         else:
             self.may_compute_c_max_bound = lambda _: None
 
@@ -138,3 +91,29 @@ class StateStore:
 
     def reset(self):
         self.store = self.empty_store()
+
+    # With hash
+
+    def _set_instance_hash_parameters(self, instance):
+        epsilon = self.parameters["hash_epsilon"]
+        self.delta = epsilon * instance.symbol_weight_sum / 2 / instance.tile_count
+
+    def _may_add_hashed_state(self, w1, w2, i1, i2):
+        key = (w1 // self.delta, w2 // self.delta, i1, i2)
+        if key not in self.store or (w1, w2) < self.store[key]:
+            self.store[key] = (w1, w2, i1, i2)
+
+    # Without hash
+
+    def _add_raw_state(self, w1, w2, i1, i2):
+        self.store.append((w1, w2, i1, i2))
+
+    # With c_max_bound filtering
+
+    def _compute_c_max_bound(self, instance):
+        self.c_max_bound_calculator.set_instance(instance)
+        self.c_max_bound = self.c_max_bound_calculator.run()
+
+    def _may_add_state_with_c_max_bound_check(self, w1, w2, i1, i2):
+        if w1 <= self.c_max_bound and w2 <= self.c_max_bound:
+            self.may_add_state_after_c_max_bound_check(w1, w2, i1, i2)
