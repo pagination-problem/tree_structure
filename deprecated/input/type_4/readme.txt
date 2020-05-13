@@ -1,1 +1,0 @@
-Je vais prendre des instances déjà traitées pour ce type là notamment celle du type 2
