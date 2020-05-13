@@ -152,4 +152,4 @@ def dump_instances(config_path):
 
 
 if __name__ == "__main__":
-    dump_instances("instances/1_config.json")
+    dump_instances("instances/snapshots.json")

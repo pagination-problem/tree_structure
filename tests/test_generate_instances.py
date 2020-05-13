@@ -3,7 +3,7 @@ import random
 import pytest
 
 import context
-from instance_maker import (
+from generate_instances import (
     InstanceMaker,
     TileTooSmall,
     TooFewCommonSymbols,
