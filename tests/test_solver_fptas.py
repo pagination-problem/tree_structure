@@ -9,14 +9,13 @@ from instance import Instance
 InstanceStub = namedtuple('InstanceStub', ["symbol_weight_sum", "tile_count"])
 
 def test_state_store():
-    store = StateStore({"store_hash_epsilon": 0.1})
+    store = StateStore({"hash_epsilon": 0.1})
     instance = InstanceStub(symbol_weight_sum=200, tile_count=5)
     store.set_instance(instance)
-    assert store.delta == 2
-    store.reset()
+    store.cleanup_states()
     states = [(0, 1, 42, 42), (1, 5, 42, 42), (2, 0, 42, 42), (3, 1, 42, 42), (3, 3, 42, 42), (4, 1, 42, 42), (5, 0, 42, 42), (5, 1, 42, 42), (5, 3, 42, 42), (5, 4, 42, 42)]
     for state in states:
-        store.may_add_state(*state)
+        store.add_state(*state)
     filtered_states = list(store.get_states())
     print(filtered_states)
     assert filtered_states == [(0, 1, 42, 42), (1, 5, 42, 42), (2, 0, 42, 42), (3, 3, 42, 42), (4, 1, 42, 42), (5, 3, 42, 42), (5, 4, 42, 42)]
@@ -61,7 +60,7 @@ def test_set_instance():
 
 
 def test_run_fptas_hash_store():
-    fptas = Solver({"store_hash_epsilon": 1})
+    fptas = Solver({"hash_epsilon": 1})
     fptas.set_log_strategy(True)
     fptas.set_instance(instance)
     computed_c_max = fptas.run()
