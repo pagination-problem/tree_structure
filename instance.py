@@ -1,6 +1,7 @@
 import json
 from pathlib import Path
 from typing import Dict, Union
+from math import ceil
 
 from regex import sub
 
@@ -51,3 +52,9 @@ class Instance:
 
     def dump_json(self, json_path: Path) -> None:
         json_path.write_text(self.get_json())
+    
+    def copy_with_hashed_symbols(self, epsilon):
+        data = self.get_data()
+        data["symbol_weight_bound"] = ceil(self.symbol_weight_bound * epsilon)
+        data["symbol_weights"] = [ceil(s.weight * epsilon) for s in sorted(self.symbols)]
+        return Instance(data)

@@ -1,8 +1,0 @@
-{
-    "input_dir": "instances/1_instances/",
-    "output_dir": "solutions/1_solutions/naive_cut/",
-    "solver": "naive_cut",
-    "engine": null,
-    "parameters": {},
-    "log": true
-}

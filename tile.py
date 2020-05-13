@@ -1,6 +1,10 @@
 from symbol import Symbols
 
 
+def merge_tiles(tiles):
+    return set().union(*(tile.symbols for tile in tiles))
+
+
 class Tile:
     def __init__(self, symbols: Symbols):
         self.symbols = frozenset(symbols)
@@ -24,7 +28,7 @@ class Tile:
 
     def __eq__(self, other):  # a.__eq__(b) is equivalent to a == b
         return self.symbols == other.symbols
-    
+
     def __sub__(self, other):
         """Return the set difference between this tile and another tile."""
         return self.symbols - other.symbols

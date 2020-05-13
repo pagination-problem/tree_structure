@@ -6,21 +6,21 @@ a way that most tiles of bin1 have an index lesser than that of all tiles of bin
 simple linear search finds the “cut” i minimizing |weight(tiles[:i]) - weight(tiles[i:])|.
 """
 
-from solver import AbstractSolver
+from abstract_solver import AbstractSolver
+from tile import merge_tiles
 
+class Solver(AbstractSolver):
 
-class NaiveCut(AbstractSolver):
     def run(self):
-        def weight(tiles):
-            symbols = set().union(*(tile.symbols for tile in tiles))
-            return sum(symbol.weight for symbol in symbols)
-
+        weight = lambda t: sum(symbol.weight for symbol in merge_tiles(t))
         tiles = self.instance.tiles
         differences = [abs(weight(tiles[:i]) - weight(tiles[i:])) for i in range(len(tiles))]
         minimal_difference = min(differences)
         i = differences.index(minimal_difference)
         self.solution = i
         self.c_max = max(weight(tiles[:i]), weight(tiles[i:]))
+        self.step_count = "N/A"
+        return self.c_max
 
     def retrieve_solution(self):
         i = self.solution
