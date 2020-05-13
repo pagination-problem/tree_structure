@@ -1,6 +1,6 @@
 {
-    "input_dir": "instances/1_instances/",
-    "output_dir": "solutions/1_solutions/FPTAS/hash/store/",
+    "input_dir": "instances/snapshots/",
+    "output_dir": "solutions/snapshots/FPTAS/hash/",
     "start": 0,
     "stop": null,
     "solver": "FPTAS",
