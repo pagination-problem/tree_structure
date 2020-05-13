@@ -5,9 +5,9 @@
   "duration_magnitude": -2,
   "c_max": 72,
   "solution": [
-    [0, 6, 7, 8, 9, 13, 14],
-    [1, 2, 3, 4, 5, 10, 11, 12]
+    [0, 1, 2, 8, 9, 13, 14],
+    [3, 4, 5, 6, 7, 10, 11, 12]
   ],
-  "step_count": 3969,
+  "step_count": 3894,
   "log": "not dumped (too long)."
 }
