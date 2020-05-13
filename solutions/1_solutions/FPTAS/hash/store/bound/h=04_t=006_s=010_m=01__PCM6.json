@@ -1,7 +1,7 @@
 {
   "solver_parameters": {
-    "store_hash_epsilon": 1,
-    "c_max_bound_calculator": "solver_naive_cut"
+    "hash_epsilon": 1,
+    "c_max_pruner": "solver_naive_cut"
   },
   "duration_magnitude": -4,
   "c_max": 6,

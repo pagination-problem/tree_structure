@@ -1,13 +1,13 @@
 {
   "solver_parameters": {
-    "store_hash_epsilon": 1,
-    "c_max_bound_calculator": "solver_naive_cut"
+    "hash_epsilon": 1,
+    "c_max_pruner": "solver_naive_cut"
   },
-  "duration_magnitude": -4,
-  "c_max": 26,
+  "duration_magnitude": -3,
+  "c_max": 23,
   "solution": [
-    [0, 1, 2, 4, 5],
-    [3]
+    [0, 1, 4, 5],
+    [2, 3]
   ],
   "step_count": 46,
   "log": [

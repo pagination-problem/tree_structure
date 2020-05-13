@@ -1,6 +1,6 @@
 {
   "solver_parameters": {
-    "store_hash_epsilon": 1
+    "hash_epsilon": 1
   },
   "duration_magnitude": -2,
   "c_max": 66,

@@ -1,9 +1,11 @@
 {
     "input_dir": "instances/1_instances/",
     "output_dir": "solutions/1_solutions/FPTAS/hash/store/",
+    "start": 0,
+    "stop": null,
     "solver": "FPTAS",
     "parameters": {
-        "store_hash_epsilon": 1
+        "hash_epsilon": 1
     },
     "log": true,
     "recalculate_existing": true,
