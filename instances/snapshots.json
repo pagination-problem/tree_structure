@@ -1,5 +1,5 @@
 {
-    "output_directory": "instances/1_instances/",
+    "output_directory": "instances/snapshots/",
     "instance_count": 20,
     "min_height": 4,
     "max_height": 9,
