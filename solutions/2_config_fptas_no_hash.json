@@ -1,8 +1,0 @@
-{
-    "input_dir": "instances/2_small/",
-    "output_dir": "solutions/2_solutions/FPTAS/no_hash/",
-    "solver": "FPTAS",
-    "log": true,
-    "recalculate_existing": true,
-    "rewrite_existing": true
-}

@@ -107,10 +107,10 @@ if __name__ == "__main__":
         run()
     else:
         filenames = [
-            "1_config_cut_naive",
-            "1_config_fptas_hash_store_bound",
-            "1_config_fptas_hash_store",
-            "2_config_fptas_no_hash",
+            "snapshots_fptas_hash_with_bound.json",
+            "snapshots_fptas_hash.json",
+            "snapshots_fptas_no_hash.json",
+            "snapshots_naive_cut.json",
         ]
         for filename in filenames:
             run = Runner(filename)

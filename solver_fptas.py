@@ -22,8 +22,8 @@ class Solver(AbstractSolver):
 
     def run(self):
         """Compute and return the c_max of the setted instance."""
-        self.step_count = 0
         states = [(self.tiles[0].weight, 0, 0, NO_LAST_TILE)]
+        self.step_count = 1
         self.may_log(states)
         add_state = self.store.add_state  # micro-optimize attribute access
         for new in range(1, self.tile_count):
