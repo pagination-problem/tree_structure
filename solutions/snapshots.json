@@ -3,6 +3,7 @@
         "input_dir": "instances/snapshots/",
         "output_dir": "solutions/snapshots/naive_cut/",
         "solver": "naive_cut",
+        "skip": false,
         "log": true,
         "if_exists": "update",
         "if_not_exists": "write"

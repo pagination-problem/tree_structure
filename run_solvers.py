@@ -30,6 +30,7 @@ MAX_LOG_SIZE = 1000
 # solver: "FPTAS" or "naive_cut"
 # parameters: parameters of the specific solver
 # log: boolean
+# skip: boolean
 # if_exists: what to do when there already exists a solution file
 #   - "nothing": just display this solution, without running the solver
 #   - "dry": run the solver, display the results and compare them with the previous ones
@@ -86,6 +87,8 @@ class Runner:
 
     def __call__(self):
         for config in self.configs:
+            if config.get("skip"):
+                continue
             self.solver_parameters = config.get("parameters", {})
             self.solver = SOLVERS[config["solver"]](self.solver_parameters)
             self.solver.set_log_strategy(config["log"])
@@ -213,7 +216,7 @@ class Runner:
             print(f"{self.solved_instance_count} instances solved", end=" ")
             print(f"in {round(self.total_elapsed_time, 2)} seconds.")
         else:
-            print(f"All {self.i} instances already solved.")
+            print(f"All {self.i + 1} instances already solved.")
         print()
 
 
