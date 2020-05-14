@@ -3,21 +3,22 @@
         "input_dir": "instances/snapshots/",
         "output_dir": "solutions/snapshots/naive_cut/",
         "solver": "naive_cut",
-        "skip": false,
+        "skip": true,
         "log": true,
-        "if_exists": "update",
+        "if_exists": "dry",
         "if_not_exists": "write"
     },
     {
         "input_dir": "instances/snapshots/",
         "output_dir": "solutions/snapshots/FPTAS/hash_with_bound/",
         "solver": "FPTAS",
+        "skip": true,
         "parameters": {
             "hash_epsilon": 1,
             "c_max_pruner": "solver_naive_cut"
         },
         "log": true,
-        "if_exists": "update",
+        "if_exists": "dry",
         "if_not_exists": "write"
     },
     {
@@ -30,17 +31,18 @@
             "hash_epsilon": 1
         },
         "log": true,
-        "if_exists": "update",
+        "if_exists": "dry",
         "if_not_exists": "write"
     },
     {
         "input_dir": "instances/snapshots/",
         "output_dir": "solutions/snapshots/FPTAS/no_hash/",
+        "skip": true,
         "start": 0,
         "stop": 10,
         "solver": "FPTAS",
         "log": true,
-        "if_exists": "update",
+        "if_exists": "dry",
         "if_not_exists": "write"
     }
 ]

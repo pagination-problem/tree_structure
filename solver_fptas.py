@@ -117,7 +117,7 @@ class HashAdder:
     def add_state(self, w1, w2, i1, i2):
         # the next expression micro-optimized the integer division
         key = ((w1 / self.delta).__trunc__(), (w2 / self.delta).__trunc__(), i1, i2)
-        if key not in self.store or (w1, w2) < self.store[key]:
+        if key not in self.store or max(w1, w2) < max(self.store[key][:2]):
             self.store[key] = (w1, w2, i1, i2)
 
     def get_states(self):
