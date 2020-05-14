@@ -103,6 +103,8 @@ class RawAdder:
 class HashAdder:
     """Structure storing a dict of states, with hash comparison before each addition."""
 
+    __slots__ = ["delta", "store", "epsilon"] # micro-optimization
+
     def __init__(self, params):
         self.epsilon = params["hash_epsilon"]
 
@@ -113,7 +115,8 @@ class HashAdder:
         self.store = {}
 
     def add_state(self, w1, w2, i1, i2):
-        key = (w1 // self.delta, w2 // self.delta, i1, i2)
+        # the next expression micro-optimized the integer division
+        key = ((w1 / self.delta).__trunc__(), (w2 / self.delta).__trunc__(), i1, i2)
         if key not in self.store or max(w1, w2) < max(self.store[key][:2]):
             self.store[key] = (w1, w2, i1, i2)
 
