@@ -40,13 +40,13 @@ def test_set_instance():
     fptas = Solver({})
     fptas.set_log_strategy(True)
     fptas.set_instance(instance)
-    # fmt: off
-    expected_costs = [
-        [ 8,  8,  8,  8,  8], # tile (0, 1, 3,  6) / weights (0 + 5 + 1 + 2) =  8
-        [ 3,  8,  8,  8,  8], # tile (0, 1, 4,  7) / weights (0 + 5 + 2 + 1) =  8
-        [ 6,  4, 11, 11, 11], # tile (0, 1, 4,  8) / weights (0 + 5 + 2 + 4) = 11
-        [12, 12, 12, 12, 12], # tile (0, 2, 5,  9) / weights (0 + 3 + 6 + 3) = 12
-        [14, 14, 14,  5, 14], # tile (0, 2, 5, 10) / weights (0 + 3 + 6 + 5) = 14
+    # fmt: off                +----- The last column is duplicated to differentiate "last tile" and "no top tile"
+    expected_costs = [ #      |
+        [ 8,  8,  8,  8,  8,  8], # tile (0, 1, 3,  6) / weights (0 + 5 + 1 + 2) =  8
+        [ 3,  8,  8,  8,  8,  8], # tile (0, 1, 4,  7) / weights (0 + 5 + 2 + 1) =  8
+        [ 6,  4, 11, 11, 11, 11], # tile (0, 1, 4,  8) / weights (0 + 5 + 2 + 4) = 11
+        [12, 12, 12, 12, 12, 12], # tile (0, 2, 5,  9) / weights (0 + 3 + 6 + 3) = 12
+        [14, 14, 14,  5, 14, 14], # tile (0, 2, 5, 10) / weights (0 + 3 + 6 + 5) = 14
     ] #       |           |
     #         |           +------ adding tile (0, 1, 3,  6) on an empty bin costs 0 + 5 + 1 + 2 = 8, etc.
     #         |
@@ -67,11 +67,11 @@ def test_run_fptas_hash_store():
     assert computed_c_max == 17
     pprint(fptas.log_result)
     expected_log_result = [
-        [(8, 0, 0, -1)],
-        [(11, 0, 1, -1), (8, 8, 0, 1)],
-        [(15, 0, 2, -1), (11, 11, 1, 2), (14, 8, 2, 1), (8, 12, 0, 2)],
+        [(8, 0, 0, 5)],
+        [(11, 0, 1, 5), (8, 8, 0, 1)],
+        [(15, 0, 2, 5), (11, 11, 1, 2), (14, 8, 2, 1), (8, 12, 0, 2)],
         [
-            (27, 0, 3, -1),
+            (27, 0, 3, 5),
             (15, 12, 2, 3),
             (23, 11, 3, 2),
             (11, 23, 1, 3),
@@ -81,7 +81,7 @@ def test_run_fptas_hash_store():
             (8, 24, 0, 3),
         ],
         [
-            (32, 0, 4, -1),
+            (32, 0, 4, 5),
             (27, 14, 3, 4),
             (29, 12, 4, 3),
             (15, 17, 2, 4),
@@ -109,7 +109,7 @@ def test_run_fptas_hash_store():
     assert fptas.best_states == [
         (15, 17, 2, 4),
         (15, 12, 2, 3),
-        (15, 0, 2, -1),
-        (11, 0, 1, -1),
-        (8, 0, 0, -1),
+        (15, 0, 2, 5),
+        (11, 0, 1, 5),
+        (8, 0, 0, 5),
     ]

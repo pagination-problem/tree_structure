@@ -1,8 +1,6 @@
 from abstract_solver import AbstractSolver
 from tile import merge_tiles
 
-NO_LAST_TILE = -1  # index of the last column of the cost matrix
-
 
 class Solver(AbstractSolver):
     """Dynamic programming solver, with optional FPATS and pruning."""
@@ -14,15 +12,16 @@ class Solver(AbstractSolver):
         self.may_reset_log()
         self.tile_count = instance.tile_count
         self.tiles = instance.tiles
-        self.costs = [[tile.weight] * self.tile_count for tile in self.tiles]
+        self.costs = [[tile.weight] * (self.tile_count + 1) for tile in self.tiles]
         for (new, new_tile) in enumerate(self.tiles):
             for (last, last_tile) in enumerate(self.tiles[:new]):
                 self.costs[new][last] = sum(symbol.weight for symbol in new_tile - last_tile)
+        self.no_top_tile = self.tile_count
         self.store.set_instance(instance)
 
     def run(self):
         """Compute and return the c_max of the setted instance."""
-        states = [(self.tiles[0].weight, 0, 0, NO_LAST_TILE)]
+        states = [(self.tiles[0].weight, 0, 0, self.no_top_tile)]
         self.step_count = 1
         self.may_log(states)
         add_state = self.store.add_state  # micro-optimize attribute access
@@ -61,8 +60,8 @@ class Solver(AbstractSolver):
             else:
                 raise ValueError(f"cannot match {self.best_states[-1]} in {states}.")
             new -= 1
-        tiles1 = set(state[2] for state in self.best_states if state[2] != NO_LAST_TILE)
-        tiles2 = set(state[3] for state in self.best_states if state[3] != NO_LAST_TILE)
+        tiles1 = set(state[2] for state in self.best_states if state[2] != self.no_top_tile)
+        tiles2 = set(state[3] for state in self.best_states if state[3] != self.no_top_tile)
         w1 = sum(symbol.weight for symbol in merge_tiles(self.tiles[i] for i in tiles1))
         w2 = sum(symbol.weight for symbol in merge_tiles(self.tiles[i] for i in tiles2))
         c_max = max(w1, w2)

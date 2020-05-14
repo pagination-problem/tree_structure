@@ -3,7 +3,7 @@
     "hash_epsilon": 1,
     "c_max_pruner": "solver_naive_cut"
   },
-  "duration_magnitude": -4,
+  "duration_magnitude": -3,
   "c_max": 6,
   "solution": [
     [0, 1, 4],
@@ -12,10 +12,10 @@
   "step_count": 13,
   "log": [
     [
-      [3, 0, 0, -1]
+      [3, 0, 0, 6]
     ],
     [
-      [4, 0, 1, -1],
+      [4, 0, 1, 6],
       [3, 3, 0, 1]
     ],
     [
