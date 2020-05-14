@@ -1,3 +1,6 @@
+from functools import partial
+import struct
+
 from abstract_solver import AbstractSolver
 from tile import merge_tiles
 
@@ -75,7 +78,13 @@ class StateStore:
     """Facade layer for a collection of states generated during one step of the FPTAS."""
 
     def __init__(self, params):
-        adder = HashAdder(params) if params.get("hash_epsilon") else RawAdder()
+        if params.get("hash_epsilon"):
+            if params.get("redis"):
+                adder = HashAdderRedis(params)
+            else:
+                adder = HashAdder(params)
+        else:
+            adder = RawAdder()
         self.cleanup_states = adder.cleanup_states
         self.get_states = adder.get_states
         pruner = BoundPruner(adder, params) if params.get("c_max_pruner") else NoPruner(adder)
@@ -121,6 +130,29 @@ class HashAdder:
 
     def get_states(self):
         return self.store.values()
+
+
+class HashAdderRedis(HashAdder):
+    """Experimental variation of HashAdder with Redis for backend."""
+
+    pack = partial(struct.pack, "HHHH") # H denotes an unsigned short (generally 2 bytes)
+    unpack = partial(struct.unpack, "HHHH") # H denotes an unsigned short (generally 2 bytes)
+
+    def __init__(self, params):
+        redis = __import__("redis").StrictRedis
+        self.store = redis(host="localhost", port=6379, db=3)
+        HashAdder.__init__(self, params)
+
+    def cleanup_states(self):
+        self.store.flushdb()
+
+    def add_state(self, w1, w2, i1, i2):
+        key = self.pack(int(w1 // self.delta), int(w2 // self.delta), i1, i2)
+        if not self.store.exists(key) or (w1, w2) < self.unpack(self.store.get(key))[:2]:
+            self.store.set(key, self.pack(w1, w2, i1, i2))
+
+    def get_states(self):
+        return list(map(self.unpack, self.store.mget(self.store.scan_iter())))
 
 
 class NoPruner:
