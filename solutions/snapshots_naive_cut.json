@@ -1,9 +1,0 @@
-{
-    "input_dir": "instances/snapshots/",
-    "output_dir": "solutions/snapshots/naive_cut/",
-    "solver": "naive_cut",
-    "engine": null,
-    "log": true,
-    "recalculate_existing": true,
-    "rewrite_existing": true
-}
