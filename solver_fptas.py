@@ -141,6 +141,8 @@ class HashAdderRedis(HashAdder):
     def __init__(self, params):
         redis = __import__("redis").StrictRedis
         self.store = redis(host="localhost", port=6379, db=3)
+        self.store.config_set("save", "") # disable RDB persistence
+        self.store.config_set("appendonly", "no") # disable AOF persistence
         HashAdder.__init__(self, params)
 
     def cleanup_states(self):
