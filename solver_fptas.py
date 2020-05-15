@@ -166,7 +166,7 @@ class HashAdderRedis(HashAdder):
 
     def add_state(self, w1, w2, i1, i2):
         key = self.pack(int(w1 // self.delta), int(w2 // self.delta), i1, i2)
-        if not self.store.exists(key) or (w1, w2) < self.unpack(self.store.get(key))[:2]:
+        if not self.store.exists(key) or (w1, w2) < self.unpack(self.store.get(key)):
             self.store.set(key, self.pack(w1, w2, i1, i2))
 
     def get_states(self):

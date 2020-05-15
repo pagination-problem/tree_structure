@@ -47,14 +47,14 @@
         "if_not_exists": "write"
     },
     {
-        "skip": true,
+        "skip": false,
         "input_dir": "instances/snapshots/",
         "output_dir": "solutions/snapshots/FPTAS/hash_redis/",
         "start": 0,
         "stop": 13,
         "solver": "FPTAS",
         "parameters": {
-            "hash_epsilon": 3,
+            "hash_epsilon": 1,
             "redis": true
         },
         "log": true,
@@ -62,7 +62,7 @@
         "if_not_exists": "write"
     },
     {
-        "skip": false,
+        "skip": true,
         "input_dir": "instances/snapshots/",
         "output_dir": "solutions/snapshots/FPTAS/mini/",
         "start": 0,
