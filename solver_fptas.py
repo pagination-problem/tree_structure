@@ -81,6 +81,8 @@ class StateStore:
         if params.get("hash_epsilon"):
             if params.get("redis"):
                 adder = HashAdderRedis(params)
+            elif params.get("mini"):
+                adder = HashAdderMini(params)
             else:
                 adder = HashAdder(params)
         else:
@@ -130,6 +132,20 @@ class HashAdder:
 
     def get_states(self):
         return self.store.values()
+
+
+class HashAdderMini(HashAdder):
+    """Structure storing a dict of states, with hash comparison before each addition."""
+
+    __slots__ = ["store"] # micro-optimization
+
+    def set_instance(self, instance):
+        pass
+
+    def add_state(self, w1, w2, i1, i2):
+        key = (w1, i1, i2)
+        if key not in self.store or w2 < self.store[key][1]:
+            self.store[key] = (w1, w2, i1, i2)
 
 
 class HashAdderRedis(HashAdder):

@@ -32,7 +32,7 @@
             "hash_epsilon": 1
         },
         "log": true,
-        "if_exists": "dry",
+        "if_exists": "write",
         "if_not_exists": "write"
     },
     {
@@ -47,15 +47,29 @@
         "if_not_exists": "write"
     },
     {
-        "skip": false,
+        "skip": true,
         "input_dir": "instances/snapshots/",
         "output_dir": "solutions/snapshots/FPTAS/hash_redis/",
         "start": 0,
         "stop": 13,
         "solver": "FPTAS",
         "parameters": {
-            "hash_epsilon": 1,
+            "hash_epsilon": 3,
             "redis": true
+        },
+        "log": true,
+        "if_exists": "dry",
+        "if_not_exists": "write"
+    },
+    {
+        "skip": false,
+        "input_dir": "instances/snapshots/",
+        "output_dir": "solutions/snapshots/FPTAS/mini/",
+        "start": 0,
+        "stop": 10,
+        "solver": "FPTAS",
+        "parameters": {
+            "mini": true
         },
         "log": true,
         "if_exists": "dry",
