@@ -152,4 +152,5 @@ def dump_instances(config_path):
 
 
 if __name__ == "__main__":
-    dump_instances("instances/snapshots.json")
+    filename = "instances/snapshots.json" if len(sys.argv) <= 1 else sys.argv[1]
+    dump_instances(filename)
