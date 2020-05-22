@@ -41,6 +41,9 @@ class Solver(AbstractSolver):
         self.c_max = max(min_state[:2])
         return self.c_max
 
+    def _run (self):
+        print("Ctypes")
+
     def retrieve_solution(self):
         """Backtrack the logged states to tell which tiles are assigned to which bins."""
         assert self.log_result, "could not retrieve the solution when logging is disabled."
