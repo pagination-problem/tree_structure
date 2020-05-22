@@ -6,6 +6,10 @@ from functools import partial
 from pathlib import Path
 from time import time
 
+from statistics import mean
+from statistics import pstdev
+from functools import reduce #python 3
+
 import colorama
 from colorama import Fore
 
@@ -102,11 +106,17 @@ class Runner:
             self.total_elapsed_time = 0
             self.solved_instance_count = 0
             self.run_one_config()
-
+            self.cost_mean = 0
+            self.cost_std_dev = 0
+            
+            
     def solve_one(self, instance):
         self.solver.set_instance(instance)
         starting_time = time()
         c_max = self.solver.run()
+        flatten_costs = reduce(lambda x,y: x+y,self.solver.costs)
+        cost_mean = mean(flatten_costs)
+        cost_std_dev = pstdev(flatten_costs)
         elapsed_time = time() - starting_time + 10e-20
         self.total_elapsed_time += elapsed_time
         self.solved_instance_count += 1
@@ -116,6 +126,8 @@ class Runner:
             "solution": self.solver.may_retrieve_solution(),
             "step_count": self.solver.step_count,
             "elapsed_time": elapsed_time,
+            "cost_mean": cost_mean,
+            "cost_std_dev": cost_std_dev,
             "log": ""
         }
         if self.solver.log_result:
@@ -154,6 +166,8 @@ class Runner:
         if self.existing_strategy != "nothing":
             table.add_column("ratio", attribute="c_max_delta", width=8)
         table.add_column("duration", align="left", width=21)
+        table.add_column("cost_mean", align="left", width=9)
+        table.add_column("cost_std_dev", align="left", width=10)
         table.print_header()
 
         files = sorted(self.input_dir.glob("*.json"))
@@ -167,6 +181,8 @@ class Runner:
             self.c_max = "N/A"
             self.c_max_delta = "N/A"
             self.duration = "N/A"
+            self.cost_mean = "N/A"
+            self.cost_std_dev = "N/A"
 
             previous_results = {}
             output_path = self.output_dir / instance.name
@@ -177,6 +193,8 @@ class Runner:
                     self.c_max = previous_results["c_max"]
                     magnitude = previous_results["duration_magnitude"]
                     self.duration = f"previously in ~1e{magnitude} s."
+                    self.cost_mean = previous_results["cost_mean"]
+                    self.cost_std_dev = previous_results["cost_std_dev"]
                     table.print_row()
                     continue
             elif self.non_existing_strategy == "nothing":
@@ -189,6 +207,8 @@ class Runner:
             self.step_count = results["step_count"]
             self.c_max = results["c_max"]
             self.duration = f"solved in {results['elapsed_time']:.2e} s."
+            self.cost_mean = "%.2f" % results["cost_mean"]
+            self.cost_std_dev = "%.2f" % results["cost_std_dev"]
 
             if previous_results:
                 self.step_count_delta = self.ratio(previous_results["step_count"], self.step_count)
@@ -207,6 +227,8 @@ class Runner:
                 "c_max": results["c_max"],
                 "solution": results["solution"],
                 "step_count": results["step_count"],
+                "cost_mean": results["cost_mean"],
+                "cost_std_dev": results["cost_std_dev"],
                 "log": results["log"],
             }
             output_path.write_text(data_to_json(report))
@@ -221,6 +243,6 @@ class Runner:
 
 
 if __name__ == "__main__":
-    filename = "solutions/snapshots.json" if len(sys.argv) <= 1 else sys.argv[1]
+    filename = "solutions/sarah/runs_on_tests.json" if len(sys.argv) <= 1 else sys.argv[1]
     run = Runner(filename)
     run()
