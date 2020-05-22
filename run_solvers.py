@@ -107,7 +107,7 @@ class Runner:
         self.solver.set_instance(instance)
         starting_time = time()
         c_max = self.solver.run()
-        elapsed_time = time() - starting_time
+        elapsed_time = time() - starting_time + 10e-20
         self.total_elapsed_time += elapsed_time
         self.solved_instance_count += 1
         results = {
