@@ -114,9 +114,10 @@ class Runner:
         self.solver.set_instance(instance)
         starting_time = time()
         c_max = self.solver.run()
-        flatten_costs = reduce(lambda x,y: x+y,self.solver.costs)
+        flatten_costs = reduce(lambda x,y: x[:-1]+y,self.solver.costs)
         cost_mean = mean(flatten_costs)
         cost_std_dev = pstdev(flatten_costs)
+        flatten_costs.pop()
         elapsed_time = time() - starting_time + 10e-20
         self.total_elapsed_time += elapsed_time
         self.solved_instance_count += 1
@@ -243,6 +244,6 @@ class Runner:
 
 
 if __name__ == "__main__":
-    filename = "solutions/sarah/runs_on_tests.json" if len(sys.argv) <= 1 else sys.argv[1]
+    filename = "solutions/sarah/run_to_test_stat.json" if len(sys.argv) <= 1 else sys.argv[1] # "solutions/sarah/runs_on_tests.json"
     run = Runner(filename)
     run()
