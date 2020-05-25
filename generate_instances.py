@@ -5,6 +5,10 @@ from hashlib import sha256
 from pathlib import Path
 from random import randint, randrange, sample, seed
 
+from statistics import mean, pstdev
+from tile import Tile
+from symbol import Symbol
+
 from numpy import base_repr
 
 from goodies import data_to_json
@@ -79,6 +83,24 @@ class InstanceMaker:
         self.renumber_symbols()
         self.create_random_weights(symbol_weight_bound)
         identifier = f"{self.paths},{self.weights}".encode("utf8")
+
+        #Code from method __init__ of class Instance in instance.py: duplication
+        d = {s[0]: Symbol(*s) for s in enumerate(self.weights)}
+        tiles = [Tile([d[i] for i in t]) for t in self.paths]
+        tile_count = len(tiles)
+
+        #Code from method set_instance of class Solver in solver_fptas.py: Duplication
+        costs = [[tile.weight] * (tile_count + 1) for tile in tiles]
+        for (new, new_tile) in enumerate(tiles):
+            for (last, last_tile) in enumerate(tiles[:new]):
+                costs[new][last] = sum(symbol.weight for symbol in new_tile - last_tile)
+        
+        #Code from method solve_one of class Runner in run_solvers.py: It will disapear from solve_one so there won't be a duplication
+        lower_triangle_costs = [row[: i + 1] for (i, row) in enumerate(costs)]
+        flattened_costs = reduce(lambda x, y: x + y, lower_triangle_costs)
+        cost_mean = mean(flattened_costs)
+        cost_standard_deviation = pstdev(flattened_costs)
+
         return {
             "name": "h={height:02}_t={tiles:03}_s={symbols:03}_m={max_weight:02}__{hash_value}.json".format(
                 height=self.height,
@@ -93,6 +115,8 @@ class InstanceMaker:
             "common_symbols": sorted(self.common_symbols),
             "symbol_weights": self.weights,
             "tiles": sorted(self.paths),
+            "cost_mean": cost_mean,
+            "cost_standard_deviation": cost_standard_deviation
         }
 
 
@@ -152,5 +176,6 @@ def dump_instances(config_path):
 
 
 if __name__ == "__main__":
-    filename = "instances/snapshots.json" if len(sys.argv) <= 1 else sys.argv[1]
+    filename = "instances/sarah/test_config.json" if len(sys.argv) <= 1 else sys.argv[1]
+    # alternatively:  "instances/snapshots.json"
     dump_instances(filename)
