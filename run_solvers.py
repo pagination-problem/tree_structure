@@ -114,10 +114,10 @@ class Runner:
         self.solver.set_instance(instance)
         starting_time = time()
         c_max = self.solver.run()
-        flatten_costs = reduce(lambda x,y: x[:-1]+y,self.solver.costs)
+        epurated_costs = [ one_list[:cpt+1] for (cpt, one_list) in enumerate(self.solver.costs) ]
+        flatten_costs = reduce(lambda x,y: x+y,epurated_costs)
         cost_mean = mean(flatten_costs)
         cost_std_dev = pstdev(flatten_costs)
-        flatten_costs.pop()
         elapsed_time = time() - starting_time + 10e-20
         self.total_elapsed_time += elapsed_time
         self.solved_instance_count += 1
