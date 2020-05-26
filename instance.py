@@ -47,7 +47,10 @@ class Instance:
             "symbol_weight_bound": self.symbol_weight_bound,
             "symbol_count": self.symbol_count,
             "symbol_weights": [s.weight for s in sorted(self.symbols)],
+            "cost_mean": self.cost_mean,
+            "cost_standard_deviation": self.cost_standard_deviation,
             "tiles": sorted(sorted(s.index for s in t.symbols) for t in self.tiles),
+            "costs": self.costs,
         }
 
     def get_json(self) -> str:
