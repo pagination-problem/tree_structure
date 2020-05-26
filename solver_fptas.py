@@ -15,10 +15,7 @@ class Solver(AbstractSolver):
         self.may_reset_log()
         self.tile_count = instance.tile_count
         self.tiles = instance.tiles
-        self.costs = [[tile.weight] * (self.tile_count + 1) for tile in self.tiles]
-        for (new, new_tile) in enumerate(self.tiles):
-            for (last, last_tile) in enumerate(self.tiles[:new]):
-                self.costs[new][last] = sum(symbol.weight for symbol in new_tile - last_tile)
+        self.costs = instance.costs
         self.no_top_tile = self.tile_count
         self.store.set_instance(instance)
 

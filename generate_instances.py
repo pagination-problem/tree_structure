@@ -89,13 +89,11 @@ class InstanceMaker:
         tiles = [Tile([d[i] for i in t]) for t in self.paths]
         tile_count = len(tiles)
 
-        #Code from method set_instance of class Solver in solver_fptas.py: Duplication
         costs = [[tile.weight] * (tile_count + 1) for tile in tiles]
         for (new, new_tile) in enumerate(tiles):
             for (last, last_tile) in enumerate(tiles[:new]):
                 costs[new][last] = sum(symbol.weight for symbol in new_tile - last_tile)
         
-        #Code from method solve_one of class Runner in run_solvers.py: It will disapear from solve_one so there won't be a duplication
         lower_triangle_costs = [row[: i + 1] for (i, row) in enumerate(costs)]
         flattened_costs = reduce(lambda x, y: x + y, lower_triangle_costs)
         cost_mean = mean(flattened_costs)
@@ -116,7 +114,8 @@ class InstanceMaker:
             "symbol_weights": self.weights,
             "tiles": sorted(self.paths),
             "cost_mean": cost_mean,
-            "cost_standard_deviation": cost_standard_deviation
+            "cost_standard_deviation": cost_standard_deviation,
+            "costs": costs
         }
 
 

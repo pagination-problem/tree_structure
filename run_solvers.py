@@ -111,10 +111,10 @@ class Runner:
         self.solver.set_instance(instance)
         starting_time = time()
         c_max = self.solver.run()
-        lower_triangle_costs = [row[: i + 1] for (i, row) in enumerate(self.solver.costs)]
-        flattened_costs = reduce(lambda x, y: x + y, lower_triangle_costs)
-        cost_mean = mean(flattened_costs)
-        cost_standard_deviation = pstdev(flattened_costs)
+        # lower_triangle_costs = [row[: i + 1] for (i, row) in enumerate(self.solver.costs)]
+        # flattened_costs = reduce(lambda x, y: x + y, lower_triangle_costs)
+        # cost_mean = mean(flattened_costs)
+        # cost_standard_deviation = pstdev(flattened_costs)
         elapsed_time = time() - starting_time + 10e-20
         self.total_elapsed_time += elapsed_time
         self.solved_instance_count += 1
@@ -124,8 +124,6 @@ class Runner:
             "solution": self.solver.may_retrieve_solution(),
             "step_count": self.solver.step_count,
             "elapsed_time": elapsed_time,
-            "cost_mean": cost_mean,
-            "cost_standard_deviation": cost_standard_deviation,
             "log": "",
         }
         if self.solver.log_result:
@@ -205,8 +203,8 @@ class Runner:
             self.step_count = results["step_count"]
             self.c_max = results["c_max"]
             self.duration = f"solved in {results['elapsed_time']:.2e} s."
-            self.cost_mean = "%.2f" % results["cost_mean"]
-            self.cost_standard_deviation = "%.2f" % results["cost_standard_deviation"]
+            self.cost_mean = "%.2f" % instance.cost_mean
+            self.cost_standard_deviation = "%.2f" % instance.cost_standard_deviation
 
             if previous_results:
                 self.step_count_delta = self.ratio(previous_results["step_count"], self.step_count)
@@ -225,8 +223,8 @@ class Runner:
                 "c_max": results["c_max"],
                 "solution": results["solution"],
                 "step_count": results["step_count"],
-                "cost_mean": results["cost_mean"],
-                "cost_standard_deviation": results["cost_standard_deviation"],
+                "cost_mean": instance.cost_mean,
+                "cost_standard_deviation": instance.cost_standard_deviation,
                 "log": results["log"],
             }
             output_path.write_text(data_to_json(report))
@@ -241,7 +239,7 @@ class Runner:
 
 
 if __name__ == "__main__":
-    filename = "solutions/snapshots.json" if len(sys.argv) <= 1 else sys.argv[1]
-    # alternatively: "solutions/sarah/runs_on_tests.json"
+    filename = "solutions/sarah/run_to_test_stat.json" if len(sys.argv) <= 1 else sys.argv[1]
+    # alternatively: "solutions/snapshots.json"
     run = Runner(filename)
     run()

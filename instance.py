@@ -32,6 +32,9 @@ class Instance:
         self.symbol_count = data["symbol_count"]
         self.symbols = data["symbols"]
         self.tiles = data["tiles"]
+        self.costs = data["costs"]
+        self.cost_standard_deviation = data["cost_standard_deviation"]
+        self.cost_mean = data["cost_mean"]
 
         # Add some calculated attributes
         self.symbol_weight_sum = sum(symbol.weight for symbol in self.symbols)
