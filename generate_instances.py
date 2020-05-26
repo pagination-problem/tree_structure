@@ -98,9 +98,9 @@ class InstanceMaker:
             "symbol_count": self.node_count,
             "common_symbols": sorted(self.common_symbols),
             "symbol_weights": self.weights,
-            "tiles": sorted(self.paths),
             "cost_mean": "N/A",
             "cost_standard_deviation": "N/A",
+            "tiles": sorted(self.paths),
             "costs": "N/A"
         }
 
