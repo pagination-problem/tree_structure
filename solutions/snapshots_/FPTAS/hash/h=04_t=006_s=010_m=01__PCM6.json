@@ -2,13 +2,15 @@
   "solver_parameters": {
     "hash_epsilon": 1
   },
-  "duration_magnitude": -3,
+  "duration_magnitude": -19,
   "c_max": 6,
   "solution": [
     [0, 1, 4],
     [2, 3, 5]
   ],
   "step_count": 59,
+  "cost_mean": 2.2857142857142856,
+  "cost_standard_deviation": 0.8247860988423225,
   "log": [
     [
       [3, 0, 0, 6]
