@@ -1,0 +1,13 @@
+{
+  "solver_parameters": {
+    "hash_epsilon": 1
+  },
+  "duration_magnitude": 0,
+  "c_max": 54,
+  "solution": [
+    [0, 1, 2, 3, 4, 5, 10, 12],
+    [6, 7, 8, 9, 11]
+  ],
+  "step_count": 1946,
+  "log": "not dumped (too long)."
+}

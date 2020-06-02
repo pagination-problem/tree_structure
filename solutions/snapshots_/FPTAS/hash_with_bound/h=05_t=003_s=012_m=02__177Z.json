@@ -1,0 +1,27 @@
+{
+  "solver_parameters": {
+    "hash_epsilon": 1,
+    "c_max_pruner": "solver_naive_cut"
+  },
+  "duration_magnitude": -4,
+  "c_max": 12,
+  "solution": [
+    [0, 2],
+    [1]
+  ],
+  "step_count": 6,
+  "log": [
+    [
+      [7, 0, 0, 3]
+    ],
+    [
+      [14, 0, 1, 3],
+      [7, 10, 0, 1]
+    ],
+    [
+      [14, 8, 1, 2],
+      [12, 10, 2, 1],
+      [7, 14, 0, 2]
+    ]
+  ]
+}
