@@ -22,7 +22,7 @@
         "if_not_exists": "write"
     },
     {
-        "skip": true,
+        "skip": false,
         "input_dir": "instances/snapshots_/",
         "output_dir": "solutions/snapshots_/FPTAS/hash/",
         "start": 0,
@@ -36,7 +36,7 @@
         "if_not_exists": "write"
     },
     {
-        "skip": true,
+        "skip": false,
         "input_dir": "instances/snapshots_/",
         "output_dir": "solutions/snapshots_/FPTAS/no_hash/",
         "start": 0,
@@ -47,7 +47,7 @@
         "if_not_exists": "write"
     },
     {
-        "skip": false,
+        "skip": true,
         "input_dir": "instances/snapshots_/",
         "output_dir": "solutions/snapshots_/FPTAS/hash_redis/",
         "start": 0,
@@ -62,7 +62,7 @@
         "if_not_exists": "write"
     },
     {
-        "skip": true,
+        "skip": false,
         "input_dir": "instances/snapshots_/",
         "output_dir": "solutions/snapshots_/FPTAS/mini/",
         "start": 0,
