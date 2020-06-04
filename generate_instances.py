@@ -137,7 +137,7 @@ class InstanceMaker:
     
         return coeff_for_quadratic
 
-    def create_weight_according_to_mean_and_deviation(
+    def create_weights_according_to_mean_and_deviation(
         self,
         the_instance,
         p_i_occurrences,
@@ -210,7 +210,7 @@ class InstanceMaker:
 
             p_i_occurrences = self.compute_occurrences_of_p_i(temporary_instance)
             coefficients_for_quadratic_var = self.compute_coefficient_for_quadratic_var(temporary_instance)
-            temp_weights = self.create_weight_according_to_mean_and_deviation(temporary_instance, p_i_occurrences, coefficients_for_quadratic_var)
+            temp_weights = self.create_weights_according_to_mean_and_deviation(temporary_instance, p_i_occurrences, coefficients_for_quadratic_var)
             self.weights =  [temp_weights[i] for i in range(self.node_count)] #tranformation necessary because json doesnt know NDarray of numpy
             
         identifier = f"{self.paths},{self.weights}".encode("utf8")
