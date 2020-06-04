@@ -2,7 +2,7 @@
   "solver_parameters": {
     "hash_epsilon": 1
   },
-  "duration_magnitude": -3,
+  "duration_magnitude": -19,
   "c_max": 6,
   "solution": [
     [0, 1, 4],
