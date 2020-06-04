@@ -23,8 +23,6 @@ class InstanceMaker:
         tile_min_size=2,
         common_symbol_min_count=0,
         common_symbol_max_count=sys.maxsize,
-        desired_cost_mean=20,
-        desired_cost_standard_deviation=5,
     ):
         self.leaves = list(range(arity ** (height - 1), arity ** height))
         self.height = height
@@ -32,8 +30,6 @@ class InstanceMaker:
         self.tile_min_size = tile_min_size
         self.common_symbol_min_count = common_symbol_min_count
         self.common_symbol_max_count = common_symbol_max_count
-        self.desired_cost_mean = desired_cost_mean
-        self.desired_cost_standard_deviation = desired_cost_standard_deviation
 
     def ancestors(self, node):
         """Return all the ancestors of a node in a complete n-ary tree, including itself."""
@@ -82,18 +78,10 @@ class InstanceMaker:
         """Return a list of n random weights, where n is the number of distinct nodes in self.paths."""
         self.weights = [1 + randrange(max_weight) for _ in range(self.node_count)]
 
-    def create_weight_according_to(self, desired_cost_mean,  desired_cost_standard_deviation):
-        print("Im not finished !")
-
     def __call__(self, leaf_rate, kill_rate, symbol_weight_bound):
         self.create_path_sample(leaf_rate)
         self.remove_random_nodes(kill_rate)
         self.renumber_symbols()
-
-        # j'appellerai 
-        # create_weight_according_to(self, desired_cost_mean,  desired_cost_standard_deviation)
-        # au lieu de create_random_weights(symbol_weight_bound)
-
         self.create_random_weights(symbol_weight_bound)
         identifier = f"{self.paths},{self.weights}".encode("utf8")
 
@@ -166,8 +154,6 @@ def dump_instances(config_path):
             cfg["tile_min_size"],
             cfg["common_symbol_min_count"],
             cfg["common_symbol_max_count"],
-            cfg["desired_cost_mean"],
-            cfg["desired_cost_standard_deviation"],
         )
         leaf_rate = randint(cfg["min_tile_percentage"], cfg["max_tile_percentage"]) / 100.0
         kill_rate = randint(cfg["min_kill_percentage"], cfg["max_kill_percentage"]) / 100.0
@@ -196,4 +182,4 @@ if __name__ == "__main__":
     filename = "instances/sarah/test_config.json" if len(sys.argv) <= 1 else sys.argv[1]
     # alternatively:  "instances/snapshots.json"
     dump_instances(filename)
-
+    
