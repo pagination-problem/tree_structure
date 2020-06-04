@@ -173,7 +173,7 @@ class InstanceMaker:
 
         bnds = list()
         for i in range(p_i_count):
-            bnds.append([1, np.inf])
+            bnds.append([0, np.inf])
 
         variables =  np.array([0 for y in range(p_i_count)])
         value_distrib = optimize.minimize(f, variables, method="SLSQP", bounds=bnds, constraints=cons)
