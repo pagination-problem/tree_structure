@@ -1,0 +1,16 @@
+{
+  "solver_parameters": {
+    "hash_epsilon": 1,
+    "c_max_pruner": "solver_naive_cut"
+  },
+  "duration_magnitude": 0,
+  "c_max": 167,
+  "solution": [
+    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 27, 28, 41, 42],
+    [25, 26, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58]
+  ],
+  "step_count": 303427,
+  "cost_mean": 10.370621468926554,
+  "cost_standard_deviation": 3.8259353065242196,
+  "log": "not dumped (too long)."
+}

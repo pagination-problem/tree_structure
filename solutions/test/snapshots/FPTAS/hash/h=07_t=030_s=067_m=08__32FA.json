@@ -1,0 +1,15 @@
+{
+  "solver_parameters": {
+    "hash_epsilon": 1
+  },
+  "duration_magnitude": -1,
+  "c_max": 169,
+  "solution": [
+    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+    [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29]
+  ],
+  "step_count": 68971,
+  "cost_mean": 20.473118279569892,
+  "cost_standard_deviation": 7.887094941765222,
+  "log": "not dumped (too long)."
+}

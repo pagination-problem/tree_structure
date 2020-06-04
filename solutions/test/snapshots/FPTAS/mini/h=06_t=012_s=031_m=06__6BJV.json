@@ -1,0 +1,15 @@
+{
+  "solver_parameters": {
+    "mini": true
+  },
+  "duration_magnitude": -2,
+  "c_max": 54,
+  "solution": [
+    [0, 1, 2, 3, 4, 6],
+    [5, 7, 8, 9, 10, 11]
+  ],
+  "step_count": 4095,
+  "cost_mean": 12.435897435897436,
+  "cost_standard_deviation": 4.73012642425978,
+  "log": "not dumped (too long)."
+}
