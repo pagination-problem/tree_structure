@@ -174,7 +174,7 @@ def test_compute_coefficient_for_quadratic_var():
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5]
         ]
 
-def test_create_weight_according_to_mean_and_deviation():
+def test_create_weights_according_to_mean_and_deviation():
     the_dict = {
     "name": "h=03_t=005_s=011_m=06.json",
     "height": 3,
@@ -223,7 +223,7 @@ def test_create_weight_according_to_mean_and_deviation():
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5]
         ]
-    computed_weights = maker.create_weight_according_to_mean_and_deviation(the_instance, p_i_occurrences, coeff_for_quadratic)
+    computed_weights = maker.create_weights_according_to_mean_and_deviation(the_instance, p_i_occurrences, coeff_for_quadratic)
     weights =  [computed_weights[i] for i in range(maker.node_count)]
 
     assert weights == [1.3143362332957655,
