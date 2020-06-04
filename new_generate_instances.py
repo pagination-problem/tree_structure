@@ -29,6 +29,7 @@ class InstanceMaker:
         desired_cost_mean=20,
         LB_standard_deviation=3,
         UB_standard_deviation=8,
+        method="classic"
     ):
         self.leaves = list(range(arity ** (height - 1), arity ** height))
         self.height = height
@@ -39,6 +40,7 @@ class InstanceMaker:
         self.desired_cost_mean = desired_cost_mean
         self.LB_standard_deviation = LB_standard_deviation
         self.UB_standard_deviation = UB_standard_deviation
+        self.method = method
 
     def ancestors(self, node):
         """Return all the ancestors of a node in a complete n-ary tree, including itself."""
@@ -280,6 +282,7 @@ def dump_instances(config_path):
             cfg["desired_cost_mean"],
             cfg["LB_standard_deviation"],
             cfg["UB_standard_deviation"],
+            cfg["method"]
         )
         leaf_rate = randint(cfg["min_tile_percentage"], cfg["max_tile_percentage"]) / 100.0
         kill_rate = randint(cfg["min_kill_percentage"], cfg["max_kill_percentage"]) / 100.0
