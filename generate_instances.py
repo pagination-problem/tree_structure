@@ -312,7 +312,7 @@ def dump_instances(config_path):
 
 
 if __name__ == "__main__":
-    filename = "instances/sarah/config_for_stats.json" if len(sys.argv) <= 1 else sys.argv[1]
-    # alternatively:  "instances/snapshots.json"
+    filename =  "instances/snapshots.json" if len(sys.argv) <= 1 else sys.argv[1]
+    # alternatively:   "instances/sarah/snapshots_.json"
     dump_instances(filename)
 

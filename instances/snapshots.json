@@ -13,5 +13,9 @@
     "common_symbol_min_count": 0,
     "common_symbol_max_count": 2,
     "arity": 2,
-    "seed": 42
+    "seed": 42,
+	"desired_cost_mean": 50,
+	"LB_standard_deviation": 8,
+	"UB_standard_deviation": 10,
+	"method": "classic"
 }
