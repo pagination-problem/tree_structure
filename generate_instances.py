@@ -29,7 +29,9 @@ class InstanceMaker:
         desired_cost_mean=20,
         LB_standard_deviation=3,
         UB_standard_deviation=8,
-        method="classic"
+        method="classic",
+        min_symbol_weight_bound=0,
+        max_symbol_weight_bound=np.inf,
     ):
         self.leaves = list(range(arity ** (height - 1), arity ** height))
         self.height = height
@@ -42,6 +44,8 @@ class InstanceMaker:
         self.UB_standard_deviation = UB_standard_deviation
         self.method = method #if method==classic, we generate instances without controlling the mean and the standard deviation. 
                              #if method==stats (or anything else in fact), it means we want to control the stats
+        self.min_symbol_weight_bound = min_symbol_weight_bound
+        self.max_symbol_weight_bound = max_symbol_weight_bound
 
     def ancestors(self, node):
         """Return all the ancestors of a node in a complete n-ary tree, including itself."""
@@ -176,7 +180,7 @@ class InstanceMaker:
 
         bnds = list()
         for i in range(p_i_count):
-            bnds.append([0, np.inf])
+            bnds.append([self.min_symbol_weight_bound, self.max_symbol_weight_bound])
 
         variables =  np.array([0 for y in range(p_i_count)])
         value_distrib = optimize.minimize(f, variables, method="SLSQP", bounds=bnds, constraints=cons)
@@ -286,7 +290,9 @@ def dump_instances(config_path):
             cfg["desired_cost_mean"],
             cfg["LB_standard_deviation"],
             cfg["UB_standard_deviation"],
-            cfg["method"]
+            cfg["method"],
+            cfg["min_symbol_weight_bound"],
+            cfg["max_symbol_weight_bound"]
         )
         leaf_rate = randint(cfg["min_tile_percentage"], cfg["max_tile_percentage"]) / 100.0
         kill_rate = randint(cfg["min_kill_percentage"], cfg["max_kill_percentage"]) / 100.0
@@ -312,7 +318,7 @@ def dump_instances(config_path):
 
 
 if __name__ == "__main__":
-    filename =  "instances/snapshots.json" if len(sys.argv) <= 1 else sys.argv[1]
-    # alternatively:   "instances/sarah/snapshots_.json"
+    filename =  "instances/sarah/snapshots_.json"  if len(sys.argv) <= 1 else sys.argv[1]
+    # alternatively:   "instances/snapshots.json"
     dump_instances(filename)
 

@@ -127,7 +127,12 @@ def test_compute_occurrences_of_p_i():
             [14, 14, 14, 5, 14, 14]
         ]
     }
-    maker = InstanceMaker(height=the_dict["height"], tile_min_size=2, common_symbol_max_count=1)
+    maker = InstanceMaker(
+        height=the_dict["height"],
+        tile_min_size=2,
+        common_symbol_max_count=1,
+        min_symbol_weight_bound=0,
+        max_symbol_weight_bound=np.inf)
     the_instance = Instance(the_dict)
     computed_occurrences = maker.compute_occurrences_of_p_i(the_instance)
 
@@ -157,7 +162,12 @@ def test_compute_coefficient_for_quadratic_var():
         [14, 14, 14, 5, 14, 14]
         ]
     }
-    maker = InstanceMaker(height=the_dict["height"], tile_min_size=2, common_symbol_max_count=1)
+    maker = InstanceMaker(
+        height=the_dict["height"],
+        tile_min_size=2,
+        common_symbol_max_count=1,
+        min_symbol_weight_bound=0,
+        max_symbol_weight_bound=np.inf)
     the_instance = Instance(the_dict)
     computed_coefficients = maker.compute_coefficient_for_quadratic_var(the_instance)
     assert computed_coefficients == [
@@ -204,7 +214,9 @@ def test_create_weights_according_to_mean_and_deviation():
         common_symbol_max_count=1,
         desired_cost_mean=9.933333333333334,
         LB_standard_deviation=3,
-        UB_standard_deviation=4)
+        UB_standard_deviation=4,
+        min_symbol_weight_bound=0,
+        max_symbol_weight_bound=np.inf)
     maker.node_count = the_dict["symbol_count"]
 
     the_instance = Instance(the_dict)
