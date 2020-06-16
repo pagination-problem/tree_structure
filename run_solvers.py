@@ -239,7 +239,7 @@ class Runner:
 
 
 if __name__ == "__main__":
-    filename = "solutions/snapshots.json" if len(sys.argv) <= 1 else sys.argv[1]
-    # alternatively:  "solutions/sarah/run_to_test_stat.json"
+    filename = "solutions/sarah/run_for_stats.json" if len(sys.argv) <= 1 else sys.argv[1]
+    # alternatively:   "solutions/snapshots.json"
     run = Runner(filename)
     run()
