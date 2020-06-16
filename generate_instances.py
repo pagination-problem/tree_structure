@@ -78,6 +78,14 @@ class InstanceMaker:
             if len(set(map(tuple, self.paths))) != len(self.paths):
                 raise DuplicateTiles
 
+            for (i, path1) in enumerate(self.paths):
+                for (j, path2) in enumerate(self.paths[:i]):
+                    path1[:] = [node for node in path1]
+                    path2[:] = [node for node in path2]
+                    ps1 = set(path1)
+                    ps2 = set(path2)
+                    if ps1.issubset(ps2) or ps2.issubset(ps1):
+                        raise TileContainedInAnother
 
     def renumber_symbols(self):
         """Update self.paths with all their nodes renumbered consecutively."""
@@ -271,6 +279,10 @@ class TooManyCommonSymbols(Exception):
 
 
 class TooFewCommonSymbols(Exception):
+    ...
+
+
+class TileContainedInAnother(Exception):
     ...
 
 
