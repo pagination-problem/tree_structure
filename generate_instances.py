@@ -26,9 +26,9 @@ class InstanceMaker:
         tile_min_size=2,
         common_symbol_min_count=0,
         common_symbol_max_count=sys.maxsize,
-        desired_cost_mean=20,
-        LB_standard_deviation=3,
-        UB_standard_deviation=8,
+        cost_mean=20,
+        min_cost_standard_deviation=3,
+        max_cost_standard_deviation=8,
         method="classic",
         min_symbol_weight_bound=0,
         max_symbol_weight_bound=np.inf,
@@ -39,9 +39,9 @@ class InstanceMaker:
         self.tile_min_size = tile_min_size
         self.common_symbol_min_count = common_symbol_min_count
         self.common_symbol_max_count = common_symbol_max_count
-        self.desired_cost_mean = desired_cost_mean
-        self.LB_standard_deviation = LB_standard_deviation
-        self.UB_standard_deviation = UB_standard_deviation
+        self.cost_mean = cost_mean
+        self.min_cost_standard_deviation = min_cost_standard_deviation
+        self.max_cost_standard_deviation = max_cost_standard_deviation
         self.method = method #if method==classic, we generate instances without controlling the mean and the standard deviation. 
                              #if method==stats (or anything else in fact), it means we want to control the stats
         self.min_symbol_weight_bound = min_symbol_weight_bound
@@ -155,24 +155,24 @@ class InstanceMaker:
             return 1
 
         def mean_constraint(x):
-            return np.dot(p_i_occurrences, x) - cell_count_in_costs_matrix * self.desired_cost_mean
+            return np.dot(p_i_occurrences, x) - cell_count_in_costs_matrix * self.cost_mean
 
         def define_standard_deviation(x, coeff_for_quadratic):
-            res = self.desired_cost_mean * self.desired_cost_mean  * cell_count_in_costs_matrix
+            res = self.cost_mean * self.cost_mean  * cell_count_in_costs_matrix
             for l in range(p_i_count):
                 for c in range(l, p_i_count):
                     res = res + coeff_for_quadratic[l][c] * x[l] * x[c]
 
             for l in range(p_i_count):
-                res = res - 2 * self.desired_cost_mean * coeff_for_quadratic[l][l] * x[l]
+                res = res - 2 * self.cost_mean * coeff_for_quadratic[l][l] * x[l]
             
             return res * (1/cell_count_in_costs_matrix)
 
         def sd_constraint_1(x, coeff_for_quadratic=coeff_for_quadratic): #LB for the standard deviation
-            return define_standard_deviation(x, coeff_for_quadratic) - (self.LB_standard_deviation * self.LB_standard_deviation)
+            return define_standard_deviation(x, coeff_for_quadratic) - (self.min_cost_standard_deviation * self.min_cost_standard_deviation)
 
         def sd_constraint_2(x, coeff_for_quadratic=coeff_for_quadratic): #UB for the standard deviation
-            return  (self.UB_standard_deviation * self.UB_standard_deviation) - define_standard_deviation(x, coeff_for_quadratic)
+            return  (self.max_cost_standard_deviation * self.max_cost_standard_deviation) - define_standard_deviation(x, coeff_for_quadratic)
         
         cons = [{'type': 'eq', 'fun': mean_constraint},
         {'type': 'ineq', 'fun': sd_constraint_1},
@@ -205,7 +205,7 @@ class InstanceMaker:
                 "symbol_count": self.node_count,
                 "common_symbols": sorted(self.common_symbols),
                 "symbol_weights": self.weights,
-                "cost_mean": self.desired_cost_mean,
+                "cost_mean": self.cost_mean,
                 "cost_standard_deviation": "N/A",
                 "tiles": sorted(self.paths),
                 "costs": "N/A"
@@ -287,9 +287,9 @@ def dump_instances(config_path):
             cfg["tile_min_size"],
             cfg["common_symbol_min_count"],
             cfg["common_symbol_max_count"],
-            cfg["desired_cost_mean"],
-            cfg["LB_standard_deviation"],
-            cfg["UB_standard_deviation"],
+            cfg["cost_mean"],
+            cfg["min_cost_standard_deviation"],
+            cfg["max_cost_standard_deviation"],
             cfg["method"],
             cfg["min_symbol_weight_bound"],
             cfg["max_symbol_weight_bound"]
@@ -318,7 +318,7 @@ def dump_instances(config_path):
 
 
 if __name__ == "__main__":
-    filename =  "instances/sarah/snapshots_.json"  if len(sys.argv) <= 1 else sys.argv[1]
+    filename =  "instances/sarah/test_config.json"  if len(sys.argv) <= 1 else sys.argv[1]
     # alternatively:   "instances/snapshots.json"
     dump_instances(filename)
 

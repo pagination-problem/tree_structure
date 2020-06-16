@@ -212,9 +212,9 @@ def test_create_weights_according_to_mean_and_deviation():
         height=the_dict["height"],
         tile_min_size=2,
         common_symbol_max_count=1,
-        desired_cost_mean=9.933333333333334,
-        LB_standard_deviation=3,
-        UB_standard_deviation=4,
+        cost_mean=9.933333333333334,
+        min_cost_standard_deviation=3,
+        max_cost_standard_deviation=4,
         min_symbol_weight_bound=0,
         max_symbol_weight_bound=np.inf)
     maker.node_count = the_dict["symbol_count"]
