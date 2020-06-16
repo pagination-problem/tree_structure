@@ -78,6 +78,7 @@ class InstanceMaker:
             if len(set(map(tuple, self.paths))) != len(self.paths):
                 raise DuplicateTiles
 
+
     def renumber_symbols(self):
         """Update self.paths with all their nodes renumbered consecutively."""
         remaining_nodes = set.union(*map(set, self.paths))
@@ -198,6 +199,7 @@ class InstanceMaker:
             self.create_random_weights(symbol_weight_bound)
         else:
             self.weights = [0 for i in range(self.node_count)]
+            #self.create_random_weights(symbol_weight_bound)
             temporary_dict = {
                 "name": "temp",
                 "height": self.height,  # seems useless
@@ -215,7 +217,7 @@ class InstanceMaker:
             p_i_occurrences = self.compute_occurrences_of_p_i(temporary_instance)
             coefficients_for_quadratic_var = self.compute_coefficient_for_quadratic_var(temporary_instance)
             temp_weights = self.create_weights_according_to_mean_and_deviation(temporary_instance, p_i_occurrences, coefficients_for_quadratic_var)
-            self.weights =  [temp_weights[i] for i in range(self.node_count)] #tranformation necessary because json doesnt know NDarray of numpy
+            self.weights =  [round(temp_weights[i], 1) for i in range(self.node_count)] #tranformation necessary because json doesnt know NDarray of numpy
             
         identifier = f"{self.paths},{self.weights}".encode("utf8")
         returned_dict = {
@@ -249,8 +251,8 @@ class InstanceMaker:
         cost_mean = mean(flattened_costs)
         cost_standard_deviation = pstdev(flattened_costs)
 
-        returned_dict["cost_mean"] = cost_mean
-        returned_dict["cost_standard_deviation"] = cost_standard_deviation
+        returned_dict["cost_mean"] = round(cost_mean, 1)
+        returned_dict["cost_standard_deviation"] = round(cost_standard_deviation, 1)
         returned_dict["costs"] = costs
 
         return returned_dict
@@ -309,6 +311,8 @@ def dump_instances(config_path):
             outcome = "F"
         except TooManyCommonSymbols:
             outcome = "M"
+        except TileContainedInAnother:
+            outcome = "C"
         else:
             (directory / instance["name"]).write_text(data_to_json(instance))
             outcome = "."
@@ -319,6 +323,6 @@ def dump_instances(config_path):
 
 if __name__ == "__main__":
     filename =  "instances/sarah/test_config.json"  if len(sys.argv) <= 1 else sys.argv[1]
-    # alternatively:   "instances/snapshots.json"
+    # alternatively: filename =  "instances/snapshots.json"  if len(sys.argv) <= 1 else sys.argv[1]
     dump_instances(filename)
 
