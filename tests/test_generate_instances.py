@@ -218,6 +218,7 @@ def test_create_weights_according_to_mean_and_deviation():
         min_symbol_weight_bound=0,
         max_symbol_weight_bound=np.inf)
     maker.node_count = the_dict["symbol_count"]
+    maker.weights = [0 for i in range(maker.node_count)]
 
     the_instance = Instance(the_dict)
 
