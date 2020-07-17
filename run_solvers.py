@@ -13,6 +13,13 @@ from colorama import Fore
 from goodies import data_to_json
 from instance import Instance
 
+import xlsxwriter
+import glob
+import os.path
+import traceback
+import winsound
+import gc
+
 colorama.init()
 
 SOLVERS = {
@@ -99,11 +106,16 @@ class Runner:
             self.output_dir.mkdir(parents=True, exist_ok=True)
             self.existing_strategy = config.get("if_exists", "nothing")
             self.non_existing_strategy = config.get("if_not_exists", "nothing")
+            self.solver_name = config["solver_name"]
+            self.output_filename = config["output_filename"]
+            self.output_path = config["output_dir"]
             self.start = config.get("start", 0)
             self.stop = config.get("stop")
+            if "FPTAS" in self.solver_name:
+                self.epsilon = config["parameters"]["hash_epsilon"]
             self.total_elapsed_time = 0
             self.solved_instance_count = 0
-            self.run_one_config()
+            self.run_one_config_csv()
             self.cost_mean = 0
             self.cost_standard_deviation = 0
 
@@ -145,6 +157,132 @@ class Runner:
         else:
             color = "<R>" if s.startswith("+") else "<G>"
             return f"{color}{s}"
+
+    def copy_with_hashed_symbols(self, instance, epsilon): 
+        data = instance.get_data() 
+        data["symbol_weight_bound"] = math.ceil(instance.symbol_weight_bound * epsilon) 
+        data["symbol_weights"] = [math.ceil(s.weight * epsilon) for s in sorted(instance.symbols)] 
+        return Instance(data) 
+
+    def run_one_config_excel(self):
+        print(f"Input:  {self.input_dir}")
+        print(f"Output: {self.output_dir}")
+        print()
+
+        files = sorted(self.input_dir.glob("*.json"))
+        if "FPTAS" in self.solver_name:
+            workbook = xlsxwriter.Workbook(self.output_path + self.output_filename + "__eps=" + str(self.epsilon) + '.xlsx')
+        else:
+            workbook = xlsxwriter.Workbook(self.output_path + self.output_filename + '.xlsx')
+        worksheet = workbook.add_worksheet()
+        
+        # Create two formats to use in the merged range.
+        merge_format = workbook.add_format(
+            {
+            'bold': 1,
+            'border': 1,
+            'align': 'center',
+            'valign': 'vcenter',
+            'fg_color': 'white'
+            }
+        )
+
+        worksheet.merge_range(0,0,1,2,'instance', merge_format) # l,c,l,c,"text_inside_merged_cells", the_format
+        worksheet.merge_range(0,3,0,5, self.solver_name, merge_format)
+        if "FPTAS" in self.solver_name:
+            worksheet.merge_range(1,3,1,5, "eps="+str(self.epsilon), merge_format)
+        
+        worksheet.write(2, 0, "name")
+        worksheet.write(2, 1, "cost mean")
+        worksheet.write(2, 2, "cost SD")
+        worksheet.write(2, 3, "time")
+        worksheet.write(2, 4, "step count")
+        worksheet.write(2, 5, "Cmax")
+
+        for (self.i, instance_path) in enumerate(files[self.start : self.stop], self.start):
+            instance = Instance(instance_path)
+            print(f"no. {self.i}: {instance.name}")
+            
+            if self.solver_name == "FPTAS 2":
+                instance = self.copy_with_hashed_symbols(instance, self.epsilon)
+            
+            results = self.solve_one(instance)
+
+            worksheet.write(self.i+3, 0, instance.name)
+            worksheet.write(self.i+3, 1, instance.cost_mean)
+            worksheet.write(self.i+3, 2, instance.cost_standard_deviation)
+            worksheet.write(self.i+3, 3, round(results['elapsed_time'], 2))
+            worksheet.write(self.i+3, 4, results["step_count"])
+            worksheet.write(self.i+3, 5, results["c_max"])
+            
+        workbook.close()
+
+    def run_one_config_csv(self):
+        print(f"Input:  {self.input_dir}")
+        print(f"Output: {self.output_dir}")
+        print(f"{self.solver_name}")
+        print()
+
+        files = sorted(self.input_dir.glob("*.json"))
+
+        if "FPTAS" in self.solver_name:
+            filename = self.output_path + self.output_filename + "__eps=" + str(self.epsilon) + '.txt'
+        else:
+            filename = self.output_path + self.output_filename + '.txt'
+        
+        my_file = Path(filename)
+        if my_file.is_file():
+            f = open(filename, "a")
+        else:
+            f = open(filename, "w")
+            f.write("instance;;;")
+            f.write(self.solver_name+";;;\n")
+            if "FPTAS" in self.solver_name:
+                f.write(";;;eps="+str(self.epsilon)+";\n")
+            else:
+                f.write(" ; ;\n")
+                f.write("name;")
+                f.write("cost mean;")
+                f.write("cost SD;")
+                f.write("time;")
+                f.write("step count;")
+                f.write("Cmax;\n")
+
+        f.close()
+
+        if "FPTAS" in self.solver_name:
+            print(f"epsilon = {self.epsilon}\n")
+
+        for (self.i, instance_path) in enumerate(files[self.start : self.stop], self.start):
+            instance = Instance(instance_path)
+            print(f"no. {self.i}: {instance.name} begun at {datetime.now()}")
+            
+            if self.solver_name == "FPTAS 2":
+                instance = self.copy_with_hashed_symbols(instance, self.epsilon)
+
+            f = open(filename, "a")
+            f.write(instance.name + ";")
+            f.write(str(instance.cost_mean) + ";")
+            f.write(str(instance.cost_standard_deviation) + ";")
+            f.close()
+            try:
+                results = self.solve_one(instance)
+            except Exception:
+                f = open(filename, "a")
+                f.write("MemoryError;\n")
+                f.close()
+                gc.collect()
+                winsound.Beep(440, 350)
+                # traceback.print_exc()
+                # print("Error message: ", e)
+            else:
+                f = open(filename, "a")
+                f.write(str(round(results['elapsed_time'], 2)) + ";")
+                f.write(str(results["step_count"]) + ";")
+                f.write(str(results["c_max"]) + ";\n")
+                f.close()
+                gc.collect()
+                winsound.Beep(440, 350)
 
     def run_one_config(self):
         print(f"Input:  {self.input_dir}")
@@ -239,7 +377,15 @@ class Runner:
 
 
 if __name__ == "__main__":
-    filename = "solutions/sarah/run_for_stats.json" if len(sys.argv) <= 1 else sys.argv[1]
+    # filename = "experiments/results/h=6__i1__low_mean.json" if len(sys.argv) <= 1 else sys.argv[1]
     # alternatively:   "solutions/snapshots.json"
-    run = Runner(filename)
-    run()
+    # alternatively:   "solutions/sarah/run_for_stats.json"
+    # run = Runner(filename)
+    # run()
+    for filename in glob.glob("experiments/results/configs/*.json"):
+        run = Runner(filename)
+        run()
+
+    winsound.Beep(440, 350)
+    winsound.Beep(440, 350)
+    winsound.Beep(440, 350)
