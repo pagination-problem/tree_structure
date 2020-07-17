@@ -16,6 +16,8 @@ from goodies import data_to_json
 
 import numpy as np
 from scipy import optimize
+#import os
+import glob
 
 
 class InstanceMaker:
@@ -79,7 +81,7 @@ class InstanceMaker:
                 raise DuplicateTiles
 
             for (i, path1) in enumerate(self.paths):
-                for (j, path2) in enumerate(self.paths[:i]):
+                for path2 in self.paths[:i]:
                     path1[:] = [node for node in path1]
                     path2[:] = [node for node in path2]
                     ps1 = set(path1)
@@ -192,7 +194,7 @@ class InstanceMaker:
             bnds.append([self.min_symbol_weight_bound, self.max_symbol_weight_bound])
 
         variables =  np.array([0 for y in range(p_i_count)])
-        value_distrib = optimize.minimize(f, variables, method="SLSQP", bounds=bnds, constraints=cons)
+        value_distrib = optimize.minimize(f, self.weights, method="SLSQP", bounds=bnds, constraints=cons)
         # if we want more control over the possible values for the p_i, we will need to store the values read
         # in this document line 294 : cfg["min_symbol_weight_bound"], cfg["max_symbol_weight_bound"]
     
@@ -206,8 +208,8 @@ class InstanceMaker:
         if self.method == "classic":
             self.create_random_weights(symbol_weight_bound)
         else:
-            self.weights = [0 for i in range(self.node_count)]
-            #self.create_random_weights(symbol_weight_bound)
+            #self.weights = [0 for i in range(self.node_count)]
+            self.create_random_weights(symbol_weight_bound)
             temporary_dict = {
                 "name": "temp",
                 "height": self.height,  # seems useless
@@ -263,6 +265,9 @@ class InstanceMaker:
         returned_dict["cost_standard_deviation"] = round(cost_standard_deviation, 1)
         returned_dict["costs"] = costs
 
+        if self.cost_mean - 0.5 > cost_mean or cost_mean > self.cost_mean + 0.5:
+            raise WrongCostMeanInInstance
+
         return returned_dict
 
 
@@ -285,6 +290,9 @@ class TooFewCommonSymbols(Exception):
 class TileContainedInAnother(Exception):
     ...
 
+
+class WrongCostMeanInInstance(Exception):
+    ...
 
 def dump_instances(config_path):
     cfg = json.loads(Path(config_path).read_text())
@@ -325,6 +333,8 @@ def dump_instances(config_path):
             outcome = "M"
         except TileContainedInAnother:
             outcome = "C"
+        except WrongCostMeanInInstance:
+            outcome = "W"
         else:
             (directory / instance["name"]).write_text(data_to_json(instance))
             outcome = "."
@@ -334,7 +344,10 @@ def dump_instances(config_path):
 
 
 if __name__ == "__main__":
-    filename =  "instances/sarah/test_config.json"  if len(sys.argv) <= 1 else sys.argv[1]
+    # filename =  "instances/sarah/test_config.json"  if len(sys.argv) <= 1 else sys.argv[1]
     # alternatively: filename =  "instances/snapshots.json"  if len(sys.argv) <= 1 else sys.argv[1]
-    dump_instances(filename)
+
+    #file_list = os.listdir("./instances/data")
+    for filename in glob.glob("instances/data/*.json"):
+        dump_instances(filename)
 
