@@ -106,23 +106,26 @@ class Runner:
             self.output_dir.mkdir(parents=True, exist_ok=True)
             self.existing_strategy = config.get("if_exists", "nothing")
             self.non_existing_strategy = config.get("if_not_exists", "nothing")
-            self.solver_name = config["solver_name"]
-            self.output_filename = config["output_filename"]
             self.output_path = config["output_dir"]
             self.start = config.get("start", 0)
             self.stop = config.get("stop")
-            if "FPTAS" in self.solver_name:
-                self.epsilon = config["parameters"]["hash_epsilon"]
             self.total_elapsed_time = 0
             self.solved_instance_count = 0
-            self.run_one_config_csv()
+            if "experiments" in config["output_dir"]:
+                self.solver_name = config["solver_name"]
+                self.output_filename = config["output_filename"]
+                if "FPTAS" in self.solver_name:
+                    self.epsilon = config["parameters"]["hash_epsilon"]
+                self.run_one_config_csv()
+            else:
+                self.run_one_config()
             self.cost_mean = 0
             self.cost_standard_deviation = 0
 
     def solve_one(self, instance):
         self.solver.set_instance(instance)
         starting_time = time()
-        c_max = self.solver.run()
+        (c_max, min_state) = self.solver.run()
         # lower_triangle_costs = [row[: i + 1] for (i, row) in enumerate(self.solver.costs)]
         # flattened_costs = reduce(lambda x, y: x + y, lower_triangle_costs)
         # cost_mean = mean(flattened_costs)
@@ -133,6 +136,7 @@ class Runner:
         results = {
             "duration_magnitude": int(math.log10(elapsed_time)),
             "c_max": c_max,
+            "min_state": min_state,
             "solution": self.solver.may_retrieve_solution(),
             "step_count": self.solver.step_count,
             "elapsed_time": elapsed_time,
@@ -235,18 +239,19 @@ class Runner:
             f = open(filename, "a")
         else:
             f = open(filename, "w")
-            f.write("instance;;;")
+            f.write("instance;;;;")
             f.write(self.solver_name+";;;\n")
             if "FPTAS" in self.solver_name:
                 f.write(";;;eps="+str(self.epsilon)+";\n")
             else:
                 f.write(" ; ;\n")
                 f.write("name;")
+                f.write("tile count;")
                 f.write("cost mean;")
                 f.write("cost SD;")
-                f.write("time;")
-                f.write("step count;")
-                f.write("Cmax;\n")
+            f.write("time;")
+            f.write("step count;")
+            f.write("Cmax;\n")
 
         f.close()
 
@@ -258,10 +263,13 @@ class Runner:
             print(f"no. {self.i}: {instance.name} begun at {datetime.now()}")
             
             if self.solver_name == "FPTAS 2":
-                instance = self.copy_with_hashed_symbols(instance, self.epsilon)
+                data = instance.get_data()
+                instance_save = Instance(data)
+                instance = instance.copy_with_hashed_symbols(self.epsilon)
 
             f = open(filename, "a")
             f.write(instance.name + ";")
+            f.write(str(instance.tile_count) + ";")
             f.write(str(instance.cost_mean) + ";")
             f.write(str(instance.cost_standard_deviation) + ";")
             f.close()
@@ -273,9 +281,26 @@ class Runner:
                 f.close()
                 gc.collect()
                 winsound.Beep(440, 350)
+                winsound.Beep(440, 350)
                 # traceback.print_exc()
                 # print("Error message: ", e)
             else:
+                if self.solver_name == "FPTAS 2":
+                    # Computation of the real Cmax of the solution
+                    tiles_on_P1 = results["min_state"][4]
+                    last_on_P1 = instance_save.tile_count
+                    last_on_P2 = instance_save.tile_count
+                    C1 = 0
+                    C2 = 0
+                    for i in range(instance_save.tile_count) :
+                        if i in tiles_on_P1:
+                            C1 = C1 + instance_save.costs[i][last_on_P1]
+                            last_on_P1 = i
+                        else:
+                            C2 = C2 + instance_save.costs[i][last_on_P2]
+                            last_on_P2 = i
+                    results["c_max"] = max(C1, C2)
+                
                 f = open(filename, "a")
                 f.write(str(round(results['elapsed_time'], 2)) + ";")
                 f.write(str(results["step_count"]) + ";")
@@ -377,15 +402,19 @@ class Runner:
 
 
 if __name__ == "__main__":
+    # filename = "solutions/snapshots.json" if len(sys.argv) <= 1 else sys.argv[1]
     # filename = "experiments/results/h=6__i1__low_mean.json" if len(sys.argv) <= 1 else sys.argv[1]
     # alternatively:   "solutions/snapshots.json"
     # alternatively:   "solutions/sarah/run_for_stats.json"
     # run = Runner(filename)
     # run()
-    for filename in glob.glob("experiments/results/configs/*.json"):
+
+    files = sorted(glob.glob("experiments/results/configs/*.json"))
+    for filename in files:
         run = Runner(filename)
         run()
 
     winsound.Beep(440, 350)
     winsound.Beep(440, 350)
     winsound.Beep(440, 350)
+    
