@@ -21,22 +21,28 @@ class Solver(AbstractSolver):
 
     def run(self):
         """Compute and return the c_max of the setted instance."""
-        states = [(self.tiles[0].weight, 0, 0, self.no_top_tile)]
+        l = list()
+        l.append(0)
+        states = [(self.tiles[0].weight, 0, 0, self.no_top_tile, l)] #
         self.step_count = 1
         self.may_log(states)
         add_state = self.store.add_state  # micro-optimize attribute access
         for new in range(1, self.tile_count):
             self.store.cleanup_states()
             costs = self.costs[new]  # micro-optimize element access
-            for (w1, w2, top1, top2) in states:  # bottleneck of the solver
-                add_state(w1 + costs[top1], w2, new, top2)
-                add_state(w1, w2 + costs[top2], top1, new)
+            for (w1, w2, top1, top2, tiles_on_P1) in states:  # bottleneck of the solver #
+                new_list_on_P1 = tiles_on_P1.copy()
+                new_list_on_P1.append(new)
+                add_state(w1 + costs[top1], w2, new, top2, new_list_on_P1)#
+                add_state(w1, w2 + costs[top2], top1, new, tiles_on_P1)#
             states = self.store.get_states()
             self.step_count += len(states)
             self.may_log(states)
         min_state = min(states, key=lambda state: max(state[:2]))
         self.c_max = max(min_state[:2])
-        return self.c_max
+        # return self.c_max
+        # Need to return c_max AND the state to reconstruction if needed
+        return (self.c_max, min_state)
 
     def _run (self):
         print("Ctypes")
@@ -103,8 +109,8 @@ class RawAdder:
     def cleanup_states(self):
         self.store = []
 
-    def add_state(self, w1, w2, i1, i2):
-        self.store.append((w1, w2, i1, i2))
+    def add_state(self, w1, w2, i1, i2, tiles_on_P1): #
+        self.store.append((w1, w2, i1, i2, tiles_on_P1)) 
 
     def get_states(self):
         return self.store
@@ -124,11 +130,11 @@ class HashAdder:
     def cleanup_states(self):
         self.store = {}
 
-    def add_state(self, w1, w2, i1, i2):
+    def add_state(self, w1, w2, i1, i2, tiles_on_P1): #
         # the next expression micro-optimized the integer division
         key = ((w1 / self.delta).__trunc__(), (w2 / self.delta).__trunc__(), i1, i2)
         if key not in self.store or (w1, w2) < self.store[key]:
-            self.store[key] = (w1, w2, i1, i2)
+            self.store[key] = (w1, w2, i1, i2, tiles_on_P1) #
 
     def get_states(self):
         return self.store.values()
@@ -142,10 +148,10 @@ class HashAdderMini(HashAdder):
     def set_instance(self, instance):
         pass
 
-    def add_state(self, w1, w2, i1, i2):
+    def add_state(self, w1, w2, i1, i2, tiles_on_P1):#
         key = (w1, i1, i2)
         if key not in self.store or w2 < self.store[key][1]:
-            self.store[key] = (w1, w2, i1, i2)
+            self.store[key] = (w1, w2, i1, i2, tiles_on_P1)#
 
 
 class HashAdderRedis(HashAdder):
