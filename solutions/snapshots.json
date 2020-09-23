@@ -1,15 +1,15 @@
 [
     {
-        "skip": false,
+        "skip": true,
         "input_dir": "instances/snapshots/",
         "output_dir": "solutions/test/snapshots/naive_cut/",
         "solver": "naive_cut",
         "log": true,
-        "if_exists": "dry",
+        "if_exists": "update",
         "if_not_exists": "write"
     },
     {
-        "skip": false,
+        "skip": true,
         "input_dir": "instances/snapshots/",
         "output_dir": "solutions/test/snapshots/FPTAS/hash_with_bound/",
         "solver": "FPTAS",
@@ -18,7 +18,7 @@
             "c_max_pruner": "solver_naive_cut"
         },
         "log": true,
-        "if_exists": "dry",
+        "if_exists": "update",
         "if_not_exists": "write"
     },
     {
@@ -43,7 +43,7 @@
         "stop": 10,
         "solver": "FPTAS",
         "log": true,
-        "if_exists": "dry",
+        "if_exists": "update",
         "if_not_exists": "write"
     },
     {
@@ -58,7 +58,7 @@
             "redis": true
         },
         "log": true,
-        "if_exists": "dry",
+        "if_exists": "update",
         "if_not_exists": "write"
     },
     {
@@ -72,7 +72,7 @@
             "mini": true
         },
         "log": true,
-        "if_exists": "dry",
+        "if_exists": "update",
         "if_not_exists": "write"
     }
 ]
