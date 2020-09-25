@@ -13,12 +13,12 @@ def test_state_store():
     instance = InstanceStub(symbol_weight_sum=200, tile_count=5)
     store.set_instance(instance)
     store.cleanup_states()
-    states = [(0, 1, 42, 42), (1, 5, 42, 42), (2, 0, 42, 42), (3, 1, 42, 42), (3, 3, 42, 42), (4, 1, 42, 42), (5, 0, 42, 42), (5, 1, 42, 42), (5, 3, 42, 42), (5, 4, 42, 42)]
+    states = [(0, 1, 42, 42, {}), (1, 5, 42, 42, {}), (2, 0, 42, 42, {}), (3, 1, 42, 42, {}), (3, 3, 42, 42, {}), (4, 1, 42, 42, {}), (5, 0, 42, 42, {}), (5, 1, 42, 42, {}), (5, 3, 42, 42, {}), (5, 4, 42, 42, {})]
     for state in states:
         store.add_state(*state)
     filtered_states = list(store.get_states())
     print(filtered_states)
-    assert filtered_states == [(0, 1, 42, 42), (1, 5, 42, 42), (2, 0, 42, 42), (3, 3, 42, 42), (4, 1, 42, 42), (5, 3, 42, 42), (5, 4, 42, 42)]
+    assert filtered_states == [(0, 1, 42, 42, {}), (1, 5, 42, 42, {}), (2, 0, 42, 42, {}), (3, 3, 42, 42, {}), (4, 1, 42, 42, {}), (5, 3, 42, 42, {}), (5, 4, 42, 42, {})]
 
 
 instance = Instance(Path("tests/input/h=03_t=005_s=011_m=06.json"))
