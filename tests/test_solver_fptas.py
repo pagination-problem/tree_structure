@@ -63,7 +63,7 @@ def test_run_fptas_hash_store():
     fptas = Solver({"hash_epsilon": 1})
     fptas.set_log_strategy(True)
     fptas.set_instance(instance)
-    computed_c_max = fptas.run()
+    (computed_c_max, best_state) = fptas.run()
     assert computed_c_max == 17
     pprint(fptas.log_result)
     expected_log_result = [
