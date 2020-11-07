@@ -61,6 +61,7 @@ class Instance:
     
     def copy_with_hashed_symbols(self, epsilon):
         data = self.get_data()
-        data["symbol_weight_bound"] = ceil(self.symbol_weight_bound * epsilon)
-        data["symbol_weights"] = [ceil(s.weight * epsilon) for s in sorted(self.symbols)]
+        delta = (epsilon * self.symbol_weight_sum) / (2 * self.symbol_count)
+        data["symbol_weight_bound"] = ceil(self.symbol_weight_bound / delta)
+        data["symbol_weights"] = [ceil(s.weight / delta) for s in sorted(self.symbols)]
         return Instance(data)
