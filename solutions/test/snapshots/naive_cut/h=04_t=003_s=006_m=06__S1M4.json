@@ -1,0 +1,13 @@
+{
+  "solver_parameters": {},
+  "duration_magnitude": -19,
+  "c_max": 15,
+  "solution": [
+    [0, 1],
+    [2]
+  ],
+  "step_count": "N/A",
+  "cost_mean": 9.833333333333334,
+  "cost_standard_deviation": 4.844813951249544,
+  "log": ""
+}

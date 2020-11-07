@@ -32,6 +32,9 @@ class Instance:
         self.symbol_count = data["symbol_count"]
         self.symbols = data["symbols"]
         self.tiles = data["tiles"]
+        self.costs = data["costs"]
+        self.cost_standard_deviation = data["cost_standard_deviation"]
+        self.cost_mean = data["cost_mean"]
 
         # Add some calculated attributes
         self.symbol_weight_sum = sum(symbol.weight for symbol in self.symbols)
@@ -44,7 +47,10 @@ class Instance:
             "symbol_weight_bound": self.symbol_weight_bound,
             "symbol_count": self.symbol_count,
             "symbol_weights": [s.weight for s in sorted(self.symbols)],
+            "cost_mean": self.cost_mean,
+            "cost_standard_deviation": self.cost_standard_deviation,
             "tiles": sorted(sorted(s.index for s in t.symbols) for t in self.tiles),
+            "costs": self.costs,
         }
 
     def get_json(self) -> str:
@@ -55,6 +61,7 @@ class Instance:
     
     def copy_with_hashed_symbols(self, epsilon):
         data = self.get_data()
-        data["symbol_weight_bound"] = ceil(self.symbol_weight_bound * epsilon)
-        data["symbol_weights"] = [ceil(s.weight * epsilon) for s in sorted(self.symbols)]
+        delta = (epsilon * self.symbol_weight_sum) / (2 * self.symbol_count)
+        data["symbol_weight_bound"] = ceil(self.symbol_weight_bound / delta)
+        data["symbol_weights"] = [ceil(s.weight / delta) for s in sorted(self.symbols)]
         return Instance(data)

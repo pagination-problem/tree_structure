@@ -1,0 +1,31 @@
+{
+  "solver_parameters": {
+    "hash_epsilon": 1,
+    "c_max_pruner": "solver_naive_cut"
+  },
+  "duration_magnitude": -19,
+  "c_max": 9,
+  "solution": [
+    [0, 1],
+    [2, 3]
+  ],
+  "step_count": 6,
+  "cost_mean": 3.8,
+  "cost_standard_deviation": 2.4819347291981715,
+  "log": [
+    [
+      [8, 0, 0, 4]
+    ],
+    [
+      [9, 0, 1, 4],
+      [8, 7, 0, 1]
+    ],
+    [
+      [9, 6, 1, 2],
+      [8, 9, 0, 2]
+    ],
+    [
+      [9, 8, 1, 3]
+    ]
+  ]
+}
